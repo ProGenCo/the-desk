@@ -122,7 +122,7 @@ a{color:inherit;text-decoration:none}
 /* ════════════════════════════════════
    SIDEBAR
 ════════════════════════════════════ */
-/* Invisible hover trigger zone on left edge */
+/* Invisible hover trigger zone on left edge (desktop only) */
 .sidebar-trigger-zone{
     position:fixed;
     top:var(--nav-h);left:0;bottom:0;
@@ -142,6 +142,29 @@ a{color:inherit;text-decoration:none}
     transition:opacity 0.3s;
 }
 .sidebar-trigger-zone:hover::after{opacity:0.5}
+@media(max-width:768px){.sidebar-trigger-zone{display:none}}
+
+/* Mobile floating accounts button */
+.mobile-accounts-btn{
+    display:none;
+    position:fixed;
+    bottom:24px;left:50%;
+    transform:translateX(-50%);
+    z-index:75;
+    padding:12px 28px;
+    border-radius:9999px;
+    background:var(--accent);
+    color:#111;
+    font-family:var(--font-head);
+    font-size:14px;font-weight:800;
+    border:none;cursor:pointer;
+    box-shadow:0 4px 20px rgba(0,0,0,0.3),0 0 0 1px rgba(255,255,255,0.1);
+    transition:all 0.25s var(--spring);
+    letter-spacing:-0.2px;
+}
+.mobile-accounts-btn:active{transform:translateX(-50%) scale(0.95)}
+.mobile-accounts-btn i{width:16px;height:16px;vertical-align:-3px;margin-right:6px}
+@media(max-width:768px){.mobile-accounts-btn{display:flex;align-items:center;gap:8px}}
 
 .sidebar{
     position:fixed;
@@ -534,8 +557,13 @@ a{color:inherit;text-decoration:none}
 ════════════════════════════════════ -->
 <div class="app-shell" id="app-shell">
 
-    <!-- SIDEBAR HOVER TRIGGER ZONE -->
+    <!-- SIDEBAR HOVER TRIGGER ZONE (desktop) -->
     <div class="sidebar-trigger-zone" id="sidebar-trigger-zone"></div>
+
+    <!-- MOBILE FLOATING BUTTON -->
+    <button class="mobile-accounts-btn" id="mobile-accounts-btn" onclick="openSidebar()">
+        <i data-lucide="layout-list"></i> Accounts
+    </button>
 
     <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
