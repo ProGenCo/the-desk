@@ -1,0 +1,339 @@
+{
+  "last_updated": "2026-03-27",
+  "risk_preference": "balanced-aggressive",
+  "daily_target": 150,
+  "accounts": {
+    "topstep_1_204": {
+      "name": "Topstep Express #1",
+      "id": "EXPRESS-V2-156967-43033204",
+      "short_id": "204",
+      "type": "topstep_express",
+      "status": "funded",
+      "balance": 474.99,
+      "starting_balance": 0,
+      "profit": 474.99,
+      "mll": 2000,
+      "mll_current": -1032.59,
+      "mll_locked": false,
+      "floor": -1032.59,
+      "dist_to_breach": 1507.58,
+      "consistency_rule": "NONE",
+      "winning_days": 6,
+      "winning_days_required": 5,
+      "payout_path": "standard",
+      "prior_payouts": 0,
+      "payout_cap": 5000,
+      "split": 1.0,
+      "risk_level": "safe",
+      "notes": "🏆 PAYOUT ELIGIBLE. $475 profit. Small red day, still strong. 100% split on first $10k. Let it ride."
+    },
+    "topstep_2_676": {
+      "name": "Topstep Express #2",
+      "id": "EXPRESS-V2-156967-54630676",
+      "short_id": "676",
+      "type": "topstep_express",
+      "status": "funded",
+      "balance": -96.69,
+      "starting_balance": 0,
+      "profit": -96.69,
+      "mll": 2000,
+      "mll_current": -1610.52,
+      "mll_locked": false,
+      "floor": -1610.52,
+      "dist_to_breach": 1513.83,
+      "consistency_rule": "NONE",
+      "winning_days": 4,
+      "winning_days_required": 5,
+      "payout_path": "standard",
+      "prior_payouts": 0,
+      "payout_cap": 5000,
+      "split": 1.0,
+      "risk_level": "medium",
+      "notes": "4/5 win days. $97 from breakeven. One more $150+ day = payout eligible. Small setback."
+    },
+    "topstep_3_235": {
+      "name": "Topstep Express #3",
+      "id": "EXPRESS-V2-156967-98464235",
+      "short_id": "235",
+      "type": "topstep_express",
+      "status": "funded",
+      "balance": -718.59,
+      "starting_balance": 0,
+      "profit": -718.59,
+      "mll": 2000,
+      "mll_current": -2000,
+      "mll_locked": false,
+      "floor": -2000,
+      "dist_to_breach": 1281.41,
+      "consistency_rule": "NONE",
+      "winning_days": 2,
+      "winning_days_required": 5,
+      "payout_path": "standard",
+      "prior_payouts": 0,
+      "payout_cap": 5000,
+      "split": 1.0,
+      "risk_level": "high",
+      "notes": "$1,281 to breach. 2/5 win days. Still well above where it was last week."
+    },
+    "tradeify_286": {
+      "name": "Tradeify 50k Flex",
+      "id": "FTDFYSLX50540736286",
+      "short_id": "286",
+      "type": "tradeify_flex",
+      "status": "funded",
+      "balance": 50409.75,
+      "starting_balance": 50000,
+      "profit": 409.75,
+      "mll": 2000,
+      "floor": 48000,
+      "buffer_threshold": 52100,
+      "winning_days": 9,
+      "winning_days_required": 5,
+      "payout_path": "flex",
+      "prior_payouts": 0,
+      "payout_cap": 3000,
+      "split": 0.90,
+      "risk_level": "medium",
+      "notes": "Profit +$410. Win days banked (9/5). $2,590 to extraction trigger. Still positive."
+    },
+    "apex_100k_811": {
+      "name": "Apex Legacy 100k",
+      "id": "PA-APEX-285778-11",
+      "short_id": "811",
+      "type": "apex_legacy_100k",
+      "status": "funded",
+      "balance": 100892.53,
+      "starting_balance": 100000,
+      "profit": 892.53,
+      "equity_high": 101622.71,
+      "mll": 3000,
+      "safety_net": 103100,
+      "floor": 100100,
+      "trading_days": 16,
+      "trading_days_required": 8,
+      "winning_days_50": 13,
+      "winning_days_50_required": 5,
+      "prior_payouts": 0,
+      "payout_step_caps": [2000, 2500, 3000, 3000, 3500],
+      "current_cap": 2000,
+      "split": 1.0,
+      "consistency_pct": 0.30,
+      "consistency_best_day": 257.33,
+      "consistency_best_day_pct": 0.288,
+      "consistency_status": "OK",
+      "consistency_note": "Best day $257 = 28.8% of $893 profit. Under 30% ✅. Max allowed single day: $268.",
+      "risk_level": "medium",
+      "notes": "Profit $893. Buffer $793 above floor. $2,208 to safety net. One red day, still solid."
+    },
+    "apex_50k_812": {
+      "name": "Apex Legacy 50k",
+      "id": "PA-APEX-285778-12",
+      "short_id": "812",
+      "type": "apex_legacy_50k",
+      "status": "funded",
+      "balance": 50987.86,
+      "starting_balance": 50000,
+      "profit": 987.86,
+      "equity_high": 51695.54,
+      "mll": 2500,
+      "safety_net": 52600,
+      "floor": 47500,
+      "dist_dd": 3488,
+      "trading_days": 16,
+      "trading_days_required": 8,
+      "winning_days_50": 13,
+      "winning_days_50_required": 5,
+      "prior_payouts": 0,
+      "payout_step_caps": [1500, 1750, 2000, 2500, 2750],
+      "current_cap": 1500,
+      "split": 1.0,
+      "consistency_pct": 0.30,
+      "consistency_best_day": 257.33,
+      "consistency_best_day_pct": 0.260,
+      "consistency_status": "OK",
+      "consistency_note": "Best day $257 = 26.0% of $988 profit. Under 30% ✅. Max allowed single day: $296.",
+      "risk_level": "safe",
+      "notes": "FLEET ANCHOR. Profit $988. DIST DD 3,488. $1,612 to safety net."
+    },
+    "apex_eval_101": {
+      "name": "Apex 50k Eval",
+      "id": "APEX-285778-101",
+      "short_id": "101",
+      "type": "apex_eval",
+      "status": "not_funded",
+      "balance": 51553.97,
+      "target": 53000,
+      "gap": 1446.03,
+      "risk_level": "na",
+      "notes": "Eval — $1,446 from funding. 4 trading days left (Apr 2 deadline). $362/day needed. Tighter but doable."
+    }
+  },
+  "daily_log": [
+    {
+      "date": "2026-03-16",
+      "totals": { "portfolio_balance": 310829.18, "daily_pnl": null },
+      "accounts": {
+        "topstep_1_204": { "balance": 967.41, "daily_pnl": null },
+        "topstep_2_676": { "balance": 389.48, "daily_pnl": null },
+        "tradeify_286": { "balance": 51333.45, "daily_pnl": null },
+        "apex_100k_811": { "balance": 101600.49, "daily_pnl": null },
+        "apex_50k_812": { "balance": 51673.32, "daily_pnl": null }
+      }
+    },
+    {
+      "date": "2026-03-17",
+      "totals": { "portfolio_balance": 306876.74, "daily_pnl": -1244.36 },
+      "accounts": {
+        "topstep_1_204": { "balance": 817.38, "daily_pnl": -150.03 },
+        "topstep_2_676": { "balance": 240.70, "daily_pnl": -148.78 },
+        "topstep_3_235": { "balance": -241.89, "daily_pnl": -241.89 },
+        "tradeify_286": { "balance": 51128.25, "daily_pnl": -205.20 },
+        "apex_100k_811": { "balance": 101421.83, "daily_pnl": -178.66 },
+        "apex_50k_812": { "balance": 51529.66, "daily_pnl": -143.66 },
+        "apex_eval_101": { "balance": 51780.71, "daily_pnl": -176.16 }
+      }
+    },
+    {
+      "date": "2026-03-18",
+      "totals": { "portfolio_balance": 251036.27, "daily_pnl": -5640.37 },
+      "accounts": {
+        "topstep_1_204": { "balance": 17.22, "daily_pnl": -800.16 },
+        "topstep_2_676": { "balance": -555.71, "daily_pnl": -796.41 },
+        "topstep_3_235": { "balance": -1039.55, "daily_pnl": -797.66 },
+        "tradeify_286": { "balance": 50292.40, "daily_pnl": -835.85 },
+        "apex_100k_811": { "balance": 100619.65, "daily_pnl": -802.18 },
+        "apex_50k_812": { "balance": 50723.73, "daily_pnl": -805.93 },
+        "apex_eval_101": { "balance": 50978.53, "daily_pnl": -802.18 }
+      },
+      "notes": "FOMC + contract rollover — worst day in portfolio. DO NOT TRADE during FOMC or rollover."
+    },
+    {
+      "date": "2026-03-19",
+      "totals": { "portfolio_balance": 251896.45, "daily_pnl": 970.18 },
+      "accounts": {
+        "topstep_1_204": { "balance": 160.71, "daily_pnl": 143.49 },
+        "topstep_2_676": { "balance": -412.22, "daily_pnl": 143.49 },
+        "topstep_3_235": { "balance": -893.56, "daily_pnl": 145.99 },
+        "tradeify_286": { "balance": 50410.55, "daily_pnl": 118.15 },
+        "apex_100k_811": { "balance": 100758.92, "daily_pnl": 139.27 },
+        "apex_50k_812": { "balance": 50865.50, "daily_pnl": 141.77 },
+        "apex_eval_101": { "balance": 51116.55, "daily_pnl": 138.02 }
+      },
+      "notes": "Green bounce — all accounts positive. Tradeify +$118 did NOT count as winning day (<$150)."
+    },
+    {
+      "date": "2026-03-20",
+      "totals": { "portfolio_balance": 249399.98, "daily_pnl": -3106.37 },
+      "accounts": {
+        "topstep_1_204": { "balance": -264.40, "daily_pnl": -425.11 },
+        "topstep_2_676": { "balance": -836.08, "daily_pnl": -423.86 },
+        "topstep_3_235": { "balance": -1314.92, "daily_pnl": -421.36 },
+        "tradeify_286": { "balance": 49928.95, "daily_pnl": -481.60 },
+        "apex_100k_811": { "balance": 100307.89, "daily_pnl": -451.03 },
+        "apex_50k_812": { "balance": 50408.22, "daily_pnl": -457.28 },
+        "apex_eval_101": { "balance": 50670.42, "daily_pnl": -446.13 }
+      },
+      "notes": "Fleet-wide red day. -$3,106 total. Topstep #3 at $75 from breach — STOP TRADING. Apex 100k $208 above floor — MES ONLY."
+    },
+    {
+      "date": "2026-03-23",
+      "totals": { "portfolio_balance": 250725.86, "daily_pnl": 1325.88 },
+      "accounts": {
+        "topstep_1_204": { "balance": -73.46, "daily_pnl": 190.94 },
+        "topstep_2_676": { "balance": -645.14, "daily_pnl": 190.94 },
+        "topstep_3_235": { "balance": -1265.79, "daily_pnl": 49.13 },
+        "tradeify_286": { "balance": 50120.35, "daily_pnl": 191.40 },
+        "apex_100k_811": { "balance": 100514.76, "daily_pnl": 206.87 },
+        "apex_50k_812": { "balance": 50623.84, "daily_pnl": 215.62 },
+        "apex_eval_101": { "balance": 50951.50, "daily_pnl": 281.08 }
+      },
+      "notes": "ALL GREEN. +$1,326 fleet-wide. TS-204 now 4/5 win days — ONE MORE. Tradeify back above water. Momentum shifting."
+    },
+    {
+      "date": "2026-03-24",
+      "totals": { "portfolio_balance": 250851.71, "daily_pnl": 625.65 },
+      "accounts": {
+        "topstep_1_204": { "balance": 55.74, "daily_pnl": 129.20 },
+        "topstep_2_676": { "balance": -515.94, "daily_pnl": 129.20 },
+        "topstep_3_235": { "balance": -1137.84, "daily_pnl": 127.95 },
+        "tradeify_286": { "balance": 50152.35, "daily_pnl": 32.00 },
+        "apex_100k_811": { "balance": 100590.11, "daily_pnl": 75.35 },
+        "apex_50k_812": { "balance": 50679.19, "daily_pnl": 55.35 },
+        "apex_eval_101": { "balance": 51028.10, "daily_pnl": 76.60 }
+      },
+      "notes": "ALL GREEN x2. +$626 fleet. TS-204 +$129 just missed $150 win day threshold — still 4/5. Smaller gains but consistency building."
+    },
+    {
+      "date": "2026-03-25",
+      "totals": { "portfolio_balance": 252391.85, "daily_pnl": 1540.14 },
+      "accounts": {
+        "topstep_1_204": { "balance": 250.66, "daily_pnl": 194.92 },
+        "topstep_2_676": { "balance": -321.02, "daily_pnl": 194.92 },
+        "topstep_3_235": { "balance": -942.92, "daily_pnl": 194.92 },
+        "tradeify_286": { "balance": 50318.80, "daily_pnl": 166.45 },
+        "apex_100k_811": { "balance": 100779.02, "daily_pnl": 188.91 },
+        "apex_50k_812": { "balance": 50869.35, "daily_pnl": 190.16 },
+        "apex_eval_101": { "balance": 51437.96, "daily_pnl": 409.86 }
+      },
+      "notes": "🏆 ALL GREEN x3. +$1,540 fleet. TS-204 HIT 5/5 WIN DAYS — PAYOUT ELIGIBLE. Best day since FOMC. AX-EVAL +$410 monster."
+    },
+    {
+      "date": "2026-03-26",
+      "totals": { "portfolio_balance": 254890.67, "daily_pnl": 1808.22 },
+      "accounts": {
+        "topstep_1_204": { "balance": 512.62, "daily_pnl": 261.96 },
+        "topstep_2_676": { "balance": -59.06, "daily_pnl": 261.96 },
+        "topstep_3_235": { "balance": -680.96, "daily_pnl": 261.96 },
+        "tradeify_286": { "balance": 50558.90, "daily_pnl": 240.10 },
+        "apex_100k_811": { "balance": 101036.35, "daily_pnl": 257.33 },
+        "apex_50k_812": { "balance": 51126.68, "daily_pnl": 257.33 },
+        "apex_eval_101": { "balance": 51696.54, "daily_pnl": 258.58 }
+      },
+      "notes": "ALL GREEN x4! +$1,808 — BEST DAY EVER. TS-676 about to go green (-$59). TS-204 doubled. AX-EVAL on pace for funding."
+    },
+    {
+      "date": "2026-03-27",
+      "totals": { "portfolio_balance": 253203.42, "daily_pnl": -687.25 },
+      "accounts": {
+        "topstep_1_204": { "balance": 474.99, "daily_pnl": -37.63 },
+        "topstep_2_676": { "balance": -96.69, "daily_pnl": -37.63 },
+        "topstep_3_235": { "balance": -718.59, "daily_pnl": -37.63 },
+        "tradeify_286": { "balance": 50409.75, "daily_pnl": -149.15 },
+        "apex_100k_811": { "balance": 100892.53, "daily_pnl": -143.82 },
+        "apex_50k_812": { "balance": 50987.86, "daily_pnl": -138.82 },
+        "apex_eval_101": { "balance": 51553.97, "daily_pnl": -142.57 }
+      },
+      "notes": "Streak snaps at 4. -$687 fleet. Technical issues. Topstep only -$38 each (copy trade). Manageable loss after +$5,300 in 4 days."
+    }
+  ],
+  "momentum": {
+    "last_5_days": [625.65, 1540.14, 1808.22, -687.25],
+    "green_days_last_5": 4,
+    "total_days_last_5": 5,
+    "win_rate_last_5": 0.80,
+    "classification": "HOT",
+    "streak": 1,
+    "streak_direction": "red",
+    "projection_multiplier": 0.90,
+    "note": "80% win rate (4 of 5 green). Streak snaps at 4 but momentum still HOT. One red day doesn't change the trend."
+  },
+  "extraction_triggers": {
+    "topstep_1_204": { "trigger_balance": 0, "current_balance": 474.99, "pct_to_trigger": 100, "est_days": "GROWING", "note": "🏆 PAYOUT ELIGIBLE. $475 profit. Letting it ride to $1k+." },
+    "topstep_2_676": { "trigger_balance": 0, "current_balance": -96.69, "pct_to_trigger": 0, "est_days": "1-2 days", "note": "4/5 win days. $97 from breakeven. One $150+ day = payout eligible." },
+    "tradeify_286": { "trigger_profit": 3000, "current_profit": 409.75, "pct_to_trigger": 13.7, "est_days": 16, "note": "$2,590 to extraction trigger." },
+    "apex_50k_812": { "trigger_balance": 52600, "current_balance": 50987.86, "pct_to_trigger": 38.0, "est_days": 10, "note": "$1,612 to safety net." },
+    "apex_100k_811": { "trigger_balance": 103100, "current_balance": 100892.53, "pct_to_trigger": 28.8, "est_days": 13, "note": "$2,208 to safety net." }
+  },
+  "payouts_taken": [],
+  "projected_payouts": [
+    { "account": "topstep_1_204", "target_date": "2026-04-01", "amount": 500, "net": 500, "confidence": "high", "notes": "ELIGIBLE NOW. Growing to $1k for optimal pull. 100% split on first $10k." },
+    { "account": "topstep_2_676", "target_date": "2026-04-02", "amount": 125, "net": 125, "confidence": "high", "notes": "4/5 win days. $59 from green. One more $150+ day = eligible." },
+    { "account": "apex_50k_812", "target_date": "2026-04-06", "amount": 1500, "net": 1500, "confidence": "high", "notes": "$1,473 to safety net. At $250/day pace = 6 days." },
+    { "account": "apex_100k_811", "target_date": "2026-04-10", "amount": 2000, "net": 2000, "confidence": "medium", "notes": "$2,064 to safety net. Upgraded confidence." },
+    { "account": "tradeify_286", "target_date": "2026-04-12", "amount": 1350, "net": 1215, "confidence": "medium", "notes": "$2,441 to extraction trigger. Accelerating." }
+  ],
+  "danger_dates": [
+    { "type": "FOMC", "dates": ["2026-04-29", "2026-05-06", "2026-06-17", "2026-07-29", "2026-09-16", "2026-10-28", "2026-12-16"], "rule": "DO NOT TRADE" },
+    { "type": "Contract Rollover", "note": "Quarterly: Jun/Sep/Dec rollover weeks — check CME calendar", "rule": "DO NOT TRADE or reduce size" }
+  ]
+}

@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>The Desk</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+/* ══════════════════════════════════════════
+   PAYOUT COMMAND v8 — Sidebar Layout
+══════════════════════════════════════════ */
+
+/* ── Tokens ── */
+:root,[data-theme="light"]{
+    --bg-main:#f9f9f9;--bg-primary:#ffffff;--bg-secondary:#f2f4f4;--bg-tertiary:#ebeeef;--bg-card:#ffffff;
+    --tx-primary:#2d3435;--tx-secondary:#5a6061;--tx-muted:#8a9091;--tx-light:#adb3b4;
+    --accent:#7a5a00;--accent-light:#c4972a;--accent-bg:rgba(122,90,0,0.06);
+    --border:rgba(0,0,0,0.07);--border-strong:rgba(0,0,0,0.14);
+    --shadow-sm:0 1px 3px rgba(0,0,0,0.08),0 1px 2px -1px rgba(0,0,0,0.08);
+    --shadow-md:0 4px 12px rgba(0,0,0,0.08),0 2px 4px rgba(0,0,0,0.05);
+    --shadow-lg:0 12px 24px rgba(0,0,0,0.10),0 4px 8px rgba(0,0,0,0.06);
+    --shadow-xl:0 24px 48px rgba(0,0,0,0.12),0 8px 16px rgba(0,0,0,0.07);
+    --nav-h:68px;
+    --gn:#2D68C4;--gn-bg:rgba(45,104,196,0.09);
+    --rd:#d70000;--rd-bg:rgba(215,0,0,0.08);
+    --yl:#b45309;--yl-bg:rgba(180,83,9,0.08);
+    --pp:#7c3aed;--pp-bg:rgba(124,58,237,0.08);
+    --font-head:'Plus Jakarta Sans',system-ui,sans-serif;
+    --font-body:'Manrope','Inter',system-ui,sans-serif;
+    --font-mono:'Inter',ui-monospace,monospace;
+    --spring:cubic-bezier(0.16,1,0.3,1);
+    --smooth:cubic-bezier(0.4,0,0.2,1);
+}
+[data-theme="dark"]{
+    --bg-main:#1a1d1e;--bg-primary:#1a1d1e;--bg-secondary:#212526;--bg-tertiary:#2a2e2f;--bg-card:#232728;
+    --tx-primary:#e8eaea;--tx-secondary:#b0b5b6;--tx-muted:#6e7879;--tx-light:#3d4546;
+    --accent:#c4972a;--accent-light:#e2c060;--accent-bg:rgba(196,151,42,0.08);
+    --border:rgba(255,255,255,0.07);--border-strong:rgba(255,255,255,0.13);
+    --shadow-sm:0 1px 3px rgba(0,0,0,0.4);
+    --shadow-md:0 4px 12px rgba(0,0,0,0.4),0 2px 4px rgba(0,0,0,0.3);
+    --shadow-lg:0 12px 32px rgba(0,0,0,0.5),0 4px 8px rgba(0,0,0,0.3);
+    --shadow-xl:0 24px 56px rgba(0,0,0,0.6),0 8px 16px rgba(0,0,0,0.35);
+    --gn:#4d88e0;--gn-bg:rgba(45,104,196,0.15);
+    --rd:#ff2020;--rd-bg:rgba(215,0,0,0.15);
+    --yl:#fbbf24;--yl-bg:rgba(251,191,36,0.10);
+    --pp:#a78bfa;--pp-bg:rgba(167,139,250,0.10);
+}
+
+/* ── Reset ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg-main);color:var(--tx-primary);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-thumb{background:var(--tx-light);border-radius:4px}
+a{color:inherit;text-decoration:none}
+
+/* ════════════════════════════════════
+   NAV
+════════════════════════════════════ */
+.nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    height:var(--nav-h);
+    background:rgba(26,29,30,0.88);
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    border-bottom:1px solid var(--border);
+}
+[data-theme="light"] .nav{background:rgba(255,255,255,0.88)}
+.nav-inner{
+    height:100%;max-width:100%;padding:0 20px;
+    display:flex;align-items:center;gap:14px;
+}
+.nav-toggle-btn{
+    display:flex;align-items:center;gap:7px;
+    padding:8px 14px;border-radius:10px;
+    background:var(--bg-tertiary);border:1px solid var(--border-strong);
+    color:var(--tx-secondary);font-size:12px;font-weight:700;
+    cursor:pointer;transition:all 0.25s var(--spring);
+    font-family:var(--font-body);
+}
+.nav-toggle-btn:hover{background:var(--accent-bg);color:var(--accent);border-color:var(--accent)}
+.nav-toggle-btn i{width:14px;height:14px}
+.nav-divider{width:1px;height:20px;background:var(--border-strong);flex-shrink:0}
+.nav-mark{
+    width:30px;height:30px;border-radius:8px;
+    background:var(--accent);
+    display:grid;place-items:center;
+    font-family:var(--font-head);font-weight:800;font-size:15px;
+    color:#111;letter-spacing:-0.5px;
+    flex-shrink:0;
+}
+.nav-title{font-family:var(--font-head);font-weight:800;font-size:21px;letter-spacing:-0.6px}
+.nav-title span{font-weight:400;color:var(--tx-muted)}
+.nav-links{
+    display:flex;align-items:center;gap:4px;
+    margin-left:auto;
+}
+.nav-link{
+    padding:6px 14px;border-radius:8px;
+    font-size:13px;font-weight:600;color:var(--tx-secondary);
+    cursor:pointer;transition:all 0.2s;border:none;background:none;font-family:var(--font-body);
+}
+.nav-link:hover{color:var(--tx-primary);background:var(--bg-tertiary)}
+.nav-link.active{color:var(--accent);background:var(--accent-bg)}
+.nav-right{display:flex;align-items:center;gap:10px;margin-left:16px}
+.nav-clock{font-family:var(--font-mono);font-size:11px;font-weight:600;color:var(--tx-muted);font-variant-numeric:tabular-nums;letter-spacing:0.3px}
+.nav-theme{
+    display:flex;align-items:center;gap:6px;
+    padding:6px 12px;border-radius:8px;
+    font-size:11px;font-weight:700;color:var(--tx-secondary);
+    cursor:pointer;border:1px solid var(--border-strong);background:transparent;
+    transition:all 0.2s;font-family:var(--font-body);
+}
+.nav-theme:hover{color:var(--accent);border-color:var(--accent)}
+.nav-theme i{width:12px;height:12px}
+
+/* ════════════════════════════════════
+   APP SHELL
+════════════════════════════════════ */
+.app-shell{padding-top:var(--nav-h)}
+
+/* ════════════════════════════════════
+   SIDEBAR
+════════════════════════════════════ */
+/* Invisible hover trigger zone on left edge */
+.sidebar-trigger-zone{
+    position:fixed;
+    top:var(--nav-h);left:0;bottom:0;
+    width:12px;
+    z-index:85;
+    cursor:pointer;
+}
+.sidebar-trigger-zone::after{
+    content:'';
+    position:absolute;
+    top:50%;left:3px;
+    transform:translateY(-50%);
+    width:3px;height:48px;
+    border-radius:3px;
+    background:var(--tx-light);
+    opacity:0;
+    transition:opacity 0.3s;
+}
+.sidebar-trigger-zone:hover::after{opacity:0.5}
+
+.sidebar{
+    position:fixed;
+    top:var(--nav-h);left:0;bottom:0;
+    width:296px;
+    background:var(--bg-card);
+    border-right:1px solid var(--border-strong);
+    transform:translateX(-296px);
+    transition:transform 0.42s var(--spring),box-shadow 0.42s;
+    z-index:90;
+    display:flex;flex-direction:column;
+    overflow:hidden;
+}
+.sidebar.open{
+    transform:translateX(0);
+    box-shadow:6px 0 48px rgba(0,0,0,0.35);
+}
+.sidebar-overlay{
+    position:fixed;inset:0;top:var(--nav-h);
+    background:transparent;
+    z-index:80;pointer-events:none;
+    transition:background 0.3s,backdrop-filter 0.3s;
+}
+.sidebar-overlay.open{
+    background:rgba(0,0,0,0.45);
+    pointer-events:all;
+    backdrop-filter:blur(3px);
+    -webkit-backdrop-filter:blur(3px);
+}
+
+/* Sidebar header */
+.sb-header{
+    padding:20px 20px 16px;
+    border-bottom:1px solid var(--border);
+    flex-shrink:0;
+}
+.sb-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.sb-title{font-family:var(--font-head);font-size:15px;font-weight:800;letter-spacing:-0.3px}
+.sb-close{
+    width:28px;height:28px;border-radius:7px;
+    background:var(--bg-tertiary);border:none;
+    color:var(--tx-muted);cursor:pointer;
+    display:grid;place-items:center;
+    transition:all 0.2s;
+}
+.sb-close:hover{background:var(--rd-bg);color:var(--rd)}
+.sb-close i{width:14px;height:14px}
+
+/* Sidebar fleet summary */
+.sb-summary{
+    display:grid;grid-template-columns:1fr 1fr;gap:8px;
+}
+.sb-stat{
+    background:var(--bg-secondary);border-radius:10px;
+    padding:10px 12px;
+}
+.sb-stat-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--tx-muted);margin-bottom:4px}
+.sb-stat-val{font-family:var(--font-mono);font-size:16px;font-weight:800;letter-spacing:-0.4px;font-variant-numeric:tabular-nums;line-height:1}
+.sb-stat-sub{font-size:10px;color:var(--tx-muted);margin-top:2px}
+
+/* Sidebar account list */
+.sb-list{flex:1;overflow-y:auto;padding:8px 0}
+.sb-list::-webkit-scrollbar{width:3px}
+.sb-list::-webkit-scrollbar-thumb{background:var(--tx-light);border-radius:3px}
+
+.sb-account{
+    display:flex;align-items:stretch;
+    cursor:pointer;
+    border-bottom:1px solid var(--border);
+    transition:background 0.18s;
+    position:relative;
+}
+.sb-account:hover{background:var(--bg-secondary)}
+.sb-account.active{background:var(--accent-bg)}
+.sb-account.active::before{
+    content:'';
+    position:absolute;left:0;top:0;bottom:0;
+    width:3px;background:var(--accent);
+    border-radius:0 2px 2px 0;
+}
+.sb-stripe{width:3px;flex-shrink:0;border-radius:0}
+.sb-body{flex:1;padding:13px 14px 11px}
+.sb-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px}
+.sb-name{font-family:var(--font-head);font-size:13px;font-weight:800;letter-spacing:-0.2px;line-height:1.2}
+.sb-firm{font-size:10px;color:var(--tx-muted);font-weight:500;margin-top:1px}
+.sb-pnl{font-family:var(--font-mono);font-size:14px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-0.3px;white-space:nowrap;line-height:1.2}
+.sb-tag{font-size:9px;font-weight:800;padding:2px 7px;border-radius:9999px;text-transform:uppercase;letter-spacing:0.4px;white-space:nowrap;margin-top:2px;display:inline-block}
+.sb-spark{display:flex;align-items:flex-end;gap:2px;height:18px;margin-top:8px}
+.sb-spark-bar{flex:1;border-radius:2px;min-width:3px}
+
+/* ════════════════════════════════════
+   MAIN CONTENT
+════════════════════════════════════ */
+.main-content{
+    min-height:calc(100vh - var(--nav-h));
+    transition:none;
+}
+
+/* ════════════════════════════════════
+   FLEET VIEW
+════════════════════════════════════ */
+.fleet-hero{padding:72px 0 40px}
+.hero-layout{display:flex;align-items:flex-end;justify-content:space-between;gap:32px}
+.hero-left{flex-shrink:0}
+.hero-right{text-align:right;flex:1}
+.hero-date{font-family:var(--font-mono);font-size:13px;font-weight:600;color:var(--tx-muted);letter-spacing:0.3px;margin-bottom:6px}
+.hero-session{font-size:12px;font-weight:700;padding:5px 12px;border-radius:8px;display:inline-block;margin-bottom:16px}
+.hero-mini-stat{margin-bottom:12px}
+.hero-mini-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--tx-muted);margin-bottom:3px}
+.hero-mini-val{font-family:var(--font-mono);font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-0.5px}
+.delta-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.fleet-chart-section{padding:0 0 40px}
+
+/* ── Status Ticker (carousel) ── */
+.ticker{padding:0 0 36px}
+.ticker-inner{
+    border-radius:12px;
+    background:var(--bg-card);
+    border:1px solid var(--border);
+    box-shadow:var(--shadow-sm);
+    overflow:hidden;
+    position:relative;
+    padding:12px 0;
+}
+.ticker-inner::before,.ticker-inner::after{
+    content:'';position:absolute;top:0;bottom:0;width:48px;z-index:2;pointer-events:none;
+}
+.ticker-inner::before{left:0;background:linear-gradient(90deg,var(--bg-card),transparent)}
+.ticker-inner::after{right:0;background:linear-gradient(-90deg,var(--bg-card),transparent)}
+.ticker-track{
+    display:flex;align-items:center;gap:24px;
+    width:max-content;
+    animation:marquee 30s linear infinite;
+}
+.ticker-track:hover{animation-play-state:paused}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-item{
+    display:flex;align-items:center;gap:8px;
+    white-space:nowrap;
+    font-size:12px;font-weight:700;
+    font-family:var(--font-mono);
+    flex-shrink:0;
+}
+.ticker-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.ticker-sep{color:var(--tx-light);font-size:10px;flex-shrink:0}
+
+/* ── Fleet Heatmap ── */
+.heatmap{padding:0 0 36px}
+.heatmap-grid{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:8px;
+}
+.hm-block{
+    padding:12px 10px;
+    border-radius:12px;
+    border:1px solid var(--border);
+    background:var(--bg-card);
+    cursor:pointer;
+    transition:all 0.25s var(--spring);
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+}
+.hm-block::before{
+    content:'';
+    position:absolute;top:0;left:0;right:0;height:3px;
+}
+.hm-block:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.hm-name{font-family:var(--font-head);font-size:12px;font-weight:800;letter-spacing:-0.2px;margin-bottom:4px}
+.hm-pnl{font-family:var(--font-mono);font-size:14px;font-weight:800;font-variant-numeric:tabular-nums;margin-bottom:4px}
+.hm-sub{font-size:9px;color:var(--tx-muted);font-weight:600}
+@media(max-width:768px){.heatmap-grid{grid-template-columns:repeat(4,1fr)}}
+
+/* ── Next Move Card ── */
+.next-move{padding:0 0 36px}
+.nm-card{
+    display:flex;align-items:center;gap:20px;
+    padding:20px 28px;
+    border-radius:16px;
+    background:var(--bg-card);
+    border:1px solid var(--border-strong);
+    box-shadow:var(--shadow-md);
+    cursor:pointer;
+    transition:all 0.25s var(--spring);
+}
+.nm-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-xl)}
+.nm-icon{
+    width:44px;height:44px;border-radius:12px;
+    display:grid;place-items:center;flex-shrink:0;
+}
+.nm-icon i{width:20px;height:20px;stroke-width:2.5}
+.nm-body{flex:1}
+.nm-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.4px;margin-bottom:4px}
+.nm-title{font-family:var(--font-head);font-size:17px;font-weight:800;letter-spacing:-0.3px;line-height:1.3}
+.nm-desc{font-size:13px;color:var(--tx-secondary);margin-top:3px}
+.nm-arrow{color:var(--tx-light);flex-shrink:0;transition:transform 0.2s}
+.nm-card:hover .nm-arrow{transform:translateX(4px);color:var(--accent)}
+
+/* ── 5-Day Roadmap ── */
+.roadmap{padding:0 0 80px}
+.roadmap-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.rm-day{
+    background:var(--bg-card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:16px 12px;
+    text-align:center;
+    transition:all 0.25s var(--spring);
+}
+.rm-day:first-child{border-color:var(--accent);background:var(--accent-bg)}
+.rm-day:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.rm-date{font-size:10px;font-weight:700;color:var(--tx-muted);text-transform:uppercase;letter-spacing:0.5px}
+.rm-label{font-family:var(--font-head);font-size:12px;font-weight:800;margin:8px 0 4px;line-height:1.3}
+.rm-note{font-size:10px;color:var(--tx-muted);font-weight:500;line-height:1.3}
+.container{max-width:1200px;margin:0 auto;padding:0 32px}
+@media(min-width:768px){.container{padding:0 48px}}
+
+/* ── Type ── */
+.eyebrow{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.8px;color:var(--accent);margin-bottom:10px}
+.h1{font-family:var(--font-head);font-size:52px;font-weight:800;letter-spacing:-1.5px;line-height:1.05}
+.h2{font-family:var(--font-head);font-size:36px;font-weight:800;letter-spacing:-1px;line-height:1.15}
+.h3{font-family:var(--font-head);font-size:20px;font-weight:800;letter-spacing:-0.4px;line-height:1.3}
+@media(min-width:768px){.h1{font-size:80px;letter-spacing:-3px}.h2{font-size:44px}}
+.tx-sec{color:var(--tx-secondary);font-size:15px;line-height:1.6}
+.tx-sm{color:var(--tx-muted);font-size:12px;font-weight:500}
+
+/* ── Pill ── */
+.pill{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:9999px;font-size:12px;font-weight:700;background:var(--bg-tertiary);color:var(--tx-primary);border:1px solid var(--border)}
+.pill-dot{width:7px;height:7px;border-radius:50%;animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ── Deltas ── */
+.delta{display:inline-flex;align-items:center;gap:4px;padding:4px 11px;border-radius:9999px;font-family:var(--font-mono);font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}
+.delta-up{background:var(--gn-bg);color:var(--gn)}
+.delta-dn{background:var(--rd-bg);color:var(--rd)}
+
+/* ── Metrics ── */
+.metric{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.metric-hero{font-size:52px;font-weight:900;letter-spacing:-2px;line-height:1}
+@media(min-width:768px){.metric-hero{font-size:88px;letter-spacing:-4px}}
+.metric-lg{font-size:30px;font-weight:800;letter-spacing:-1px;line-height:1}
+.metric-md{font-size:22px;font-weight:800;letter-spacing:-0.5px;line-height:1}
+.metric-sm{font-size:15px;font-weight:700;letter-spacing:-0.2px}
+
+/* ── Cards ── */
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow-sm);overflow:hidden;transition:box-shadow 0.3s var(--smooth)}
+.card:hover{box-shadow:var(--shadow-lg)}
+.card-body{padding:24px 28px}
+.card-lg .card-body{padding:28px 36px}
+
+/* ── Grid ── */
+.grid{display:grid;gap:16px}
+.grid-2{grid-template-columns:1fr}
+.grid-3{grid-template-columns:1fr}
+.grid-4{grid-template-columns:1fr 1fr}
+@media(min-width:640px){.grid-2{grid-template-columns:1fr 1fr}}
+@media(min-width:768px){.grid-3{grid-template-columns:1fr 1fr 1fr}.grid-4{grid-template-columns:repeat(4,1fr)}}
+
+/* ── Progress ── */
+.progress{height:6px;background:var(--bg-tertiary);border-radius:6px;overflow:hidden}
+.progress-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--accent),var(--accent-light));transition:width 0.8s var(--spring)}
+
+/* ── Detail rows ── */
+.detail-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)}
+.detail-row:last-child{border-bottom:none}
+.detail-label{font-size:13px;color:var(--tx-muted);font-weight:500}
+.detail-value{font-family:var(--font-mono);font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
+
+/* ── Table ── */
+.data-table{width:100%;border-collapse:collapse}
+.data-table th{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--tx-light);padding:10px 0;text-align:left}
+.data-table td{font-family:var(--font-mono);font-size:12px;font-weight:600;padding:10px 0;border-top:1px solid var(--border);font-variant-numeric:tabular-nums}
+
+/* ── Tag ── */
+.tag{font-size:9px;font-weight:800;padding:3px 9px;border-radius:9999px;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap}
+
+/* ── Alert ── */
+.alert{display:flex;align-items:center;gap:12px;padding:13px 18px;border-radius:12px;font-size:13px;font-weight:600;margin-bottom:12px}
+.alert i{width:16px;height:16px;flex-shrink:0;stroke-width:2}
+.alert-danger{background:var(--rd-bg);color:var(--rd);border:1px solid rgba(215,0,0,0.15)}
+.alert-success{background:var(--gn-bg);color:var(--gn);border:1px solid rgba(45,104,196,0.15)}
+.alert-warn{background:var(--yl-bg);color:var(--yl);border:1px solid rgba(180,83,9,0.15)}
+
+/* ── MLL Bar ── */
+.mll-bar-outer{height:10px;background:var(--bg-tertiary);border-radius:10px;overflow:hidden;margin:10px 0 6px}
+.mll-bar-inner{height:100%;border-radius:10px;transition:width 0.8s var(--spring)}
+
+/* ── Gauge ── */
+.gauge-wrap{display:flex;align-items:center;gap:14px;margin:10px 0}
+.gauge-track{flex:1;height:7px;background:var(--bg-tertiary);border-radius:8px;position:relative;overflow:hidden}
+.gauge-fill{height:100%;border-radius:8px}
+.gauge-mark{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--rd);border-radius:2px}
+.gauge-val{font-family:var(--font-mono);font-size:22px;font-weight:800;min-width:60px;text-align:right;font-variant-numeric:tabular-nums}
+
+/* ── Win day dots ── */
+.wd-dots{display:flex;gap:6px;margin:10px 0}
+.wd-dot{width:28px;height:10px;border-radius:4px;background:var(--bg-tertiary)}
+.wd-dot.filled{background:var(--gn)}
+
+/* ── Countdown grid ── */
+.cd-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px}
+.cd-item{background:var(--bg-secondary);border:1px solid var(--border);border-radius:12px;padding:14px 10px;text-align:center;transition:all 0.2s}
+.cd-item.next{border-color:var(--accent);background:var(--accent-bg)}
+.cd-date{font-size:9px;font-weight:700;color:var(--tx-muted);text-transform:uppercase;letter-spacing:0.5px}
+.cd-val{font-family:var(--font-mono);font-size:18px;font-weight:800;color:var(--accent);margin:4px 0 2px;font-variant-numeric:tabular-nums}
+.cd-rem{font-size:9px;color:var(--tx-light);font-family:var(--font-mono);font-weight:600;font-variant-numeric:tabular-nums}
+
+/* ── Payout sim cards ── */
+.sim-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(min-width:640px){.sim-grid{grid-template-columns:repeat(4,1fr)}}
+.sc-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:18px;position:relative;transition:all 0.25s var(--spring)}
+.sc-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+.sc-card.rec{border-color:transparent;background:linear-gradient(var(--bg-card),var(--bg-card)) padding-box,linear-gradient(135deg,rgba(196,151,42,0.5),rgba(196,151,42,0.1)) border-box;box-shadow:0 0 28px rgba(196,151,42,0.07)}
+.sc-badge{position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:var(--accent);color:#000;font-size:8px;font-weight:800;padding:2px 9px;border-radius:9999px;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap}
+
+/* ── Sparkline ── */
+.spark{display:flex;align-items:flex-end;gap:3px}
+.spark-bar{flex:1;min-width:4px;border-radius:3px}
+
+/* ── Divider ── */
+.section-divider{height:1px;background:var(--border);margin:40px 0}
+
+/* ════════════════════════════════════
+   FULL-PAGE VIEWS (Playbook, Prep)
+════════════════════════════════════ */
+.full-page{display:none;min-height:100vh;padding-top:var(--nav-h)}
+.full-page.active{display:block}
+.fp-container{max-width:860px;margin:0 auto;padding:48px 32px 80px}
+
+/* Rule cards */
+.rule-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:22px 26px;margin-bottom:12px;border-left:4px solid var(--border-strong);transition:box-shadow 0.25s}
+.rule-card:hover{box-shadow:var(--shadow-md)}
+.rule-card.hard{border-left-color:var(--rd)}
+.rule-card.payout{border-left-color:var(--gn)}
+.rule-card.risk{border-left-color:var(--yl)}
+.rule-card.apex{border-left-color:var(--pp)}
+.rule-title{font-family:var(--font-head);font-size:16px;font-weight:800;margin-bottom:5px}
+.rule-body{font-size:13px;color:var(--tx-secondary);line-height:1.65}
+.rule-badge{font-size:9px;font-weight:800;padding:2px 8px;border-radius:9999px;text-transform:uppercase;letter-spacing:0.4px;margin-right:8px;vertical-align:middle}
+
+/* Prep stats */
+.prep-stat{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:18px 22px}
+.prep-stat-val{font-family:var(--font-mono);font-size:26px;font-weight:800;letter-spacing:-0.8px;font-variant-numeric:tabular-nums;margin:5px 0 2px}
+
+/* ════════════════════════════════════
+   ANIMATIONS
+════════════════════════════════════ */
+.fade-up{opacity:0;transform:translateY(28px);transition:opacity 0.7s var(--spring),transform 0.7s var(--spring)}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+.stagger>*:nth-child(1){transition-delay:0.04s}
+.stagger>*:nth-child(2){transition-delay:0.09s}
+.stagger>*:nth-child(3){transition-delay:0.14s}
+.stagger>*:nth-child(4){transition-delay:0.19s}
+.stagger>*:nth-child(5){transition-delay:0.24s}
+.stagger>*:nth-child(6){transition-delay:0.29s}
+.stagger>*:nth-child(7){transition-delay:0.34s}
+
+/* ── Back button ── */
+.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--tx-muted);cursor:pointer;background:none;border:none;font-family:var(--font-body);padding:0;transition:color 0.2s;margin-bottom:28px}
+.back-btn:hover{color:var(--accent)}
+.back-btn i{width:14px;height:14px}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════
+     NAV
+════════════════════════════════════ -->
+<header class="nav">
+    <div class="nav-inner">
+        <span class="nav-title"><span>The</span> Desk</span>
+        <div class="nav-links">
+            <button class="nav-link active" id="nl-fleet" onclick="showFleetView()">Fleet</button>
+            <button class="nav-link" id="nl-playbook" onclick="showPage('playbook')">Playbook</button>
+            <button class="nav-link" id="nl-prep" onclick="showPage('prep')">Week Prep</button>
+        </div>
+        <div class="nav-right">
+            <span class="nav-clock" id="clock">--:--:-- MST</span>
+            <button class="nav-theme" onclick="toggleTheme()">
+                <i data-lucide="moon"></i>
+                <span id="theme-text">Dark</span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- ════════════════════════════════════
+     APP SHELL
+════════════════════════════════════ -->
+<div class="app-shell" id="app-shell">
+
+    <!-- SIDEBAR HOVER TRIGGER ZONE -->
+    <div class="sidebar-trigger-zone" id="sidebar-trigger-zone"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sb-header">
+            <div class="sb-header-row">
+                <span class="sb-title">Fleet Accounts</span>
+                <button class="sb-close" onclick="closeSidebar()"><i data-lucide="x"></i></button>
+            </div>
+            <div class="sb-summary" id="sb-summary"></div>
+        </div>
+        <div class="sb-list" id="sb-list"></div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content" id="main-content"></main>
+
+</div><!-- end app-shell -->
+
+<!-- ════════════════════════════════════
+     PLAYBOOK PAGE
+════════════════════════════════════ -->
+<div class="full-page" id="page-playbook">
+    <div class="fp-container">
+        <button class="back-btn" onclick="showFleetView()"><i data-lucide="arrow-left"></i> Back to Fleet</button>
+        <span class="eyebrow">Your Rules</span>
+        <h1 class="h1" style="margin-bottom:10px">The Playbook</h1>
+        <p class="tx-sec" style="margin-bottom:48px;max-width:560px">Hard rules built from real losses. Every rule here has a dollar amount behind it.</p>
+
+        <h3 class="h3" style="color:var(--rd);margin-bottom:16px">🔴 Hard Rules — Non-Negotiable</h3>
+        <div class="rule-card hard">
+            <div class="rule-title"><span class="rule-badge" style="background:var(--rd-bg);color:var(--rd)">Rule #1</span>No FOMC Trading</div>
+            <div class="rule-body">No entries within 2 hours of any FOMC announcement. March 18 failure cost $5,640 fleet-wide. Check the calendar every Sunday. Mark the dates. Treat them like a holiday.</div>
+        </div>
+        <div class="rule-card hard">
+            <div class="rule-title"><span class="rule-badge" style="background:var(--rd-bg);color:var(--rd)">Rule #2</span>No Rollover Trading</div>
+            <div class="rule-body">Do not trade MES during contract rollover. Spreads widen, liquidity disappears, fills are unpredictable. Wait for the new front-month to establish clean price action.</div>
+        </div>
+        <div class="rule-card hard">
+            <div class="rule-title"><span class="rule-badge" style="background:var(--rd-bg);color:var(--rd)">Rule #3</span>Daily Loss Cap — $400</div>
+            <div class="rule-body">Down $400 on the day = stop. A bad day is recoverable. A blown account is not. Walk away, review, come back tomorrow.</div>
+        </div>
+
+        <h3 class="h3" style="color:var(--gn);margin:36px 0 16px">🔵 Payout Rules</h3>
+        <div class="rule-card payout">
+            <div class="rule-title"><span class="rule-badge" style="background:var(--gn-bg);color:var(--gn)">Topstep</span>Grow to $1,000 Before Pulling</div>
+            <div class="rule-body">100% split on first $10k means every dollar counts. Pulling at $475 = $475 cash. Waiting to $1k = $1,000 cash. Waiting costs nothing — account keeps running. Default: $1k minimum before requesting.</div>
+        </div>
+        <div class="rule-card payout">
+            <div class="rule-title"><span class="rule-badge" style="background:var(--gn-bg);color:var(--gn)">Tradeify</span>$3,000 Trigger</div>
+            <div class="rule-body">TF-286 has a $3k extraction target at 90% split. Do not pull before $3k — partial pulls leave money on the table and break the momentum. Let it build, then extract.</div>
+        </div>
+        <div class="rule-card payout">
+            <div class="rule-title"><span class="rule-badge" style="background:var(--gn-bg);color:var(--gn)">Post-Payout</span>Survival Mode After Pull</div>
+            <div class="rule-body">After any payout, cut trade size 50% for 3 sessions minimum. MLL may reset. Confirm the new floor in the platform before returning to full size.</div>
+        </div>
+
+        <h3 class="h3" style="color:var(--yl);margin:36px 0 16px">🟡 Buffer Rules</h3>
+        <div class="rule-card risk">
+            <div class="rule-title"><span class="rule-badge" style="background:var(--yl-bg);color:var(--yl)">Buffer</span>Never Trade Below $800 Buffer</div>
+            <div class="rule-body">Any Topstep account with less than $800 between balance and MLL = 1 contract only. Below $500 = no new positions. The MLL breach ends the account permanently.</div>
+        </div>
+        <div class="rule-card risk">
+            <div class="rule-title"><span class="rule-badge" style="background:var(--yl-bg);color:var(--yl)">TS-235</span>High Risk Protocol</div>
+            <div class="rule-body">TS-235 floor locked at -$2,000. Only $1,281 between balance and deletion. 1-contract limit. Scalp only. No holds through any news event.</div>
+        </div>
+
+        <h3 class="h3" style="color:var(--pp);margin:36px 0 16px">🟣 Apex-Specific Rules</h3>
+        <div class="rule-card apex">
+            <div class="rule-title"><span class="rule-badge" style="background:var(--pp-bg);color:var(--pp)">Apex</span>30% Consistency Rule</div>
+            <div class="rule-body">No single day can exceed 30% of total account profit or payouts get denied. Check the consistency tracker inside each Apex account before entering large positions.</div>
+        </div>
+        <div class="rule-card apex">
+            <div class="rule-title"><span class="rule-badge" style="background:var(--pp-bg);color:var(--pp)">Apex</span>Safety Net First</div>
+            <div class="rule-body">AX-100K safety net = $103,100. AX-50K = $52,600. Both the safety net AND the 30% rule must be satisfied simultaneously before requesting a payout.</div>
+        </div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════
+     WEEK PREP PAGE
+════════════════════════════════════ -->
+<div class="full-page" id="page-prep">
+    <div class="fp-container">
+        <button class="back-btn" onclick="showFleetView()"><i data-lucide="arrow-left"></i> Back to Fleet</button>
+        <span class="eyebrow">Weekend Review</span>
+        <h1 class="h1" style="margin-bottom:10px">Week Prep Report</h1>
+        <p class="tx-sec" style="margin-bottom:48px;max-width:560px">Week of March 24–27. Reset, review, walk into Monday with a clear plan.</p>
+        <div id="prep-content"></div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════
+     SCRIPT
+════════════════════════════════════ -->
+<script>
+/* ══ DATA ══ */
+const D={
+accounts:[
+{k:'ts_204',s:'TS-204',f:'Topstep Express',ty:'ts',bal:474.99,pft:474.99,mll:-1032.59,mm:2000,db:1507.58,wd:6,wr:5,sp:1,cap:5000,el:true,rk:'safe',
+ pnl:[null,-150,-800,143,-425,191,129,195,262,-38],
+ n:'Payout eligible. 6 winning days banked. 100% split on first $10k. Growing to $1k before pulling.',
+ tgt:{l:'Optimal Pull',v:1000,g:525,d:5}},
+{k:'ts_676',s:'TS-676',f:'Topstep Express',ty:'ts',bal:-96.69,pft:-96.69,mll:-1610.52,mm:2000,db:1513.83,wd:4,wr:5,sp:1,cap:5000,el:false,rk:'medium',
+ pnl:[null,-149,-796,143,-424,191,129,195,262,-38],
+ n:'4/5 win days. $97 from breakeven. One strong green session unlocks payout eligibility.',
+ tgt:{l:'Payout Eligible',v:150,g:247,d:2}},
+{k:'ts_235',s:'TS-235',f:'Topstep Express',ty:'ts',bal:-718.59,pft:-718.59,mll:-2000,mm:2000,db:1281.41,wd:2,wr:5,sp:1,cap:5000,el:false,rk:'high',
+ pnl:[null,-242,-798,146,-421,49,128,195,262,-38],
+ n:'Floor locked at -$2,000. $1,281 buffer. 1-contract limit per playbook.',
+ tgt:{l:'Breakeven',v:0,g:719,d:6}},
+{k:'tf_286',s:'TF-286',f:'Tradeify',ty:'tf',bal:50409.75,pft:409.75,db:2410,wd:9,wr:5,sp:.9,cap:3000,el:false,rk:'medium',
+ pnl:[null,-205,-836,118,-482,191,32,166,240,-149],
+ n:'9 win days. $2,590 to $3k extraction trigger. Let it ride, do not pull early.',
+ tgt:{l:'$3k Extraction',v:3000,g:2590,d:14}},
+{k:'ax_100k',s:'AX-100K',f:'Apex Trader',ty:'ax',bal:100892.53,pft:892.53,fl:100100,db:793,sn:103100,ds:2208,sp:1,cp:.30,bd:257,el:false,rk:'medium',
+ pnl:[null,-179,-802,139,-451,207,75,189,257,-144],
+ n:'Buffer $793 above floor. $2,208 to safety net. 30% rule currently clear.',
+ tgt:{l:'Safety Net',v:103100,g:2208,d:11}},
+{k:'ax_50k',s:'AX-50K',f:'Apex Trader',ty:'ax',bal:50987.86,pft:987.86,fl:47500,db:3488,sn:52600,ds:1612,sp:1,cp:.30,bd:257,el:false,rk:'safe',
+ pnl:[null,-144,-806,142,-457,216,55,190,257,-139],
+ n:'Fleet anchor. Strongest buffer at $3,488. $1,612 to safety net.',
+ tgt:{l:'Safety Net',v:52600,g:1612,d:8}},
+{k:'ax_eval',s:'AX-EVAL',f:'Apex Trader',ty:'ev',bal:51553.97,pft:1553.97,gap:1446,el:false,rk:'na',dl:true,
+ pnl:[null,-176,-802,138,-446,281,77,410,259,-143],
+ n:'$1,446 from funding. 4 trading days remain. Account deletes April 2.',
+ tgt:{l:'Funding Target',v:53000,g:1446,d:4,dead:'APR 2'}},
+],
+log:[{d:'3/17',p:-1244},{d:'3/18',p:-5640,t:'FOMC'},{d:'3/19',p:970},{d:'3/20',p:-3106},{d:'3/23',p:1326},{d:'3/24',p:626},{d:'3/25',p:1540},{d:'3/26',p:1808},{d:'3/27',p:-687}],
+mo:{wr:.80,g:4,tot:5,st:1,sd:'red',cl:'HOT'},
+fomc:['Apr 29','May 6','Jun 17','Jul 29','Sep 16','Oct 28','Dec 16']
+};
+
+/* ══ FORMATTERS ══ */
+const fm=n=>n==null?'—':(n<0?'-$':'$')+Math.abs(Math.round(n)).toLocaleString();
+const fp=n=>n==null?'—':(n>=0?'+$':'-$')+Math.abs(Math.round(n)).toLocaleString();
+const rc=r=>({safe:'var(--gn)',medium:'var(--yl)',high:'var(--rd)',na:'var(--pp)'}[r]||'var(--tx-muted)');
+const rs=r=>({safe:'var(--gn-bg)',medium:'var(--yl-bg)',high:'var(--rd-bg)',na:'var(--pp-bg)'}[r]||'var(--bg-tertiary)');
+
+function spark(arr,h){
+    h=h||24;
+    const v=arr.filter(x=>x!=null);if(!v.length)return'';
+    const m=Math.max(...v.map(Math.abs),1);
+    return'<div class="spark" style="height:'+h+'px">'+v.map(x=>'<div class="spark-bar" style="height:'+Math.max(3,Math.abs(x)/m*h)+'px;background:'+(x>=0?'var(--gn)':'var(--rd)')+'"></div>').join('')+'</div>';
+}
+
+function svgChart(data,h){
+    h=h||220;const w=700;
+    const vals=data.filter(d=>d.p!=null);if(!vals.length)return'';
+    const mx=Math.max(...vals.map(d=>Math.abs(d.p)));
+    const step=w/(vals.length-1||1);
+    const pts=vals.map((d,i)=>[i*step,h/2-(d.p/mx)*(h/2-28)]);
+    const line=pts.map((p,i)=>(i?'L':'M')+p[0]+','+p[1]).join(' ');
+    const area=line+' L'+pts[pts.length-1][0]+','+h+' L0,'+h+' Z';
+    const dots=pts.map((p,i)=>'<circle cx="'+p[0]+'" cy="'+p[1]+'" r="5" fill="'+(vals[i].p>=0?'var(--gn)':'var(--rd)')+'" stroke="var(--bg-card)" stroke-width="2.5"/>').join('');
+    const labels=vals.map((d,i)=>'<text x="'+(i*step)+'" y="'+(h+18)+'" fill="var(--tx-muted)" font-size="10" font-weight="600" text-anchor="middle" font-family="Manrope,sans-serif">'+d.d+'</text>').join('');
+    const vl=vals.map((d,i)=>'<text x="'+(i*step)+'" y="'+(pts[i][1]-14)+'" fill="'+(d.p>=0?'var(--gn)':'var(--rd)')+'" font-size="10" font-weight="700" text-anchor="middle" font-family="Inter,sans-serif">'+fp(d.p)+'</text>').join('');
+    return'<svg viewBox="-14 -28 '+(w+28)+' '+(h+52)+'" style="width:100%;height:auto;overflow:visible">'
+        +'<defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--gn)" stop-opacity=".15"/><stop offset="100%" stop-color="var(--gn)" stop-opacity="0"/></linearGradient></defs>'
+        +'<line x1="0" y1="'+(h/2)+'" x2="'+w+'" y2="'+(h/2)+'" stroke="var(--border)" stroke-dasharray="5,4"/>'
+        +'<path d="'+area+'" fill="url(#ag)"/>'
+        +'<path d="'+line+'" fill="none" stroke="var(--gn)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>'
+        +dots+vl+labels+'</svg>';
+}
+
+/* ══════════════════════════════════
+   SIDEBAR
+══════════════════════════════════ */
+function buildSidebar(){
+    const tot=D.accounts.reduce((s,a)=>s+(a.pft||0),0);
+    const eg=D.accounts.filter(a=>a.el).length;
+    const atRisk=D.accounts.filter(a=>a.rk==='high').length;
+    const last=D.log[D.log.length-1].p;
+
+    // Fleet summary cards
+    document.getElementById('sb-summary').innerHTML=
+        '<div class="sb-stat">'
+            +'<div class="sb-stat-label">Fleet P&L</div>'
+            +'<div class="sb-stat-val" style="color:'+(tot>=0?'var(--gn)':'var(--rd)')+'">'+fp(tot)+'</div>'
+            +'<div class="sb-stat-sub">'+fp(last)+' today</div>'
+        +'</div>'
+        +'<div class="sb-stat">'
+            +'<div class="sb-stat-label">Status</div>'
+            +'<div class="sb-stat-val" style="color:var(--gn)">'+eg+' eligible</div>'
+            +'<div class="sb-stat-sub" style="color:'+(atRisk>0?'var(--rd)':'var(--tx-muted)')+'">'+atRisk+' at risk</div>'
+        +'</div>';
+
+    // Account list
+    document.getElementById('sb-list').innerHTML=D.accounts.map(a=>{
+        const lastPnl=a.pnl[a.pnl.length-1];
+        const pftColor=(a.pft||0)>=0?'var(--gn)':'var(--rd)';
+        const statusTag=a.el
+            ?'<span class="sb-tag" style="background:var(--gn-bg);color:var(--gn)">Eligible</span>'
+            :a.dl
+            ?'<span class="sb-tag" style="background:var(--rd-bg);color:var(--rd)">Deadline</span>'
+            :'<span class="sb-tag" style="background:'+rs(a.rk)+';color:'+rc(a.rk)+'">'+a.rk+'</span>';
+        const miniSpark=function(){
+            const v=a.pnl.filter(x=>x!=null).slice(-5);
+            const m=Math.max(...v.map(Math.abs),1);
+            return v.map(x=>'<div class="sb-spark-bar" style="height:'+Math.max(3,Math.abs(x)/m*18)+'px;background:'+(x>=0?'var(--gn)':'var(--rd)')+'"></div>').join('');
+        }();
+        return'<div class="sb-account" id="sb-'+a.k+'" onclick="showAccountView(\''+a.k+'\')">'
+            +'<div class="sb-stripe" style="background:'+rc(a.rk)+'"></div>'
+            +'<div class="sb-body">'
+                +'<div class="sb-top">'
+                    +'<div><div class="sb-name">'+a.s+'</div><div class="sb-firm">'+a.f+'</div></div>'
+                    +'<div style="text-align:right">'
+                        +'<div class="sb-pnl" style="color:'+pftColor+'">'+fp(a.pft||0)+'</div>'
+                        +statusTag
+                    +'</div>'
+                +'</div>'
+                +'<div class="sb-spark">'+miniSpark+'</div>'
+                +(a.wd!=null?'<div class="tx-sm" style="font-size:10px;margin-top:5px">'+a.wd+'/'+a.wr+' win days'+( lastPnl!=null?' · '+fp(lastPnl)+' today':'')+'</div>':'')
+            +'</div>'
+        +'</div>';
+    }).join('');
+}
+
+function openSidebar(){
+    document.getElementById('sidebar').classList.add('open');
+    document.getElementById('sidebar-overlay').classList.add('open');
+}
+function closeSidebar(){
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebar-overlay').classList.remove('open');
+}
+function setActiveAccount(key){
+    document.querySelectorAll('.sb-account').forEach(el=>el.classList.remove('active'));
+    if(key)document.getElementById('sb-'+key)?.classList.add('active');
+}
+
+/* ══════════════════════════════════
+   FLEET VIEW
+══════════════════════════════════ */
+function showFleetView(){
+    setActiveAccount(null);
+    setNavActive('nl-fleet');
+    document.querySelectorAll('.full-page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('app-shell').style.display='';
+
+    const tot=D.accounts.reduce((s,a)=>s+(a.pft||0),0);
+    const last=D.log[D.log.length-1].p;
+    const wk=D.log.slice(-5).reduce((s,d)=>s+d.p,0);
+    const m=D.mo;
+
+    // Build ticker items
+    const ev=D.accounts.find(a=>a.dl);
+    const eg=D.accounts.filter(a=>a.el);
+    const oneAway=D.accounts.filter(a=>a.wd===a.wr-1&&!a.el);
+    const highRisk=D.accounts.filter(a=>a.rk==='high');
+    const tickerItems=[];
+    if(ev)tickerItems.push({c:'var(--rd)',t:'AX-EVAL: '+ev.tgt.d+' days left · '+fm(Math.ceil(ev.gap/ev.tgt.d))+'/day'});
+    eg.forEach(a=>tickerItems.push({c:'var(--gn)',t:a.s+': Payout eligible'}));
+    oneAway.forEach(a=>tickerItems.push({c:'var(--yl)',t:a.s+': 1 win away'}));
+    highRisk.forEach(a=>tickerItems.push({c:'var(--rd)',t:a.s+': '+fm(a.db)+' to MLL'}));
+    D.accounts.filter(a=>a.tgt&&!a.dl&&!a.el&&a.ty!=='ev').slice(0,2).forEach(a=>tickerItems.push({c:'var(--tx-muted)',t:a.s+': '+fm(a.tgt.g)+' to '+a.tgt.l}));
+
+    const tickerHtml=tickerItems.map(function(t,i){
+        return (i>0?'<span class="ticker-sep">·</span>':'')
+            +'<div class="ticker-item"><span class="ticker-dot" style="background:'+t.c+'"></span>'+t.t+'</div>';
+    }).join('');
+
+    // Build heatmap blocks
+    const heatmapHtml=D.accounts.map(function(a){
+        const lastP=a.pnl[a.pnl.length-1];
+        const pftColor=(a.pft||0)>=0?'var(--gn)':'var(--rd)';
+        const barColor=a.el?'var(--gn)':a.dl?'var(--rd)':rc(a.rk);
+        const statusLabel=a.el?'Eligible':a.dl?'Deadline':a.rk;
+        return '<div class="hm-block" onclick="showAccountView(\''+a.k+'\')" style="border-top:3px solid '+barColor+'">'
+            +'<div class="hm-name">'+a.s+'</div>'
+            +'<div class="hm-pnl" style="color:'+pftColor+'">'+fp(a.pft||0)+'</div>'
+            +'<div class="hm-sub">'+statusLabel+'</div>'
+        +'</div>';
+    }).join('');
+
+    // Build next move card
+    let nmIcon,nmBg,nmColor,nmLabel,nmTitle,nmDesc,nmKey;
+    if(ev){
+        nmIcon='clock';nmBg='var(--rd-bg)';nmColor='var(--rd)';nmLabel='Highest priority';
+        nmTitle='AX-EVAL needs '+fm(Math.ceil(ev.gap/ev.tgt.d))+' per day';
+        nmDesc='Account deletes April 2. '+ev.tgt.d+' trading days remain. '+fm(ev.gap)+' total gap.';
+        nmKey=ev.k;
+    }else if(eg.length){
+        const a=eg[0];
+        nmIcon='trophy';nmBg='var(--gn-bg)';nmColor='var(--gn)';nmLabel='Ready to pull';
+        nmTitle=a.s+' — Payout eligible';
+        nmDesc='Growing to $1k before requesting. '+fp(a.pft)+' profit. 100% split.';
+        nmKey=a.k;
+    }else{
+        nmIcon='target';nmBg='var(--accent-bg)';nmColor='var(--accent)';nmLabel='Next goal';
+        nmTitle='Build account balances';nmDesc='No accounts eligible yet.';nmKey='ts_204';
+    }
+
+    // Build 5-day roadmap
+    const roadmapDays=[
+        {d:'Mon 30',focus:'AX-EVAL: +'+fm(Math.ceil((ev?ev.gap:1446)/4)),note:'TS-676: chase 5th win'},
+        {d:'Tue 31',focus:'AX-EVAL: push pace',note:'All accounts normal'},
+        {d:'Wed 1',focus:'AX-EVAL: final push',note:'1 day left after this'},
+        {d:'Thu 2',focus:'AX-EVAL: DEADLINE',note:'Account deletes today'},
+        {d:'Fri 3',focus:'TS-204: grow to $1k',note:'Post-deadline reset'}
+    ];
+    const roadmapHtml=roadmapDays.map(function(r){
+        return '<div class="rm-day"><div class="rm-date">'+r.d+'</div><div class="rm-label">'+r.focus+'</div><div class="rm-note">'+r.note+'</div></div>';
+    }).join('');
+
+    // Date / session info
+    const now=new Date();
+    const dayNames=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const monthNames=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const dateStr=dayNames[now.getDay()]+', '+monthNames[now.getMonth()]+' '+now.getDate();
+    const isWeekend=now.getDay()===0||now.getDay()===6;
+    const sessionLabel=isWeekend?'Markets Closed':'Trading Session';
+    const sessionColor=isWeekend?'var(--tx-muted)':'var(--gn)';
+    const sessionBg=isWeekend?'var(--bg-tertiary)':'var(--gn-bg)';
+
+    // Duplicate ticker items for seamless loop
+    const tickerDupe=tickerHtml+tickerHtml;
+
+    document.getElementById('main-content').innerHTML=
+        // HERO — two column: left context + right P&L
+        '<div class="fleet-hero">'
+            +'<div class="container">'
+                +'<div class="hero-layout fade-up">'
+                    // LEFT — date, session, quick stats
+                    +'<div class="hero-left">'
+                        +'<div class="hero-date">'+dateStr+'</div>'
+                        +'<div class="hero-session" style="color:'+sessionColor+';background:'+sessionBg+'">'+sessionLabel+'</div>'
+                        +'<div class="hero-mini-stat">'
+                            +'<div class="hero-mini-label">Win Rate</div>'
+                            +'<div class="hero-mini-val" style="color:var(--gn)">'+Math.round(m.wr*100)+'%</div>'
+                        +'</div>'
+                        +'<div class="hero-mini-stat">'
+                            +'<div class="hero-mini-label">Momentum</div>'
+                            +'<div class="hero-mini-val" style="color:'+(m.sd==='green'?'var(--gn)':'var(--yl)')+'">'+m.cl+'</div>'
+                        +'</div>'
+                        +'<div style="margin-top:4px"><span class="tx-sm">7 accounts · 6 funded · 1 eval</span></div>'
+                    +'</div>'
+                    // RIGHT — big P&L
+                    +'<div class="hero-right">'
+                        +'<span class="eyebrow">Total Fleet P&L</span>'
+                        +'<div class="metric metric-hero" style="color:'+(tot>=0?'var(--gn)':'var(--rd)')+';margin-bottom:20px">'+fp(tot)+'</div>'
+                        +'<div class="delta-row">'
+                            +'<span class="delta '+(last>=0?'delta-up':'delta-dn')+'">'+fp(last)+' today</span>'
+                            +'<span class="delta '+(wk>=0?'delta-up':'delta-dn')+'">'+fp(wk)+' this week</span>'
+                            +'<div class="pill">'
+                                +'<span class="pill-dot" style="background:var(--gn)"></span>'
+                                +m.g+'/'+m.tot+' green'
+                            +'</div>'
+                        +'</div>'
+                    +'</div>'
+                +'</div>'
+            +'</div>'
+        +'</div>'
+
+        // TICKER — carousel marquee
+        +'<div class="ticker"><div class="container"><div class="ticker-inner fade-up"><div class="ticker-track">'+tickerDupe+'</div></div></div></div>'
+
+        // HEATMAP
+        +'<div class="heatmap"><div class="container"><div class="heatmap-grid fade-up">'+heatmapHtml+'</div></div></div>'
+
+        // CHART
+        +'<div class="fleet-chart-section">'
+            +'<div class="container">'
+                +'<div class="fade-up" style="margin-bottom:20px">'
+                    +'<span class="eyebrow">Performance</span>'
+                    +'<h2 class="h2">Fleet daily P&L</h2>'
+                +'</div>'
+                +'<div class="card fade-up"><div class="card-body" style="padding:28px 32px">'+svgChart(D.log,220)+'</div></div>'
+            +'</div>'
+        +'</div>'
+
+        // NEXT MOVE
+        +'<div class="next-move"><div class="container">'
+            +'<div class="nm-card fade-up" onclick="showAccountView(\''+nmKey+'\')">'
+                +'<div class="nm-icon" style="background:'+nmBg+'"><i data-lucide="'+nmIcon+'" style="color:'+nmColor+'"></i></div>'
+                +'<div class="nm-body">'
+                    +'<div class="nm-label" style="color:'+nmColor+'">'+nmLabel+'</div>'
+                    +'<div class="nm-title">'+nmTitle+'</div>'
+                    +'<div class="nm-desc">'+nmDesc+'</div>'
+                +'</div>'
+                +'<i data-lucide="chevron-right" class="nm-arrow" style="width:20px;height:20px"></i>'
+            +'</div>'
+        +'</div></div>'
+
+        // 5-DAY ROADMAP
+        +'<div class="roadmap"><div class="container">'
+            +'<div class="fade-up" style="margin-bottom:16px">'
+                +'<span class="eyebrow">Next 5 Trading Days</span>'
+                +'<h2 class="h2">Roadmap</h2>'
+            +'</div>'
+            +'<div class="roadmap-grid fade-up">'+roadmapHtml+'</div>'
+        +'</div></div>';
+
+    setTimeout(()=>{
+        document.querySelectorAll('.fade-up').forEach(el=>observer.observe(el));
+        lucide.createIcons();
+    },60);
+    window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ══════════════════════════════════
+   ACCOUNT DETAIL VIEW
+══════════════════════════════════ */
+function showAccountView(key){
+    const a=D.accounts.find(x=>x.k===key);if(!a)return;
+    setActiveAccount(key);
+    setNavActive(null);
+    document.querySelectorAll('.full-page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('app-shell').style.display='';
+    closeSidebar();
+
+    let h='';
+
+    /* Alerts */
+    if(a.el)h+='<div class="alert alert-success"><i data-lucide="trophy"></i>Payout eligible — '+a.wd+' winning days · '+Math.round(a.sp*100)+'% split'+(a.sp===1?' on first $10k':'')+'</div>';
+    if(a.dl)h+='<div class="alert alert-danger"><i data-lucide="clock"></i><strong>Deadline '+a.tgt.dead+':</strong> '+fm(a.tgt.g)+' in '+a.tgt.d+' days · '+fm(Math.ceil(a.tgt.g/a.tgt.d))+'/day needed</div>';
+    if(a.rk==='high')h+='<div class="alert alert-danger"><i data-lucide="alert-triangle"></i>'+fm(a.db)+' to MLL breach — 1-contract limit per playbook</div>';
+    if(a.cp&&a.pft>0&&a.bd>a.pft*a.cp)h+='<div class="alert alert-danger"><i data-lucide="percent"></i>30% consistency rule breached — payout may be denied</div>';
+    if(a.wd===a.wr-1&&!a.el)h+='<div class="alert alert-warn"><i data-lucide="zap"></i>One more winning session unlocks payout eligibility on this account.</div>';
+
+    /* Hero */
+    h+='<div style="margin-bottom:32px">'
+        +'<span class="eyebrow">'+a.f+'</span>'
+        +'<h1 class="h1" style="margin-bottom:10px;font-size:48px">'+a.s+'</h1>'
+        +'<div class="metric-hero" style="font-size:52px;color:'+(a.ty==='ev'?'var(--tx-primary)':(a.pft||0)>=0?'var(--gn)':'var(--rd)')+';margin-bottom:14px">'+fm(a.bal)+'</div>'
+        +'<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">'
+            +'<span class="delta '+((a.pft||0)>=0?'delta-up':'delta-dn')+'">'+fp(a.pft||0)+' profit</span>'
+            +(a.wd!=null?'<span class="tx-sm">'+a.wd+'/'+a.wr+' win days</span>':'')
+            +'<span class="tag" style="background:'+rs(a.rk)+';color:'+rc(a.rk)+'">'+a.rk+'</span>'
+        +'</div>'
+    +'</div>';
+
+    /* Stats cards */
+    h+='<div class="grid grid-3" style="margin-bottom:32px">'
+        +'<div class="card"><div class="card-body"><span class="eyebrow">'+(a.db?'Buffer to MLL':'Gap to Fund')+'</span>'
+            +'<div class="metric-lg" style="color:'+((a.db||0)>1500?'var(--gn)':(a.db||0)>800?'var(--yl)':'var(--rd)')+';margin-top:8px">'+fm(a.db||a.gap||0)+'</div>'
+        +'</div></div>'
+        +'<div class="card"><div class="card-body"><span class="eyebrow">Split</span>'
+            +'<div class="metric-lg" style="margin-top:8px">'+Math.round((a.sp||1)*100)+'%</div>'
+        +'</div></div>'
+        +'<div class="card"><div class="card-body"><span class="eyebrow">Payout Cap</span>'
+            +'<div class="metric-lg" style="margin-top:8px">'+fm(a.cap||0)+'</div>'
+        +'</div></div>'
+    +'</div>';
+
+    /* MLL Tracker (Topstep) */
+    if(a.mll!=null){
+        const rng=Math.abs(a.mll)+Math.max(Math.abs(a.bal),200);
+        const pct=Math.max(4,Math.min(95,(a.bal-a.mll)/rng*100));
+        h+='<div class="card" style="margin-bottom:20px"><div class="card-body">'
+            +'<span class="eyebrow">MLL Tracker</span>'
+            +'<h3 class="h3" style="margin-bottom:14px">Maximum Loss Limit</h3>'
+            +'<div class="mll-bar-outer"><div class="mll-bar-inner" style="width:'+pct+'%;background:'+rc(a.rk)+'"></div></div>'
+            +'<div style="display:flex;justify-content:space-between;font-size:11px;font-family:var(--font-mono);font-weight:700;font-variant-numeric:tabular-nums;margin-bottom:16px">'
+                +'<span style="color:var(--rd)">Floor '+fm(a.mll)+'</span>'
+                +'<span style="color:'+rc(a.rk)+'">'+fm(a.db)+' safe</span>'
+                +'<span>Balance '+fp(a.bal)+'</span>'
+            +'</div>'
+            +'<div class="detail-row"><span class="detail-label">Distance to Breach</span><span class="detail-value" style="color:'+(a.db>1500?'var(--gn)':a.db>800?'var(--yl)':'var(--rd)')+'">'+fm(a.db)+'</span></div>'
+            +'<div class="detail-row"><span class="detail-label">MLL Type</span><span class="detail-value">'+(a.mll===-a.mm?'At Floor (locked)':'Trailing')+'</span></div>'
+            +'<div class="detail-row"><span class="detail-label">Consistency Rule</span><span class="detail-value" style="color:var(--gn)">NONE (Topstep funded)</span></div>'
+        +'</div></div>';
+    }
+
+    /* Win Days (Topstep) */
+    if(a.wd!=null&&a.ty==='ts'){
+        const done=Math.min(a.wd,a.wr);
+        const dots=Array.from({length:a.wr},function(_,i){return'<div class="wd-dot'+(i<done?' filled':'')+'"></div>';}).join('');
+        h+='<div class="card" style="margin-bottom:20px"><div class="card-body">'
+            +'<span class="eyebrow">Win Days Progress</span>'
+            +'<h3 class="h3" style="margin-bottom:12px">'+done+' of '+a.wr+' winning days</h3>'
+            +'<div class="wd-dots">'+dots+'</div>'
+            +'<div style="font-size:13px;font-weight:700;color:'+(a.el?'var(--gn)':done>=a.wr-1?'var(--yl)':'var(--tx-muted)')+'">'+
+                (a.el?'Payout eligible — ready to request':done>=a.wr?'Requirements met':(a.wr-done)+' more session'+(a.wr-done>1?'s':'')+' needed')
+            +'</div>'
+        +'</div></div>';
+    }
+
+    /* Apex 30% Consistency */
+    if(a.cp&&a.pft>0){
+        const bp=a.bd/a.pft*100;
+        const ok=a.bd<=a.pft*a.cp;
+        const ma=a.pft*a.cp;
+        h+='<div class="card" style="margin-bottom:20px"><div class="card-body">'
+            +'<span class="eyebrow">Apex 30% Consistency Rule</span>'
+            +'<h3 class="h3" style="margin-bottom:12px">Best day cannot exceed 30% of profit</h3>'
+            +'<div class="gauge-wrap">'
+                +'<div class="gauge-track">'
+                    +'<div class="gauge-fill" style="width:'+Math.min(100,bp/40*100)+'%;background:'+(ok?'var(--gn)':'var(--rd)')+'"></div>'
+                    +'<div class="gauge-mark" style="left:'+(a.cp*100/40*100)+'%"></div>'
+                +'</div>'
+                +'<div class="gauge-val" style="color:'+(ok?'var(--gn)':'var(--rd)')+'">'+bp.toFixed(1)+'%</div>'
+            +'</div>'
+            +'<div class="detail-row"><span class="detail-label">Best Single Day</span><span class="detail-value">'+fp(a.bd)+'</span></div>'
+            +'<div class="detail-row"><span class="detail-label">Max Allowed</span><span class="detail-value">'+fm(ma)+'</span></div>'
+            +'<div class="detail-row"><span class="detail-label">Headroom</span><span class="detail-value" style="color:'+(ok?'var(--gn)':'var(--rd)')+'">'+( ok?fm(ma-a.bd):'Over by '+fm(a.bd-ma))+'</span></div>'
+            +'<div class="detail-row"><span class="detail-label">Payout Status</span><span class="detail-value" style="color:'+(ok?'var(--gn)':'var(--rd)')+'">'+( ok?'CLEAR':'BLOCKED')+'</span></div>'
+        +'</div></div>';
+    }
+
+    /* Payout Simulator (if eligible) */
+    if(a.el&&a.pft>0){
+        const scenarios=[
+            {l:'Pull Now',a:Math.min(a.cap,a.pft)},
+            {l:'At $500',a:500},
+            {l:'At $1,000',a:1000,rec:true},
+            {l:'At $2,000',a:2000}
+        ].filter(s=>s.a<=a.cap);
+        h+='<div class="card" style="margin-bottom:20px"><div class="card-body">'
+            +'<span class="eyebrow">Payout Simulator</span>'
+            +'<h3 class="h3" style="margin-bottom:16px">When should you pull? — '+Math.round(a.sp*100)+'% split</h3>'
+            +'<div class="sim-grid">'
+            +scenarios.map(function(s){
+                const net=Math.round(Math.min(s.a,a.cap)*a.sp);
+                const gap=Math.max(0,s.a-a.pft);
+                return '<div class="sc-card'+(s.rec?' rec':'')+'">'+( s.rec?'<div class="sc-badge">Recommended</div>':'')
+                    +'<div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--tx-muted);margin-bottom:10px">'+s.l+'</div>'
+                    +'<div class="metric-lg" style="color:var(--gn);margin-bottom:10px">'+fm(net)+'</div>'
+                    +'<div class="detail-row" style="padding:7px 0"><span class="detail-label" style="font-size:12px">You keep</span><span class="detail-value" style="font-size:12px;color:var(--gn)">'+fm(net)+'</span></div>'
+                    +'<div class="detail-row" style="padding:7px 0"><span class="detail-label" style="font-size:12px">Still need</span><span class="detail-value" style="font-size:12px;color:'+(gap>0?'var(--yl)':'var(--gn)')+'">'+( gap>0?fm(gap):'Ready now')+'</span></div>'
+                +'</div>';
+            }).join('')
+            +'</div>'
+        +'</div></div>';
+    }
+
+    /* Target countdown */
+    if(a.tgt){
+        const t=a.tgt;
+        const ds=['Mar 30','Mar 31','Apr 1','Apr 2','Apr 3','Apr 6','Apr 7','Apr 8','Apr 9','Apr 10'];
+        const sl=ds.slice(0,Math.max(1,t.d||5));
+        const dy=t.g>0?Math.ceil(t.g/sl.length):0;
+        const pct=t.g>0?Math.max(0,Math.min(100,(t.v-t.g)/Math.max(Math.abs(t.v),1)*100)):100;
+        h+='<div class="card" style="margin-bottom:20px"><div class="card-body">'
+            +'<span class="eyebrow">Target: '+t.l+'</span>'
+            +'<h3 class="h3" style="margin-bottom:14px">'+fm(t.g)+' to go'+(t.dead?' · Deadline '+t.dead:'')+'</h3>'
+            +'<div class="progress" style="margin-bottom:7px"><div class="progress-fill" style="width:'+pct+'%"></div></div>'
+            +'<div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:20px">'
+                +'<span class="tx-sm">'+pct.toFixed(0)+'% complete</span>'
+                +'<span style="color:var(--accent);font-weight:700;font-family:var(--font-mono)">'+fm(dy)+'/day</span>'
+            +'</div>'
+            +'<div class="cd-grid">'+sl.map(function(d,i){
+                return '<div class="cd-item'+(i===0?' next':'')+'"><div class="cd-date">'+d+'</div><div class="cd-val">+'+fm(dy)+'</div><div class="cd-rem">'+fm(Math.max(0,Math.round(t.g-dy*(i+1))))+' left</div></div>';
+            }).join('')+'</div>'
+        +'</div></div>';
+    }
+
+    /* P&L History */
+    const dt=['Mar 16','Mar 17','Mar 18','Mar 19','Mar 20','Mar 23','Mar 24','Mar 25','Mar 26','Mar 27'];
+    h+='<div class="card" style="margin-bottom:20px"><div class="card-body">'
+        +'<span class="eyebrow">P&L History</span>'
+        +'<h3 class="h3" style="margin-bottom:14px">Daily performance</h3>'
+        +spark(a.pnl,44)
+        +'<table class="data-table" style="margin-top:14px"><thead><tr><th>Date</th><th>P&L</th><th>Cumulative</th></tr></thead><tbody>';
+    let cu=0;
+    a.pnl.forEach(function(p,i){
+        if(p!=null)cu+=p;
+        h+='<tr><td style="color:var(--tx-muted)">'+( dt[i]||'')+'</td><td style="color:'+(p==null?'':p>=0?'var(--gn)':'var(--rd)')+'">'+( p!=null?fp(p):'—')+'</td><td>'+fm(cu)+'</td></tr>';
+    });
+    h+='</tbody></table></div></div>';
+
+    /* Notes */
+    h+='<div class="card"><div class="card-body"><span class="eyebrow">Notes</span><p style="font-size:14px;line-height:1.7;color:var(--tx-secondary);margin-top:8px">'+a.n+'</p></div></div>';
+
+    document.getElementById('main-content').innerHTML=
+        '<div style="padding:36px 0 80px"><div class="container">'
+        +'<button class="back-btn" onclick="showFleetView()"><i data-lucide="arrow-left"></i> Fleet overview</button>'
+        +h
+        +'</div></div>';
+
+    setTimeout(function(){lucide.createIcons();},60);
+    window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ══════════════════════════════════
+   FULL-PAGE NAVIGATION
+══════════════════════════════════ */
+function showPage(page){
+    document.getElementById('app-shell').style.display='none';
+    document.querySelectorAll('.full-page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('page-'+page).classList.add('active');
+    setNavActive('nl-'+page);
+    if(page==='prep')buildPrep();
+    setTimeout(function(){lucide.createIcons();},60);
+    window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ══════════════════════════════════
+   WEEK PREP
+══════════════════════════════════ */
+function buildPrep(){
+    const tot=D.accounts.reduce((s,a)=>s+(a.pft||0),0);
+    const wk=D.log.slice(-5).reduce((s,d)=>s+d.p,0);
+    const wins=D.log.slice(-5).filter(d=>d.p>0).length;
+    const ev=D.accounts.find(a=>a.dl);
+
+    document.getElementById('prep-content').innerHTML=
+        '<h3 class="h3" style="margin-bottom:18px">📊 Week in Review: Mar 24–27</h3>'
+        +'<div class="grid grid-4" style="margin-bottom:24px">'
+            +'<div class="prep-stat"><div class="tx-sm">Week P&L</div><div class="prep-stat-val" style="color:'+(wk>=0?'var(--gn)':'var(--rd)')+'">'+fp(wk)+'</div></div>'
+            +'<div class="prep-stat"><div class="tx-sm">Win Rate</div><div class="prep-stat-val" style="color:var(--gn)">'+wins+'/4</div></div>'
+            +'<div class="prep-stat"><div class="tx-sm">Best Day</div><div class="prep-stat-val" style="color:var(--gn)">+$1,808</div><div class="tx-sm">Career best</div></div>'
+            +'<div class="prep-stat"><div class="tx-sm">Fleet Total</div><div class="prep-stat-val" style="color:'+(tot>=0?'var(--gn)':'var(--rd)')+'">'+fp(tot)+'</div></div>'
+        +'</div>'
+        +'<div class="card" style="margin-bottom:32px"><div class="card-body">'
+            +'<div class="detail-row"><span class="detail-label">Best session</span><span class="detail-value" style="color:var(--gn)">Mar 26 — +$1,808 (career best)</span></div>'
+            +'<div class="detail-row"><span class="detail-label">Red session</span><span class="detail-value" style="color:var(--rd)">Mar 27 — -$687 (technical issues)</span></div>'
+            +'<div class="detail-row"><span class="detail-label">Momentum</span><span class="detail-value" style="color:var(--gn)">HOT — 80% win rate</span></div>'
+            +'<div class="detail-row"><span class="detail-label">Big win</span><span class="detail-value" style="color:var(--gn)">TS-204 hit 5th win day — payout eligible</span></div>'
+        +'</div></div>'
+
+        +'<h3 class="h3" style="margin-bottom:18px">📋 Monday Game Plan (Mar 30)</h3>'
+        +'<div class="alert alert-danger">'+( ev?'<i data-lucide="clock"></i><strong>AX-EVAL:</strong> Need +'+fm(Math.ceil((ev.gap||1446)/(ev.tgt&&ev.tgt.d||4)))+'/day before April 2. Highest priority all week.':'')+'</div>'
+        +'<div class="alert alert-success"><i data-lucide="trophy"></i><strong>TS-204:</strong> Payout eligible. Growing to $1,000 before requesting.</div>'
+        +'<div class="card" style="margin-bottom:32px"><div class="card-body">'
+            +'<div class="detail-row"><span class="detail-label">TS-235</span><span class="detail-value" style="color:var(--rd)">High risk — 1 contract only. Floor locked.</span></div>'
+            +'<div class="detail-row"><span class="detail-label">TS-676</span><span class="detail-value" style="color:var(--yl)">4/5 win days — one more session for eligibility</span></div>'
+            +'<div class="detail-row"><span class="detail-label">Apex accounts</span><span class="detail-value">30% rule clear. Normal size OK.</span></div>'
+            +'<div class="detail-row"><span class="detail-label">TF-286</span><span class="detail-value">$2,590 to $3k trigger. Let it build.</span></div>'
+        +'</div></div>'
+
+        +'<h3 class="h3" style="margin-bottom:18px">🎯 Week Targets & Rules</h3>'
+        +'<div class="grid grid-2">'
+            +'<div class="card"><div class="card-body"><span class="eyebrow">Must Accomplish</span>'
+                +'<ul style="margin-top:12px;list-style:none;display:flex;flex-direction:column;gap:10px">'
+                    +'<li style="display:flex;gap:10px"><span style="color:var(--rd);font-weight:800">→</span><span class="tx-sec" style="font-size:13px">Fund AX-EVAL: +$1,446 by Apr 2</span></li>'
+                    +'<li style="display:flex;gap:10px"><span style="color:var(--yl);font-weight:800">→</span><span class="tx-sec" style="font-size:13px">TS-676: Get 5th win day</span></li>'
+                    +'<li style="display:flex;gap:10px"><span style="color:var(--gn);font-weight:800">→</span><span class="tx-sec" style="font-size:13px">TS-204: Grow to $1k for payout</span></li>'
+                +'</ul>'
+            +'</div></div>'
+            +'<div class="card"><div class="card-body"><span class="eyebrow">Risk Rules This Week</span>'
+                +'<ul style="margin-top:12px;list-style:none;display:flex;flex-direction:column;gap:10px">'
+                    +'<li style="display:flex;gap:10px"><span style="color:var(--rd);font-weight:800">✕</span><span class="tx-sec" style="font-size:13px">TS-235: 1 contract max, scalp only</span></li>'
+                    +'<li style="display:flex;gap:10px"><span style="color:var(--rd);font-weight:800">✕</span><span class="tx-sec" style="font-size:13px">No holds through economic releases</span></li>'
+                    +'<li style="display:flex;gap:10px"><span style="color:var(--rd);font-weight:800">✕</span><span class="tx-sec" style="font-size:13px">Daily loss cap: $400 then stop</span></li>'
+                +'</ul>'
+            +'</div></div>'
+        +'</div>'
+        +'<div style="margin-top:32px"><span class="eyebrow">FOMC No-Trade Dates</span>'
+            +'<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px">'
+                +D.fomc.map(d=>'<span class="tag" style="background:var(--rd-bg);color:var(--rd);font-size:11px;padding:6px 14px">'+d+'</span>').join('')
+            +'</div>'
+        +'</div>';
+    setTimeout(function(){lucide.createIcons();},60);
+}
+
+/* ══════════════════════════════════
+   HELPERS
+══════════════════════════════════ */
+function setNavActive(id){
+    document.querySelectorAll('.nav-link').forEach(el=>el.classList.remove('active'));
+    if(id)document.getElementById(id)?.classList.add('active');
+}
+
+/* ══ SCROLL OBSERVER ══ */
+const observer=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target);}});
+},{threshold:0.08,rootMargin:'0px 0px -20px 0px'});
+
+/* ══ CLOCK ══ */
+!function tic(){
+    const n=new Date,u=n.getTime()+n.getTimezoneOffset()*6e4-7*36e5,m=new Date(u);
+    const h=m.getHours(),mi=m.getMinutes(),s=m.getSeconds();
+    document.getElementById('clock').textContent=String(h%12||12).padStart(2,'0')+':'+String(mi).padStart(2,'0')+':'+String(s).padStart(2,'0')+' '+(h>=12?'PM':'AM')+' MST';
+    setTimeout(tic,1e3);
+}();
+
+/* ══ THEME ══ */
+function toggleTheme(){
+    const d=document.documentElement.dataset,l=d.theme==='dark';
+    d.theme=l?'light':'dark';
+    document.getElementById('theme-text').textContent=l?'Light':'Dark';
+    localStorage.setItem('pc-theme',d.theme);
+}
+const saved=localStorage.getItem('pc-theme');
+if(saved){document.documentElement.dataset.theme=saved;if(saved==='light')document.getElementById('theme-text').textContent='Light';}
+
+/* ══ SIDEBAR HOVER LOGIC ══ */
+const triggerZone=document.getElementById('sidebar-trigger-zone');
+const sidebarEl=document.getElementById('sidebar');
+const overlayEl=document.getElementById('sidebar-overlay');
+let sidebarCloseTimer=null;
+
+triggerZone.addEventListener('mouseenter',function(){
+    clearTimeout(sidebarCloseTimer);
+    openSidebar();
+});
+
+sidebarEl.addEventListener('mouseenter',function(){
+    clearTimeout(sidebarCloseTimer);
+});
+
+sidebarEl.addEventListener('mouseleave',function(){
+    sidebarCloseTimer=setTimeout(function(){closeSidebar();},300);
+});
+
+overlayEl.addEventListener('mouseenter',function(){
+    sidebarCloseTimer=setTimeout(function(){closeSidebar();},200);
+});
+
+/* ══ INIT ══ */
+buildSidebar();
+showFleetView();
+</script>
+</body>
+</html>

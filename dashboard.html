@@ -1,0 +1,3186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>PAYOUT COMMAND // Prop Firm Fleet Terminal</title>
+
+<!-- PWA Meta -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#00f0ff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PayoutCMD">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    --bg: #0a0e17;
+    --bg2: #0d1117;
+    --bg3: #111827;
+    --card: #0f1923;
+    --card-hover: #141f2d;
+    --card-border: #1b2838;
+    --card-border-hi: #2a3a4e;
+    --text: #e2e8f0;
+    --text-dim: #8b9ab5;
+    --text-muted: #4a5568;
+    --green: #00d4aa;
+    --green-dim: #0a3d2e;
+    --green-glow: rgba(0, 212, 170, 0.12);
+    --red: #ff4757;
+    --red-dim: #3d0a0a;
+    --red-glow: rgba(255, 71, 87, 0.12);
+    --yellow: #ffa502;
+    --yellow-dim: #3d2e0a;
+    --yellow-glow: rgba(255, 165, 2, 0.12);
+    --blue: #3b82f6;
+    --blue-dim: #1e3a5f;
+    --purple: #a855f7;
+    --purple-dim: #2d1854;
+    --cyan: #00f0ff;
+    --cyan-dim: #0a2e3d;
+    --cyan-glow: rgba(0, 240, 255, 0.08);
+    --orange: #ff6b35;
+    --terminal-green: #00ff88;
+    --font: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    overflow-x: hidden;
+    font-size: 15px;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--card-border-hi); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ── CRT Scanline overlay ── */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 240, 255, 0.008) 2px,
+        rgba(0, 240, 255, 0.008) 4px
+    );
+    pointer-events: none;
+    z-index: 10000;
+}
+
+/* ── Top Status Bar (Bloomberg-style) ── */
+.status-bar {
+    background: #060a10;
+    border-bottom: 1px solid var(--card-border);
+    padding: 8px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+.status-bar .left { display: flex; gap: 20px; align-items: center; }
+.status-bar .sys-tag {
+    color: var(--cyan);
+    font-weight: 700;
+    letter-spacing: 2px;
+    font-size: 12px;
+}
+.status-bar .status-item { display: flex; align-items: center; gap: 5px; }
+.status-bar .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    animation: pulse-dot 2s ease-in-out infinite;
+}
+.dot.green { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.dot.red { background: var(--red); box-shadow: 0 0 6px var(--red); }
+.dot.yellow { background: var(--yellow); box-shadow: 0 0 6px var(--yellow); }
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+/* ── Header ── */
+.header {
+    background: linear-gradient(180deg, var(--bg2), var(--bg));
+    padding: 16px 20px 0;
+    border-bottom: 1px solid var(--card-border);
+}
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.header-left h1 {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    color: var(--cyan);
+    text-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+}
+.header-left .subtitle {
+    color: var(--text-muted);
+    font-size: 12px;
+    margin-top: 2px;
+    letter-spacing: 1px;
+}
+.header-stats {
+    display: flex;
+    gap: 24px;
+    align-items: flex-end;
+}
+.header-stat {
+    text-align: right;
+}
+.header-stat .label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+.header-stat .value {
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1;
+    margin-top: 2px;
+}
+.header-stat .sub {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 1px;
+}
+
+/* ── Tabs ── */
+.tabs {
+    display: flex;
+    gap: 0;
+}
+.tab {
+    padding: 10px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    user-select: none;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+.tab:hover { color: var(--text-dim); background: rgba(0, 240, 255, 0.02); }
+.tab.active {
+    color: var(--cyan);
+    border-bottom-color: var(--cyan);
+    background: rgba(0, 240, 255, 0.04);
+    text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+}
+
+/* ── Content ── */
+.content {
+    padding: 16px 20px 30px;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+.tab-panel { display: none; animation: fadeIn 0.25s; }
+.tab-panel.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* ── Section ── */
+.section { margin-bottom: 20px; }
+.section-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.section-title::before {
+    content: '';
+    width: 3px;
+    height: 12px;
+    background: var(--cyan);
+    border-radius: 1px;
+}
+
+/* ── Multi-Panel Grid (Bloomberg) ── */
+.panel-grid {
+    display: grid;
+    gap: 12px;
+}
+.panel-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+.panel-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+.panel-grid.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.panel-grid.cols-2-1 { grid-template-columns: 2fr 1fr; }
+.panel-grid.cols-1-2 { grid-template-columns: 1fr 2fr; }
+.panel-grid.cols-3-1 { grid-template-columns: 3fr 1fr; }
+
+/* ── Panel (Bloomberg window) ── */
+.panel {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    overflow: hidden;
+}
+.panel-header {
+    background: rgba(0, 240, 255, 0.03);
+    border-bottom: 1px solid var(--card-border);
+    padding: 6px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.panel-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--cyan);
+}
+.panel-badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-weight: 600;
+}
+.panel-body {
+    padding: 12px;
+}
+
+/* ── KPI Strip ── */
+.kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 8px;
+    margin-bottom: 16px;
+}
+.kpi {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    padding: 10px 12px;
+    position: relative;
+    overflow: hidden;
+}
+.kpi::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+}
+.kpi.kpi-green::after { background: var(--green); }
+.kpi.kpi-red::after { background: var(--red); }
+.kpi.kpi-yellow::after { background: var(--yellow); }
+.kpi.kpi-cyan::after { background: var(--cyan); }
+.kpi.kpi-purple::after { background: var(--purple); }
+.kpi .kpi-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+.kpi .kpi-value {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1;
+}
+.kpi .kpi-sub {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 3px;
+}
+
+/* ── Risk Heatmap ── */
+.heatmap {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 8px;
+}
+.heat-cell {
+    border-radius: 4px;
+    padding: 12px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid;
+    transition: transform 0.15s;
+}
+.heat-cell:hover { transform: scale(1.02); }
+.heat-cell.heat-safe {
+    background: rgba(0, 212, 170, 0.06);
+    border-color: rgba(0, 212, 170, 0.2);
+}
+.heat-cell.heat-warning {
+    background: rgba(255, 165, 2, 0.06);
+    border-color: rgba(255, 165, 2, 0.2);
+}
+.heat-cell.heat-critical {
+    background: rgba(255, 71, 87, 0.06);
+    border-color: rgba(255, 71, 87, 0.2);
+}
+.heat-cell.heat-terminal {
+    background: rgba(255, 71, 87, 0.12);
+    border-color: rgba(255, 71, 87, 0.4);
+    animation: pulse-terminal 1.5s ease-in-out infinite;
+}
+@keyframes pulse-terminal {
+    0%, 100% { border-color: rgba(255, 71, 87, 0.4); }
+    50% { border-color: rgba(255, 71, 87, 0.8); }
+}
+.heat-cell .heat-name {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+.heat-cell .heat-balance {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+.heat-cell .heat-meta {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.4;
+}
+.heat-cell .heat-bar {
+    margin-top: 8px;
+    height: 4px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 2px;
+    overflow: hidden;
+}
+.heat-cell .heat-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.6s ease;
+}
+
+/* ── Countdown Timers ── */
+.countdown-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 8px;
+}
+.countdown-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    padding: 12px;
+    position: relative;
+}
+.countdown-card .cd-account {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+.countdown-card .cd-action {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+.countdown-card .cd-timer {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+.cd-unit {
+    text-align: center;
+    background: rgba(0, 240, 255, 0.04);
+    border: 1px solid rgba(0, 240, 255, 0.1);
+    border-radius: 3px;
+    padding: 4px 8px;
+    min-width: 44px;
+}
+.cd-unit .cd-num {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--cyan);
+    line-height: 1;
+}
+.cd-unit .cd-lbl {
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.countdown-card .cd-requirements {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.5;
+}
+.countdown-card .cd-progress {
+    margin-top: 6px;
+    height: 3px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 2px;
+    overflow: hidden;
+}
+.countdown-card .cd-progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--cyan), var(--green));
+}
+
+/* ── P&L Tracker ── */
+.pnl-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+}
+.pnl-day {
+    text-align: center;
+    padding: 8px 4px;
+    border-radius: 3px;
+    border: 1px solid var(--card-border);
+}
+.pnl-day.pnl-green {
+    background: var(--green-glow);
+    border-color: rgba(0, 212, 170, 0.25);
+}
+.pnl-day.pnl-red {
+    background: var(--red-glow);
+    border-color: rgba(255, 71, 87, 0.25);
+}
+.pnl-day .pnl-date {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+}
+.pnl-day .pnl-amount {
+    font-size: 16px;
+    font-weight: 700;
+}
+.pnl-day .pnl-label {
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-top: 1px;
+    text-transform: uppercase;
+}
+
+/* ── Streak Counter ── */
+.streak-display {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    margin-bottom: 12px;
+}
+.streak-display .streak-icon {
+    font-size: 24px;
+    line-height: 1;
+}
+.streak-display .streak-info .streak-count {
+    font-size: 16px;
+    font-weight: 700;
+}
+.streak-display .streak-info .streak-sub {
+    font-size: 13px;
+    color: var(--text-dim);
+}
+.streak-display .streak-dots {
+    display: flex;
+    gap: 4px;
+    margin-left: auto;
+}
+.streak-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    border: 1px solid var(--card-border);
+}
+.streak-dot.s-green { background: var(--green); border-color: var(--green); }
+.streak-dot.s-red { background: var(--red); border-color: var(--red); }
+
+/* ── Account Cards (Dense) ── */
+.acct-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 10px;
+}
+.acct-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    padding: 12px 14px;
+    transition: border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+}
+.acct-card:hover { border-color: var(--card-border-hi); }
+.acct-card .accent {
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+}
+.acct-card .accent.ts { background: linear-gradient(90deg, var(--blue), var(--cyan)); }
+.acct-card .accent.ax { background: linear-gradient(90deg, var(--green), var(--yellow)); }
+.acct-card .accent.tf { background: linear-gradient(90deg, var(--purple), var(--blue)); }
+.acct-card .accent.ev { background: linear-gradient(90deg, var(--yellow), var(--orange)); }
+.acct-card .acct-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px;
+}
+.acct-card .acct-name { font-weight: 700; font-size: 15px; }
+.badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.badge-green { background: var(--green-glow); color: var(--green); border: 1px solid rgba(0,212,170,0.3); }
+.badge-yellow { background: var(--yellow-glow); color: var(--yellow); border: 1px solid rgba(255,165,2,0.3); }
+.badge-red { background: var(--red-glow); color: var(--red); border: 1px solid rgba(255,71,87,0.3); }
+.badge-terminal { background: rgba(255,71,87,0.2); color: var(--red); border: 1px solid rgba(255,71,87,0.5); animation: pulse-terminal 1.5s ease-in-out infinite; }
+.acct-card .row {
+    display: flex; justify-content: space-between;
+    padding: 4px 0;
+    font-size: 14px;
+}
+.acct-card .row .lbl { color: var(--text-dim); }
+.acct-card .row .val { font-weight: 600; }
+.acct-card .pbar {
+    background: rgba(255,255,255,0.04);
+    border-radius: 2px;
+    height: 4px;
+    margin-top: 8px;
+    overflow: hidden;
+}
+.acct-card .pbar .fill {
+    height: 100%;
+    border-radius: 2px;
+}
+
+/* ── Table ── */
+.tbl-wrap { overflow-x: auto; border-radius: 4px; border: 1px solid var(--card-border); }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+thead th {
+    text-align: left;
+    padding: 10px 14px;
+    background: rgba(0, 240, 255, 0.03);
+    color: var(--text-muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    border-bottom: 1px solid var(--card-border);
+    position: sticky; top: 0;
+}
+tbody td {
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(27, 40, 56, 0.5);
+}
+tbody tr:hover { background: rgba(0, 240, 255, 0.02); }
+tbody tr:last-child td { border-bottom: none; }
+
+/* ── Calendar ── */
+.cal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+}
+.month-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    padding: 12px;
+}
+.month-card .mtitle {
+    text-align: center;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--cyan);
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+.mgrid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+    text-align: center;
+    font-size: 14px;
+}
+.mgrid .dh {
+    color: var(--text-muted);
+    font-weight: 700;
+    font-size: 11px;
+    padding: 3px 0;
+    text-transform: uppercase;
+}
+.mgrid .d {
+    padding: 4px 2px;
+    border-radius: 3px;
+    min-height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    cursor: default;
+}
+.mgrid .d.we { color: var(--text-muted); opacity: 0.3; }
+.mgrid .d.today { outline: 2px solid var(--cyan); outline-offset: -2px; font-weight: 700; color: var(--cyan); }
+.mgrid .d.pay { background: var(--green-glow); color: var(--green); font-weight: 700; cursor: pointer; }
+.mgrid .d.pay:hover { background: rgba(0,212,170,0.25); }
+.mgrid .d.fund { background: var(--yellow-glow); color: var(--yellow); font-weight: 700; }
+.mgrid .d.danger { background: var(--red-glow); color: var(--red); font-weight: 700; }
+
+/* ── Legend ── */
+.legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: var(--text-dim);
+}
+.legend-item { display: flex; align-items: center; gap: 5px; }
+.ldot { width: 10px; height: 10px; border-radius: 2px; }
+
+/* ── Bar Chart ── */
+.chart-wrap {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    padding: 16px;
+}
+.bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 200px;
+    padding-top: 10px;
+}
+.bar-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    justify-content: flex-end;
+}
+.bar-val {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 3px;
+}
+.bar {
+    width: 100%;
+    max-width: 48px;
+    border-radius: 2px 2px 0 0;
+    transition: height 0.6s ease;
+}
+.bar.main { background: linear-gradient(180deg, var(--cyan), var(--cyan-dim)); }
+.bar-lbl {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 6px;
+    font-weight: 600;
+}
+
+/* ── Rules Cards ── */
+.rules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 12px;
+}
+.rule-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    padding: 14px;
+    position: relative;
+    overflow: hidden;
+}
+.rule-card .accent { position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+.rule-card h3 {
+    font-size: 16px;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+.rule-card .r {
+    display: flex; justify-content: space-between;
+    padding: 5px 0;
+    font-size: 14px;
+    border-bottom: 1px solid rgba(27,40,56,0.4);
+}
+.rule-card .r:last-child { border-bottom: none; }
+.rule-card .r .rl { color: var(--text-dim); }
+.rule-card .r .rv { font-weight: 600; text-align: right; max-width: 55%; }
+
+/* ── Intel Tab ── */
+.intel-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+.intel-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    overflow: hidden;
+}
+.intel-card.full-width {
+    grid-column: 1 / -1;
+}
+.intel-header {
+    background: rgba(0, 240, 255, 0.03);
+    border-bottom: 1px solid var(--card-border);
+    padding: 8px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.intel-header .ih-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--cyan);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.intel-header .ih-badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-weight: 600;
+    background: var(--cyan-glow);
+    color: var(--cyan);
+    border: 1px solid rgba(0, 240, 255, 0.2);
+}
+.intel-body {
+    padding: 16px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-dim);
+}
+.intel-body h4 {
+    color: var(--text);
+    font-size: 15px;
+    margin-bottom: 6px;
+    margin-top: 10px;
+}
+.intel-body h4:first-child { margin-top: 0; }
+.intel-body ul {
+    padding-left: 16px;
+    margin-bottom: 6px;
+}
+.intel-body li {
+    margin-bottom: 3px;
+}
+.intel-body .highlight {
+    color: var(--green);
+    font-weight: 600;
+}
+.intel-body .warn {
+    color: var(--yellow);
+    font-weight: 600;
+}
+.intel-body .danger {
+    color: var(--red);
+    font-weight: 600;
+}
+
+/* ── Firm Comparison Table ── */
+.firm-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+.firm-table thead th {
+    text-align: left;
+    padding: 10px 12px;
+    background: rgba(0, 240, 255, 0.03);
+    color: var(--text-muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    border-bottom: 1px solid var(--card-border);
+}
+.firm-table tbody td {
+    padding: 9px 12px;
+    border-bottom: 1px solid rgba(27, 40, 56, 0.4);
+}
+.firm-table tbody tr:hover { background: rgba(0, 240, 255, 0.02); }
+.firm-table .firm-name { font-weight: 700; color: var(--text); }
+.firm-table .good { color: var(--green); font-weight: 600; }
+.firm-table .mid { color: var(--yellow); font-weight: 600; }
+.firm-table .bad { color: var(--red); font-weight: 600; }
+
+/* ── Danger Zone Alert ── */
+.danger-alert {
+    background: rgba(255, 71, 87, 0.08);
+    border: 1px solid rgba(255, 71, 87, 0.3);
+    border-radius: 4px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    color: var(--red);
+    font-weight: 600;
+}
+.danger-alert .da-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+/* ── Momentum Meter ── */
+.momentum-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    margin-bottom: 12px;
+}
+.momentum-bar .mb-label {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    white-space: nowrap;
+}
+.momentum-bar .mb-track {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 3px;
+    position: relative;
+    overflow: hidden;
+}
+.momentum-bar .mb-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.6s ease;
+}
+.momentum-bar .mb-value {
+    font-size: 15px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+/* ── Footer ── */
+.footer {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 12px;
+    margin-top: 30px;
+    padding: 14px 20px;
+    border-top: 1px solid var(--card-border);
+    letter-spacing: 1px;
+}
+
+/* ── Sparkline ── */
+.sparkline {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 24px;
+    margin-top: 6px;
+}
+.spark-bar {
+    flex: 1;
+    border-radius: 1px;
+    min-width: 6px;
+    transition: height 0.3s ease;
+}
+
+/* ── Payout Decision Calculator ── */
+.payout-calc {
+    background: var(--card);
+    border: 2px solid rgba(0, 240, 255, 0.3);
+    border-radius: 4px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+.payout-calc .pc-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 12px;
+}
+.payout-calc .pc-title {
+    font-size: 15px; font-weight: 800; color: var(--cyan);
+    text-transform: uppercase; letter-spacing: 1px;
+}
+.payout-calc .pc-subtitle {
+    font-size: 12px; color: var(--text-dim); margin-top: 2px;
+}
+.pc-scenarios {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;
+}
+.pc-scenario {
+    background: rgba(0, 240, 255, 0.03);
+    border: 1px solid rgba(0, 240, 255, 0.15);
+    border-radius: 4px; padding: 12px;
+    transition: border-color 0.2s;
+}
+.pc-scenario:hover { border-color: rgba(0, 240, 255, 0.4); }
+.pc-scenario.pc-recommended {
+    border-color: rgba(0, 212, 170, 0.5);
+    background: rgba(0, 212, 170, 0.05);
+}
+.pc-scenario .pc-label {
+    font-size: 12px; font-weight: 700; color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
+}
+.pc-scenario .pc-amount {
+    font-size: 22px; font-weight: 800; margin-bottom: 8px;
+}
+.pc-row {
+    display: flex; justify-content: space-between; padding: 3px 0; font-size: 13px;
+}
+.pc-row .pc-key { color: var(--text-dim); }
+.pc-row .pc-val { font-weight: 600; }
+.pc-verdict-bar {
+    margin-top: 8px; padding: 6px 10px; border-radius: 3px;
+    font-size: 12px; font-weight: 700; text-align: center;
+}
+
+/* ── MLL Tracker ── */
+.mll-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; }
+.mll-card {
+    background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 4px; padding: 12px;
+}
+.mll-card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.mll-card-name { font-size: 14px; font-weight: 800; }
+.mll-card-tag { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 3px; }
+.mll-bar-wrap {
+    background: rgba(255,255,255,0.04); border-radius: 4px; height: 32px;
+    position: relative; overflow: hidden; margin-bottom: 6px;
+}
+.mll-bar-balance { position: absolute; height: 100%; border-radius: 4px; transition: width 0.5s; }
+.mll-bar-mll {
+    position: absolute; height: 100%; border-right: 3px dashed var(--red);
+    top: 0; opacity: 0.8;
+}
+.mll-bar-labels {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0 8px; font-size: 11px; font-weight: 700;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
+.mll-detail { display: flex; justify-content: space-between; font-size: 12px; padding: 2px 0; }
+.mll-detail .lbl { color: var(--text-dim); }
+.mll-detail .val { font-weight: 700; }
+.mll-note { font-size: 11px; color: var(--text-dim); margin-top: 4px; font-style: italic; }
+
+/* ── Consistency Tracker ── */
+.consist-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; }
+.consist-card {
+    background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 4px; padding: 12px;
+}
+.consist-gauge-wrap {
+    display: flex; align-items: center; gap: 12px; margin: 10px 0;
+}
+.consist-gauge {
+    flex: 1; height: 24px; background: rgba(255,255,255,0.04);
+    border-radius: 4px; position: relative; overflow: hidden;
+}
+.consist-gauge-fill { height: 100%; border-radius: 4px; transition: width 0.5s; }
+.consist-gauge-limit {
+    position: absolute; top: 0; height: 100%;
+    border-right: 3px dashed var(--red); opacity: 0.8;
+}
+.consist-gauge-text {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    font-size: 12px; font-weight: 800; text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
+.consist-pct { font-size: 28px; font-weight: 900; min-width: 80px; text-align: center; }
+.consist-detail { display: flex; justify-content: space-between; font-size: 12px; padding: 2px 0; }
+.consist-detail .lbl { color: var(--text-dim); }
+.consist-detail .val { font-weight: 700; }
+
+/* ── Weekend Prep ── */
+.prep-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+.prep-card {
+    background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 4px; padding: 14px;
+}
+.prep-card h4 { font-size: 13px; font-weight: 800; margin-bottom: 8px; color: var(--cyan); text-transform: uppercase; letter-spacing: 1px; }
+.prep-item { display: flex; gap: 8px; align-items: start; padding: 4px 0; font-size: 13px; }
+.prep-bullet { color: var(--cyan); font-weight: 800; }
+.prep-priority { display: inline-block; font-size: 10px; font-weight: 800; padding: 1px 6px; border-radius: 3px; margin-right: 4px; }
+.prep-p1 { background: rgba(255,82,82,0.2); color: var(--red); }
+.prep-p2 { background: rgba(255,202,40,0.2); color: var(--yellow); }
+.prep-p3 { background: rgba(0,212,170,0.2); color: var(--green); }
+
+/* ── Fleet Countdown Grids ── */
+.acct-countdown {
+    background: var(--card);
+    border: 2px solid rgba(0, 240, 255, 0.2);
+    border-radius: 4px; padding: 14px; margin-bottom: 12px;
+}
+.acct-countdown .ec-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px;
+}
+.acct-countdown .ec-title {
+    font-size: 14px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 1px;
+}
+.acct-countdown .ec-subtitle {
+    font-size: 11px; color: var(--text-dim); margin-top: 2px;
+}
+.ec-progress-wrap {
+    background: rgba(255,255,255,0.04);
+    border-radius: 6px; height: 24px; position: relative;
+    overflow: hidden; margin-bottom: 10px;
+}
+.ec-progress-fill {
+    height: 100%; border-radius: 6px;
+    transition: width 0.5s ease;
+}
+.ec-progress-text {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12px; font-weight: 800; color: #fff;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+.ec-daily-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 6px;
+}
+.ec-day {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 4px; padding: 8px; text-align: center;
+}
+.ec-day.ec-next {
+    border-width: 2px;
+}
+.ec-day .ec-date { font-size: 10px; color: var(--text-dim); font-weight: 600; }
+.ec-day .ec-target { font-size: 16px; font-weight: 800; margin: 3px 0; }
+.ec-day .ec-cumulative { font-size: 9px; color: var(--text-dim); }
+.ec-day .ec-label { font-size: 9px; font-weight: 700; margin-top: 3px; }
+.ec-strategy {
+    margin-top: 8px; padding: 6px 10px;
+    background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 3px; font-size: 11px; color: var(--text-dim);
+}
+
+/* ── Kill/Keep Panel ── */
+.decision-panel {
+    background: var(--card);
+    border: 1px solid rgba(255, 71, 87, 0.3);
+    border-radius: 4px;
+    padding: 14px;
+    margin-bottom: 16px;
+}
+.decision-panel .dp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.decision-panel .dp-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--red);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.decision-panel .dp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+.dp-option {
+    border-radius: 4px;
+    padding: 12px;
+    border: 1px solid;
+}
+.dp-option.dp-kill {
+    background: rgba(255, 71, 87, 0.06);
+    border-color: rgba(255, 71, 87, 0.2);
+}
+.dp-option.dp-keep {
+    background: rgba(255, 165, 2, 0.06);
+    border-color: rgba(255, 165, 2, 0.2);
+}
+.dp-option .dp-label {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+.dp-option .dp-stat {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+    font-size: 13px;
+}
+.dp-option .dp-stat .dp-key { color: var(--text-dim); }
+.dp-option .dp-stat .dp-val { font-weight: 600; }
+
+/* ── Weekly Targets ── */
+.target-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 8px;
+}
+.target-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    padding: 12px;
+}
+.target-card .tc-account {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+.target-card .tc-goal {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+.target-card .tc-daily {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+.target-card .tc-meta {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.5;
+}
+.target-card .tc-progress {
+    margin-top: 8px;
+    height: 5px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 3px;
+    overflow: hidden;
+}
+.target-card .tc-progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.6s ease;
+}
+
+/* ── Post-Payout Simulator ── */
+.sim-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 10px;
+}
+.sim-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    padding: 14px;
+    position: relative;
+}
+.sim-card .sc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.sim-card .sc-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.sim-card .sc-badge {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 700;
+}
+.sim-card .sc-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: 13px;
+    border-bottom: 1px solid rgba(27,40,56,0.3);
+}
+.sim-card .sc-row:last-child { border-bottom: none; }
+.sim-card .sc-row .sc-key { color: var(--text-dim); }
+.sim-card .sc-row .sc-val { font-weight: 600; }
+.sim-card .sc-arrow {
+    text-align: center;
+    font-size: 16px;
+    color: var(--cyan);
+    padding: 6px 0;
+    letter-spacing: 4px;
+}
+.sim-card .sc-verdict {
+    margin-top: 8px;
+    padding: 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* ── PWA Install Banner ── */
+.install-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(180deg, rgba(10,14,23,0.95), rgba(10,14,23,0.99));
+    border-top: 1px solid var(--cyan);
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 9999;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 -4px 30px rgba(0, 240, 255, 0.1);
+    animation: slideUp 0.4s ease;
+}
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+.install-banner .ib-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.install-banner .ib-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--cyan);
+}
+.install-banner .ib-sub {
+    font-size: 12px;
+    color: var(--text-dim);
+}
+.install-banner .ib-actions {
+    display: flex;
+    gap: 10px;
+}
+.install-banner .ib-btn {
+    padding: 8px 18px;
+    border-radius: 4px;
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.install-banner .ib-install {
+    background: var(--cyan);
+    color: var(--bg);
+}
+.install-banner .ib-install:hover {
+    background: #33f3ff;
+}
+.install-banner .ib-dismiss {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--card-border);
+}
+.install-banner .ib-dismiss:hover {
+    border-color: var(--text-dim);
+    color: var(--text-dim);
+}
+
+/* ── iOS Install Guide Modal ── */
+.ios-guide {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(10, 14, 23, 0.92);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+.ios-guide-card {
+    background: var(--card);
+    border: 1px solid var(--cyan);
+    border-radius: 8px;
+    padding: 24px;
+    max-width: 340px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 0 40px rgba(0, 240, 255, 0.15);
+}
+.ios-guide-card h3 {
+    color: var(--cyan);
+    font-size: 16px;
+    margin-bottom: 16px;
+}
+.ios-guide-card .step {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-align: left;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--card-border);
+    font-size: 14px;
+    color: var(--text-dim);
+}
+.ios-guide-card .step:last-of-type {
+    border-bottom: none;
+}
+.ios-guide-card .step-num {
+    width: 28px;
+    height: 28px;
+    background: var(--cyan-glow);
+    border: 1px solid rgba(0, 240, 255, 0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--cyan);
+    flex-shrink: 0;
+}
+.ios-guide-card .close-guide {
+    margin-top: 16px;
+    padding: 10px 24px;
+    background: var(--cyan);
+    color: var(--bg);
+    border: none;
+    border-radius: 4px;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ── Safe area for notched phones ── */
+@supports (padding: env(safe-area-inset-top)) {
+    .status-bar {
+        padding-top: calc(8px + env(safe-area-inset-top));
+    }
+    .install-banner {
+        padding-bottom: calc(16px + env(safe-area-inset-bottom));
+    }
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+    .panel-grid.cols-2, .panel-grid.cols-3, .panel-grid.cols-4,
+    .panel-grid.cols-2-1, .panel-grid.cols-1-2, .panel-grid.cols-3-1 {
+        grid-template-columns: 1fr;
+    }
+    .intel-grid { grid-template-columns: 1fr; }
+    .header-stats { flex-wrap: wrap; }
+    .dp-grid { grid-template-columns: 1fr; }
+    .target-grid { grid-template-columns: 1fr; }
+    .sim-grid { grid-template-columns: 1fr; }
+    .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+    .heatmap { grid-template-columns: 1fr; }
+    .countdown-grid { grid-template-columns: 1fr; }
+    .pnl-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 640px) {
+    .status-bar { padding: 6px 12px; font-size: 11px; }
+    .status-bar .left { gap: 10px; }
+    .header { padding: 10px 12px 0; }
+    .header-left h1 { font-size: 14px; }
+    .header-stats { gap: 12px; }
+    .header-stat .value { font-size: 18px; }
+    .content { padding: 10px; }
+    .tab { padding: 8px 10px; font-size: 11px; letter-spacing: 0.5px; }
+    .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+    .kpi .kpi-value { font-size: 18px; }
+    .pnl-grid { grid-template-columns: repeat(3, 1fr); }
+    .heat-cell .heat-balance { font-size: 16px; }
+    .countdown-grid { grid-template-columns: 1fr; }
+    .target-grid { grid-template-columns: 1fr; }
+    .sim-grid { grid-template-columns: 1fr; }
+    .dp-grid { grid-template-columns: 1fr; }
+    .rules-grid { grid-template-columns: 1fr; }
+    .cal-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ STATUS BAR ═══════ -->
+<div class="status-bar">
+    <div class="left">
+        <span class="sys-tag">PAYOUT COMMAND</span>
+        <div class="status-item"><div class="dot" id="sb-dot" style="background:var(--green)"></div><span id="sb-status">LOADING...</span></div>
+        <div class="status-item"><span id="sb-time">--:--:-- MST</span></div>
+        <div class="status-item"><span id="sb-session">WEEKEND</span></div>
+    </div>
+    <div>
+        <span id="sb-danger" style="color:var(--text-muted)">NEXT FOMC: APR 29</span>
+    </div>
+</div>
+
+<!-- ═══════ HEADER ═══════ -->
+<div class="header">
+    <div class="header-top">
+        <div class="header-left">
+            <h1>PAYOUT COMMAND</h1>
+            <div class="subtitle" id="h-subtitle">FLEET TERMINAL // 7 ACCOUNTS</div>
+        </div>
+        <div class="header-stats" id="header-stats">
+            <!-- Populated dynamically -->
+        </div>
+    </div>
+    <div class="tabs" id="tabs">
+        <div class="tab active" data-tab="overview">COMMAND</div>
+        <div class="tab" data-tab="calendar">CALENDAR</div>
+        <div class="tab" data-tab="simulation">SIMULATION</div>
+        <div class="tab" data-tab="rules">RULES</div>
+        <div class="tab" data-tab="intel">INTEL</div>
+    </div>
+</div>
+
+<div class="content">
+
+<!-- ═══════ TAB 1: COMMAND (OVERVIEW) ═══════ -->
+<div class="tab-panel active" id="panel-overview">
+
+    <!-- Danger Alert -->
+    <div class="danger-alert" id="danger-alert" style="display:none">
+        <span class="da-icon">&#9888;</span>
+        <span id="danger-text"></span>
+    </div>
+
+    <!-- Momentum Bar -->
+    <div class="momentum-bar">
+        <span class="mb-label">MOMENTUM</span>
+        <div class="mb-track">
+            <div class="mb-fill" id="momentum-fill" style="width:40%;background:var(--yellow)"></div>
+        </div>
+        <span class="mb-value" id="momentum-label" style="color:var(--yellow)">40% WIN RATE — WARMING</span>
+    </div>
+
+    <!-- KPI Strip -->
+    <div class="kpi-strip" id="kpi-strip"></div>
+
+    <!-- 1. Fleet Countdown Grids (Daily Action Plan) -->
+    <div class="section">
+        <div class="section-title">DAILY TARGETS — WHAT EACH ACCOUNT NEEDS</div>
+    </div>
+    <div id="fleet-countdowns"></div>
+
+    <!-- 2. Risk Heatmap (Account Health) -->
+    <div class="section">
+        <div class="section-title">RISK HEATMAP</div>
+        <div class="heatmap" id="heatmap"></div>
+    </div>
+
+    <!-- 2b. MLL Tracker (Real Drawdown Levels) -->
+    <div class="section" id="mll-section">
+        <div class="section-title">MLL TRACKER — REAL DRAWDOWN LEVELS</div>
+        <div id="mll-tracker"></div>
+    </div>
+
+    <!-- 2c. Apex Consistency Tracker (30% Rule) -->
+    <div class="section" id="consistency-section">
+        <div class="section-title">APEX CONSISTENCY TRACKER — 30% RULE</div>
+        <div id="consistency-tracker"></div>
+    </div>
+
+    <!-- 3. Payout Decision Calculator (Strategic) -->
+    <div class="payout-calc" id="payout-calc"></div>
+
+    <!-- 4. Kill/Keep Decision Gate (if terminal) -->
+    <div class="decision-panel" id="decision-panel"></div>
+
+    <!-- 5. Daily P&L Tracker (Session History) -->
+    <div class="section">
+        <div class="section-title">DAILY P&L TRACKER</div>
+        <div class="streak-display" id="streak-display"></div>
+        <div class="pnl-grid" id="pnl-grid"></div>
+    </div>
+
+    <!-- 6. Post-Payout Simulator -->
+    <div class="section">
+        <div class="section-title">POST-PAYOUT SIMULATOR</div>
+        <div class="sim-grid" id="sim-grid"></div>
+    </div>
+
+    <!-- 7. Planned Actions Table -->
+    <div class="section">
+        <div class="section-title">PLANNED ACTIONS</div>
+        <div class="tbl-wrap">
+            <table>
+                <thead><tr><th>TARGET</th><th>ACCOUNT</th><th>ACTION</th><th>AMOUNT</th><th>REQUIREMENTS</th><th>CONFIDENCE</th></tr></thead>
+                <tbody id="plan-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 8. Weekend Prep Report -->
+    <div class="section" id="weekend-prep-section">
+        <div class="section-title">WEEKEND PREP — NEXT WEEK BATTLE PLAN</div>
+        <div id="weekend-prep"></div>
+    </div>
+
+    <!-- Hidden targets for backward compat -->
+    <div style="display:none"><div id="target-grid"></div><div id="countdown-grid"></div></div>
+</div>
+
+<!-- ═══════ TAB 2: CALENDAR ═══════ -->
+<div class="tab-panel" id="panel-calendar">
+    <div class="legend">
+        <div class="legend-item"><div class="ldot" style="background:var(--green-glow);border:1px solid var(--green)"></div> Payout Target</div>
+        <div class="legend-item"><div class="ldot" style="background:var(--yellow-glow);border:1px solid var(--yellow)"></div> Eval Funded</div>
+        <div class="legend-item"><div class="ldot" style="background:var(--red-glow);border:1px solid var(--red)"></div> FOMC / Danger</div>
+        <div class="legend-item"><div class="ldot" style="outline:2px solid var(--cyan);outline-offset:-2px"></div> Today</div>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+</div>
+
+<!-- ═══════ TAB 3: SIMULATION ═══════ -->
+<div class="tab-panel" id="panel-simulation">
+    <div class="section">
+        <div class="section-title">MONTHLY CASH FLOW PROJECTION (P50)</div>
+        <div class="chart-wrap">
+            <div class="bars" id="bars"></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">YEAR-END PERCENTILE BREAKDOWN</div>
+        <div class="tbl-wrap">
+            <table>
+                <thead><tr><th>ACCOUNT</th><th>P10</th><th>P25</th><th>P50</th><th>P75</th><th>P90</th><th>BREACH%</th><th>AVG PAYOUTS</th></tr></thead>
+                <tbody id="perc-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">SIMULATION PARAMETERS</div>
+        <div class="kpi-strip">
+            <div class="kpi kpi-cyan"><div class="kpi-label">PATHS</div><div class="kpi-value" style="color:var(--cyan)">10,000</div></div>
+            <div class="kpi kpi-green"><div class="kpi-label">DAILY MEAN</div><div class="kpi-value" style="color:var(--green)">$150</div><div class="kpi-sub">adjusted for momentum</div></div>
+            <div class="kpi kpi-yellow"><div class="kpi-label">DAILY STD</div><div class="kpi-value" style="color:var(--yellow)">$300</div></div>
+            <div class="kpi kpi-red"><div class="kpi-label">DAILY RANGE</div><div class="kpi-value" style="color:var(--text)">-$800 / +$1.5k</div></div>
+            <div class="kpi kpi-purple"><div class="kpi-label">STRATEGY</div><div class="kpi-value" style="color:var(--purple);font-size:12px">SURVIVAL</div><div class="kpi-sub">build buffer first</div></div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════ TAB 4: RULES ═══════ -->
+<div class="tab-panel" id="panel-rules">
+    <div class="section">
+        <div class="section-title">PAYOUT RULES REFERENCE</div>
+        <div class="rules-grid" id="rules-grid">
+
+            <div class="rule-card">
+                <div class="accent" style="background:linear-gradient(90deg,var(--blue),var(--cyan))"></div>
+                <h3 style="color:var(--blue)">TOPSTEP EXPRESS -- STANDARD</h3>
+                <div class="r"><span class="rl">Winning Days</span><span class="rv">5 days at $150+ net</span></div>
+                <div class="r"><span class="rl">Payout Cap</span><span class="rv">min($5,000, 50% balance)</span></div>
+                <div class="r"><span class="rl">Split</span><span class="rv">90 / 10</span></div>
+                <div class="r"><span class="rl">MLL</span><span class="rv">$2,000 trailing EOD</span></div>
+                <div class="r"><span class="rl">MLL Locks At</span><span class="rv">$50,000</span></div>
+                <div class="r"><span class="rl">After 1st Payout</span><span class="rv" style="color:var(--red)">MLL->$0, balance=floor</span></div>
+                <div class="r"><span class="rl">Min Payout</span><span class="rv">$125</span></div>
+                <div class="r"><span class="rl">Processing</span><span class="rv">1-3 biz days + $30 fee</span></div>
+            </div>
+
+            <div class="rule-card">
+                <div class="accent" style="background:linear-gradient(90deg,var(--cyan),var(--blue))"></div>
+                <h3 style="color:var(--cyan)">TOPSTEP EXPRESS -- CONSISTENCY</h3>
+                <div class="r"><span class="rl">Trading Days</span><span class="rv">3 days minimum</span></div>
+                <div class="r"><span class="rl">Consistency</span><span class="rv">Largest day &le; 40% of total</span></div>
+                <div class="r"><span class="rl">Payout Cap</span><span class="rv">min($6,000, 50% balance)</span></div>
+                <div class="r"><span class="rl">Split</span><span class="rv">90 / 10</span></div>
+                <div class="r"><span class="rl">All Other Rules</span><span class="rv">Same as Standard</span></div>
+            </div>
+
+            <div class="rule-card">
+                <div class="accent" style="background:linear-gradient(90deg,var(--green),var(--yellow))"></div>
+                <h3 style="color:var(--green)">APEX LEGACY 50K</h3>
+                <div class="r"><span class="rl">Min Trading Days</span><span class="rv">10 (first) / 8 (after)</span></div>
+                <div class="r"><span class="rl">Profitable Days</span><span class="rv">5 days at $50+</span></div>
+                <div class="r"><span class="rl">Safety Net (P1-3)</span><span class="rv">$52,600 min balance</span></div>
+                <div class="r"><span class="rl">Payout Steps</span><span class="rv">$1.5k/$1.75k/$2k/$2.5k/$2.75k</span></div>
+                <div class="r"><span class="rl">Payout 6+</span><span class="rv" style="color:var(--green)">UNCAPPED</span></div>
+                <div class="r"><span class="rl">30% Consistency</span><span class="rv">Best day &le; 30% total (P1-5)</span></div>
+                <div class="r"><span class="rl">Trailing DD</span><span class="rv">$2,500 -> locks at $50,100</span></div>
+                <div class="r"><span class="rl">Split</span><span class="rv" style="color:var(--green)">100% first $25k, 90/10</span></div>
+                <div class="r"><span class="rl">Min Payout</span><span class="rv">$500</span></div>
+            </div>
+
+            <div class="rule-card">
+                <div class="accent" style="background:linear-gradient(90deg,var(--yellow),var(--green))"></div>
+                <h3 style="color:var(--yellow)">APEX LEGACY 100K</h3>
+                <div class="r"><span class="rl">Min Trading Days</span><span class="rv">10 (first) / 8 (after)</span></div>
+                <div class="r"><span class="rl">Profitable Days</span><span class="rv">5 days at $50+</span></div>
+                <div class="r"><span class="rl">Safety Net (P1-3)</span><span class="rv">$103,100 min balance</span></div>
+                <div class="r"><span class="rl">Payout Steps</span><span class="rv">$2k/$2.5k/$3k/$3k/$3.5k</span></div>
+                <div class="r"><span class="rl">Trailing DD</span><span class="rv">$3,000 -> locks at $100,100</span></div>
+                <div class="r"><span class="rl">All Other Rules</span><span class="rv">Same as 50k</span></div>
+            </div>
+
+            <div class="rule-card">
+                <div class="accent" style="background:linear-gradient(90deg,var(--purple),var(--blue))"></div>
+                <h3 style="color:var(--purple)">TRADEIFY SELECT FLEX</h3>
+                <div class="r"><span class="rl">Winning Days</span><span class="rv">5 days at $150+ net</span></div>
+                <div class="r"><span class="rl">Payout Cap</span><span class="rv">min(50% profit, $3,000)</span></div>
+                <div class="r"><span class="rl">Split</span><span class="rv">90 / 10</span></div>
+                <div class="r"><span class="rl">Buffer Required</span><span class="rv" style="color:var(--green)">NONE</span></div>
+                <div class="r"><span class="rl">Consistency Rule</span><span class="rv" style="color:var(--green)">NONE</span></div>
+                <div class="r"><span class="rl">Daily Loss Limit</span><span class="rv" style="color:var(--green)">NONE</span></div>
+                <div class="r"><span class="rl">Trailing DD</span><span class="rv">$2,000 EOD -> locks $50,100</span></div>
+                <div class="r"><span class="rl">After 1st Payout</span><span class="rv" style="color:var(--red)">MLL->$0, balance=floor</span></div>
+                <div class="r"><span class="rl">Min Payout</span><span class="rv">$250</span></div>
+                <div class="r"><span class="rl">Processing</span><span class="rv" style="color:var(--green)">Same day</span></div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="section" style="margin-top:20px">
+        <div class="section-title">🏆 TOPSTEP PAYOUT PROCESS (TS-204 READY)</div>
+        <div class="rules-grid">
+            <div class="rule-card" style="border-color:rgba(0,212,170,0.4)">
+                <div class="accent" style="background:linear-gradient(90deg,var(--green),var(--cyan))"></div>
+                <h3 style="color:var(--green)">STEP 1: REQUEST PAYOUT</h3>
+                <div class="r"><span class="rl">Where</span><span class="rv">Topstep Dashboard > Payouts</span></div>
+                <div class="r"><span class="rl">When</span><span class="rv">CME hours only: Sun 5pm-Fri 5pm CT</span></div>
+                <div class="r"><span class="rl">Amount</span><span class="rv">Min $125, max 50% balance or $5k</span></div>
+                <div class="r"><span class="rl">Your max now</span><span class="rv" style="color:var(--green)">$125 (50% of $251)</span></div>
+                <div class="r"><span class="rl">Split</span><span class="rv" style="color:var(--green)">100% first $10k if joined pre-Jan 12 2026</span></div>
+                <div class="r"><span class="rl">Requirements</span><span class="rv" style="color:var(--green)">5 win days ✅</span></div>
+                <div class="r"><span class="rl">Pre-req</span><span class="rv" style="color:var(--yellow)">W-9 + KYC docs (submit NOW)</span></div>
+            </div>
+            <div class="rule-card" style="border-color:rgba(0,212,170,0.4)">
+                <div class="accent" style="background:linear-gradient(90deg,var(--cyan),var(--green))"></div>
+                <h3 style="color:var(--cyan)">STEP 2: PROCESSING</h3>
+                <div class="r"><span class="rl">Wise</span><span class="rv" style="color:var(--green)">1-3 days, NO Topstep fee</span></div>
+                <div class="r"><span class="rl">ACH</span><span class="rv">1-3 days, $30 fee</span></div>
+                <div class="r"><span class="rl">Wire/SWIFT</span><span class="rv">3-5 days domestic, 5-10 intl, $30 fee</span></div>
+                <div class="r"><span class="rl">Total Timeline</span><span class="rv">4-13 biz days request-to-bank</span></div>
+                <div class="r"><span class="rl">Best Option</span><span class="rv" style="color:var(--green)">WISE — saves $30/payout</span></div>
+                <div class="r"><span class="rl">Wise Warning</span><span class="rv" style="color:var(--yellow)">Claim within 7 days or cancelled</span></div>
+            </div>
+            <div class="rule-card" style="border-color:rgba(255,71,87,0.3)">
+                <div class="accent" style="background:linear-gradient(90deg,var(--red),var(--yellow))"></div>
+                <h3 style="color:var(--red)">STEP 3: AFTER PAYOUT (CRITICAL)</h3>
+                <div class="r"><span class="rl">MLL Changes</span><span class="rv" style="color:var(--red)">Locks to $0 (was trailing)</span></div>
+                <div class="r"><span class="rl">Floor</span><span class="rv" style="color:var(--red)">Remaining balance = permanent floor</span></div>
+                <div class="r"><span class="rl">Buffer</span><span class="rv" style="color:var(--red)">Resets to $0</span></div>
+                <div class="r"><span class="rl">Next Payout</span><span class="rv">5 more win days + profit > $0.01</span></div>
+                <div class="r"><span class="rl">Pro Tip</span><span class="rv" style="color:var(--yellow)">Get MLL to $0 naturally FIRST</span></div>
+                <div class="r"><span class="rl">Recommendation</span><span class="rv" style="color:var(--green)">Wait for $1,000+ before pulling</span></div>
+            </div>
+            <div class="rule-card" style="border-color:rgba(255,165,2,0.3)">
+                <div class="accent" style="background:linear-gradient(90deg,var(--yellow),var(--red))"></div>
+                <h3 style="color:var(--yellow)">GOTCHAS &amp; DENIAL RISKS</h3>
+                <div class="r"><span class="rl">Email Mismatch</span><span class="rv" style="color:var(--red)">Payout form email must match account</span></div>
+                <div class="r"><span class="rl">Hedging</span><span class="rv" style="color:var(--red)">No hedging across multiple accounts</span></div>
+                <div class="r"><span class="rl">Gambling Flag</span><span class="rv" style="color:var(--red)">TS flags "exploitative" strategies</span></div>
+                <div class="r"><span class="rl">Post-Payout Trap</span><span class="rv" style="color:var(--red)">Most blow account after 1st payout</span></div>
+                <div class="r"><span class="rl">Tax (US)</span><span class="rv">1099-NEC if payouts > $600/yr</span></div>
+                <div class="r"><span class="rl">Action NOW</span><span class="rv" style="color:var(--green)">Set up Wise + submit W-9 today</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" style="margin-top:20px">
+        <div class="section-title">HARD RULES (ENFORCED)</div>
+        <div class="rules-grid">
+            <div class="rule-card" style="border-color:rgba(255,71,87,0.3)">
+                <div class="accent" style="background:var(--red)"></div>
+                <h3 style="color:var(--red)">NO FOMC TRADING</h3>
+                <div class="r"><span class="rl">Rule</span><span class="rv" style="color:var(--red)">SHUT DOWN ALL ACCOUNTS</span></div>
+                <div class="r"><span class="rl">Learned</span><span class="rv">Mar 18 -- -$5,640 in one day</span></div>
+                <div class="r"><span class="rl">Next FOMC</span><span class="rv" style="color:var(--yellow)">Apr 29-30, 2026</span></div>
+            </div>
+            <div class="rule-card" style="border-color:rgba(255,71,87,0.3)">
+                <div class="accent" style="background:var(--red)"></div>
+                <h3 style="color:var(--red)">NO ROLLOVER TRADING</h3>
+                <div class="r"><span class="rl">Rule</span><span class="rv" style="color:var(--red)">MICRO ONLY OR SIT OUT</span></div>
+                <div class="r"><span class="rl">Months</span><span class="rv">Mar, Jun, Sep, Dec</span></div>
+                <div class="r"><span class="rl">Action</span><span class="rv">Check CME rollover calendar</span></div>
+            </div>
+            <div class="rule-card" style="border-color:rgba(255,165,2,0.3)">
+                <div class="accent" style="background:var(--yellow)"></div>
+                <h3 style="color:var(--yellow)">BUFFER PROTECTION</h3>
+                <div class="r"><span class="rl">$200 Rule</span><span class="rv">Buffer < $200 = MES ONLY</span></div>
+                <div class="r"><span class="rl">Post-Payout</span><span class="rv">MES only for 5 days minimum</span></div>
+                <div class="r"><span class="rl">Buffer Target</span><span class="rv">$1,500 ($300 x 5 days)</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════ TAB 5: INTEL ═══════ -->
+<div class="tab-panel" id="panel-intel">
+
+    <div class="section">
+        <div class="section-title">PROP FIRM COMPARISON -- MES FUTURES (UNDER $100 EVAL)</div>
+        <div class="tbl-wrap">
+            <table class="firm-table" id="firm-table">
+                <thead>
+                    <tr>
+                        <th>FIRM</th>
+                        <th>EVAL COST</th>
+                        <th>ACCOUNT</th>
+                        <th>PROFIT TARGET</th>
+                        <th>DD TYPE</th>
+                        <th>DRAWDOWN</th>
+                        <th>SPLIT</th>
+                        <th>1ST PAYOUT</th>
+                        <th>VERDICT</th>
+                    </tr>
+                </thead>
+                <tbody id="firm-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="intel-grid">
+
+        <div class="intel-card full-width">
+            <div class="intel-header">
+                <span class="ih-title">INDUSTRY ANALYSIS</span>
+                <span class="ih-badge">RESEARCH</span>
+            </div>
+            <div class="intel-body" id="intel-industry">
+                <h4>How Prop Firms Make Money (300K+ Account Study)</h4>
+                <ul>
+                    <li>Challenge pass rate: <span class="warn">5-10% industry avg</span> (Apex claims 15-20%)</li>
+                    <li>Only <span class="danger">~7% of eval purchasers ever receive a payout</span> (FPFX Tech data)</li>
+                    <li>~14% get funded, ~45% of funded traders get at least one payout</li>
+                    <li>Average payout: 4% of account size (~$2,000 on a 50k account)</li>
+                    <li>Primary revenue: eval fees. A firm with 10k monthly applicants at $150/mo = <span class="warn">$1.5M/mo</span></li>
+                    <li>40%+ of unregulated firms shut down in 2025. 80-100 firms collapsed 2023-2025</li>
+                    <li>CFTC considering CTA classification for US prop firms — regulation incoming</li>
+                </ul>
+
+                <h4>What Profitable Prop Traders Do Differently</h4>
+                <ul>
+                    <li><span class="highlight">Risk 0.25-1% per trade max</span> — on 50k w/ $2,500 DD = $62-250 risk/trade</li>
+                    <li><span class="highlight">Secure and stop</span> — hit daily target, close platform. Widely used by winners</li>
+                    <li><span class="highlight">Stop after 2 consecutive losses</span> — cool-down rule prevents tilt</li>
+                    <li><span class="highlight">Multi-account fleet</span> — 5-10 accounts across 3-4 firms with copy trading</li>
+                    <li><span class="highlight">Account triage</span> — cut losing accounts fast, feed winners</li>
+                    <li><span class="highlight">Rule mastery</span> — screenshot rules at funding date, track changes</li>
+                    <li>Treat each day as independent — yesterday's P&L doesn't affect today's risk</li>
+                    <li>Never revenge trade. Prop trading is about extraction, not account growth</li>
+                </ul>
+
+                <h4>Multi-Account Fleet Strategy</h4>
+                <ul>
+                    <li>Sweet spot: <span class="highlight">5-10 accounts across 3-4 firms</span></li>
+                    <li>Copy trading supported: Apex, MFFU, Phidias, BluSky, TickTick Trader</li>
+                    <li>Budget 2 eval replacements/month (~$100-150/mo maintenance cost)</li>
+                    <li>At 40% personal pass rate: break-even in ~10 months of eval fees</li>
+                    <li>Without copy trading: 3-7 accounts is practical for manual execution</li>
+                </ul>
+
+                <h4>Red Flags & Blacklisted Firms</h4>
+                <ul>
+                    <li><span class="danger">Crypto Fund Trader</span> — backdated rules to deny payouts at scale</li>
+                    <li><span class="danger">Fidelcrest</span> — retroactive rule changes, withheld payouts without appeal</li>
+                    <li><span class="danger">True Forex Funds</span> — correct trades marked as violations, accounts canceled</li>
+                    <li><span class="danger">My Forex Funds</span> — froze payouts, deleted funded accounts</li>
+                    <li><span class="warn">Consistency rule trap</span> — 30-50% rules force more trading to dilute big days</li>
+                    <li><span class="warn">Hidden fees</span> — activation ($130-360), monthly PA ($85/mo), data ($15-30/mo)</li>
+                    <li><span class="warn">Rules tightening industry-wide</span> — ETF cut max accts 20->5, Topstep changed split 100%->90/10</li>
+                </ul>
+
+                <h4>Proven Payers (Total Payouts)</h4>
+                <ul>
+                    <li><span class="highlight">Apex: $598M+ paid out since 2022</span> — $15.4M avg monthly</li>
+                    <li><span class="highlight">Topstep: Industry pioneer</span> — publicly tracks all payouts</li>
+                    <li><span class="highlight">Tradeify, MFFU, Take Profit Trader</span> — regularly cited as reliable</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="intel-card">
+            <div class="intel-header">
+                <span class="ih-title">PAYOUT OPTIMIZATION PLAYBOOK</span>
+                <span class="ih-badge">STRATEGY</span>
+            </div>
+            <div class="intel-body">
+                <h4>The $3,000 Tradeify Rule</h4>
+                <ul>
+                    <li>Cap = 50% of profit, max $3,000</li>
+                    <li>Post-payout: buffer resets to $0</li>
+                    <li>Extract trigger: <span class="highlight">profit hits $3,000</span></li>
+                    <li>You take $1,500, keep $1,500 buffer</li>
+                    <li>Net after 90/10: <span class="highlight">$1,350</span></li>
+                </ul>
+
+                <h4>Apex Step Cap Maximization</h4>
+                <ul>
+                    <li>50k: $1.5k / $1.75k / $2k / $2.5k / $2.75k / $3k+</li>
+                    <li>100k: $2k / $2.5k / $3k / $3k / $3.5k / $4k+</li>
+                    <li>Max each cap vs $500 min = <span class="highlight">$10,500 more</span> over same 48 days</li>
+                    <li>100% payout on first $25k = <span class="highlight">no split loss</span></li>
+                    <li>8 trading days between requests, 2 payouts/mo max</li>
+                </ul>
+
+                <h4>Buffer Safety Ladder</h4>
+                <ul>
+                    <li><span class="danger">&lt;$200</span> — CRITICAL: 1 MES only, $50 daily loss cap</li>
+                    <li><span class="warn">$200-500</span> — Cautious: 1-2 MES, $100 daily loss cap</li>
+                    <li>$500-1k — Conservative: 2-3 MES, $200 cap</li>
+                    <li><span class="highlight">$1k-2k</span> — Normal: 1 ES or 4 MES, $300 cap</li>
+                    <li><span class="highlight">$2k+</span> — Full size, 80% of daily loss limit</li>
+                </ul>
+
+                <h4>Winning Day Factory</h4>
+                <ul>
+                    <li>Target: $150+ then <span class="highlight">STOP TRADING</span></li>
+                    <li>At 60% win rate: 3 winning days per 5 sessions</li>
+                    <li>Plan payout cycles for 8-10 calendar days, not 5</li>
+                    <li>Negative EV to continue after securing $150</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="intel-card">
+            <div class="intel-header">
+                <span class="ih-title">TAX & FINANCIAL INTEL</span>
+                <span class="ih-badge">IMPORTANT</span>
+            </div>
+            <div class="intel-body">
+                <h4>How Prop Firm Payouts Are Taxed</h4>
+                <ul>
+                    <li>Treated as <span class="warn">1099 independent contractor income</span></li>
+                    <li>Subject to self-employment tax (~15.3%) + income tax</li>
+                    <li>No 60/40 Section 1256 treatment (that's for personal futures)</li>
+                </ul>
+
+                <h4>Deductible Expenses</h4>
+                <ul>
+                    <li><span class="highlight">Evaluation fees</span> — business expense</li>
+                    <li><span class="highlight">Data fees</span> — Tradovate, NinjaTrader, etc.</li>
+                    <li><span class="highlight">Platform costs</span> — charting software</li>
+                    <li><span class="highlight">Home office</span> — dedicated trading space</li>
+                    <li><span class="highlight">Education</span> — courses, books, communities</li>
+                    <li>Monthly subscription costs reduce taxable income</li>
+                </ul>
+
+                <h4>Record Keeping</h4>
+                <ul>
+                    <li>Track every eval purchase, fee, and payout</li>
+                    <li>Save payout confirmations and 1099s</li>
+                    <li>Consider quarterly estimated tax payments</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="intel-card">
+            <div class="intel-header">
+                <span class="ih-title">RECOMMENDED ADDITIONS</span>
+                <span class="ih-badge">ACTION</span>
+            </div>
+            <div class="intel-body">
+                <h4>Priority 1: My Funded Futures (Core)</h4>
+                <ul>
+                    <li>$77/mo, <span class="highlight">$0 activation fee</span></li>
+                    <li>EOD drawdown (more forgiving than Apex real-time)</li>
+                    <li>Copy trading allowed — mirror your MES trades</li>
+                    <li>Best value in industry right now</li>
+                </ul>
+                <h4>Priority 2: Take Profit Trader</h4>
+                <ul>
+                    <li><span class="highlight">Daily payouts</span> — fastest cash access</li>
+                    <li><span class="highlight">No daily loss limit</span> (removed Jan 2025)</li>
+                    <li>EOD drawdown</li>
+                    <li>$130 activation, ~$150/mo eval</li>
+                </ul>
+                <h4>Priority 3: Phidias (25k)</h4>
+                <ul>
+                    <li><span class="highlight">$55 one-time</span> — cheapest in industry</li>
+                    <li>Path to live account with daily payouts</li>
+                    <li>Negligible risk to add</li>
+                </ul>
+                <h4 style="margin-top:12px;color:var(--cyan)">Optimal Setup: Your 3 + These 3 = 6 Firms</h4>
+                <p>Budget impact: ~$300/mo in eval fees = cost of doing business. If 2 of 6 firms generate payouts, you're profitable.</p>
+            </div>
+        </div>
+
+        <div class="intel-card">
+            <div class="intel-header">
+                <span class="ih-title">CONSISTENCY RULE MATRIX</span>
+                <span class="ih-badge">WATCH OUT</span>
+            </div>
+            <div class="intel-body">
+                <h4>Know Before You Trade</h4>
+                <ul>
+                    <li><span class="highlight">Tradeify Flex: NONE</span> — best for your style</li>
+                    <li><span class="warn">Topstep: 50%</span> — no single day > 50% of total</li>
+                    <li><span class="warn">Apex: 30%</span> — best day ≤ 30% of total (P1-5)</li>
+                    <li><span class="warn">Bulenox: 40%</span> — moderately restrictive</li>
+                    <li><span class="danger">Elite Trader: 40%</span> — includes prior withdrawals (compounds!)</li>
+                    <li><span class="warn">Phidias: 30%</span> — standard, manageable</li>
+                </ul>
+                <h4>The Consistency Trap</h4>
+                <p>If you have one big day (say $800), and your total is $2,000, that one day = 40%. You <span class="danger">MUST keep trading</span> to dilute it below the threshold before withdrawing — risking breach in the process. This is the #1 hidden payout blocker in the industry.</p>
+                <h4>How to Beat It</h4>
+                <ul>
+                    <li>Cap daily gains at 2x your target ($300 instead of $150)</li>
+                    <li>Spread profits evenly — $150/day is better than $600 + 4 flat days</li>
+                    <li>Track consistency % daily in this system</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="intel-card full-width">
+            <div class="intel-header">
+                <span class="ih-title">YOUR ALIGNMENT WITH PROFITABLE TRADERS</span>
+                <span class="ih-badge">ASSESSMENT</span>
+            </div>
+            <div class="intel-body">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                    <div>
+                        <h4 style="color:var(--green)">What You're Doing Right</h4>
+                        <ul>
+                            <li><span class="highlight">Multi-account fleet</span> — 7 accounts across 3 firms (top 5% do this)</li>
+                            <li><span class="highlight">MES focus</span> — micro contracts = controlled risk per trade</li>
+                            <li><span class="highlight">Secure and stop mentality</span> — $150 target aligns with winning trader playbook</li>
+                            <li><span class="highlight">Rule awareness</span> — static floor, step caps, buffer rules mastered</li>
+                            <li><span class="highlight">FOMC/rollover rules</span> — hard rule from Mar 18 loss ($5,640)</li>
+                            <li><span class="highlight">Payout tracking system</span> — 93% of traders don't track this</li>
+                            <li><span class="highlight">Firm diversification</span> — Topstep + Apex + Tradeify covers different rule sets</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color:var(--yellow)">Areas to Sharpen</h4>
+                        <ul>
+                            <li><span class="warn">Daily loss cap enforcement</span> — Mar 18 & 20 exceeded $300/acct cap. Set hard stop.</li>
+                            <li><span class="warn">2-loss cool-down rule</span> — stop after 2 consecutive losses (not 3-4)</li>
+                            <li><span class="warn">Account triage speed</span> — TS-235 should have been cut 2 days earlier</li>
+                            <li><span class="warn">Copy trading setup</span> — could 3x output by mirroring across accounts</li>
+                            <li><span class="warn">Eval replacement pipeline</span> — budget $100-150/mo for 2 fresh evals</li>
+                            <li><span class="warn">Add EOD drawdown firms</span> — MFFU + TPT = friendlier DD on volatility days</li>
+                            <li><span class="warn">Weekend review habit</span> — plan next week's per-account targets every Sunday</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</div><!-- /content -->
+
+<div class="footer">
+    PAYOUT COMMAND v3.0 &bull; BLOOMBERG TERMINAL EDITION &bull; DATA CURRENT AS OF 2026-03-20 &bull; RULES FROM OFFICIAL SOURCES
+</div>
+
+<!-- ═══════ DATA & LOGIC ═══════ -->
+<script>
+// ── Portfolio Data ──
+const PORTFOLIO = {
+    accounts: [
+        {
+            key: 'ts_204', name: 'Topstep #1', short: 'TS-204', type: 'ts',
+            balance: 474.99, starting: 0, profit: 474.99,
+            mll: 2000, floor: -1032.59, dist_to_breach: 1508,
+            winning_days: 6, winning_req: 5,
+            risk: 'safe', payout_eligible: true,
+            daily_pnl: [null, -150.03, -800.16, 143.49, -425.11, 190.94, 129.20, 194.92, 261.96, -37.63],
+            notes: '🏆 PAYOUT ELIGIBLE. $475 profit. Small red, still strong. 100% split first $10k.'
+        },
+        {
+            key: 'ts_676', name: 'Topstep #2', short: 'TS-676', type: 'ts',
+            balance: -96.69, starting: 0, profit: -96.69,
+            mll: 2000, floor: -1610.52, dist_to_breach: 1514,
+            winning_days: 4, winning_req: 5,
+            risk: 'medium', payout_eligible: false,
+            daily_pnl: [null, -148.78, -796.41, 143.49, -423.86, 190.94, 129.20, 194.92, 261.96, -37.63],
+            notes: '4/5 WIN DAYS. $97 from breakeven. ONE MORE $150+ = payout eligible.'
+        },
+        {
+            key: 'ts_235', name: 'Topstep #3', short: 'TS-235', type: 'ts',
+            balance: -718.59, starting: 0, profit: -718.59,
+            mll: 2000, floor: -2000, dist_to_breach: 1281,
+            winning_days: 2, winning_req: 5,
+            risk: 'high', payout_eligible: false,
+            daily_pnl: [null, -241.89, -797.66, 145.99, -421.36, 49.13, 127.95, 194.92, 261.96, -37.63],
+            notes: '2/5 win days. $1,281 to breach. Still way above last week.'
+        },
+        {
+            key: 'tf_286', name: 'Tradeify Flex', short: 'TF-286', type: 'tf',
+            balance: 50409.75, starting: 50000, profit: 409.75,
+            mll: 2000, floor: 48000, dist_to_breach: 2410,
+            winning_days: 9, winning_req: 5,
+            risk: 'medium', payout_eligible: false,
+            extraction_trigger: 3000, current_toward_trigger: 409.75,
+            daily_pnl: [null, -205.20, -835.85, 118.15, -481.60, 191.40, 32.00, 166.45, 240.10, -149.15],
+            notes: 'Profit +$410. 9 win days. $2,590 to extraction trigger.'
+        },
+        {
+            key: 'ax_100k', name: 'Apex 100k', short: 'AX-100K', type: 'ax',
+            balance: 100892.53, starting: 100000, profit: 892.53,
+            mll: 3000, floor: 100100, dist_to_breach: 793,
+            safety_net: 103100, dist_to_safety: 2208,
+            trading_days: 16, trading_req: 10,
+            winning_days_50: 13, winning_50_req: 5,
+            step_cap: 2000, split: 1.0,
+            risk: 'medium', payout_eligible: false,
+            daily_pnl: [null, -178.66, -802.18, 139.27, -451.03, 206.87, 75.35, 188.91, 257.33, -143.82],
+            notes: 'Profit $893. Buffer $793 above floor. $2,208 to safety net.'
+        },
+        {
+            key: 'ax_50k', name: 'Apex 50k', short: 'AX-50K', type: 'ax',
+            balance: 50987.86, starting: 50000, profit: 987.86,
+            mll: 2500, floor: 47500, dist_to_breach: 3488,
+            safety_net: 52600, dist_to_safety: 1612,
+            trading_days: 16, trading_req: 10,
+            winning_days_50: 13, winning_50_req: 5,
+            step_cap: 1500, split: 1.0,
+            risk: 'safe', payout_eligible: false,
+            daily_pnl: [null, -143.66, -805.93, 141.77, -457.28, 215.62, 55.35, 190.16, 257.33, -138.82],
+            notes: 'FLEET ANCHOR. Profit $988. DIST DD 3,488. $1,612 to safety net.'
+        },
+        {
+            key: 'ax_eval', name: 'Apex Eval', short: 'AX-EVAL', type: 'ev',
+            balance: 51553.97, target: 53000, gap: 1446.03,
+            risk: 'na', payout_eligible: false,
+            daily_pnl: [null, -176.16, -802.18, 138.02, -446.13, 281.08, 76.60, 409.86, 258.58, -142.57],
+            notes: 'Eval — $1,446 from funding. 4 days left (Apr 2). $362/day needed. Tighter.'
+        }
+    ],
+    daily_log: [
+        { date: '2026-03-16', pnl: null, label: 'BASELINE' },
+        { date: '2026-03-17', pnl: -1244.36, label: 'MON' },
+        { date: '2026-03-18', pnl: -5640.37, label: 'TUE (FOMC)' },
+        { date: '2026-03-19', pnl: 970.18, label: 'WED' },
+        { date: '2026-03-20', pnl: -3106.37, label: 'THU' },
+        { date: '2026-03-23', pnl: 1325.88, label: 'MON' },
+        { date: '2026-03-24', pnl: 625.65, label: 'TUE' },
+        { date: '2026-03-25', pnl: 1540.14, label: 'WED 🏆' },
+        { date: '2026-03-26', pnl: 1808.22, label: 'THU 🔥' },
+        { date: '2026-03-27', pnl: -687.25, label: 'FRI' },
+    ],
+    momentum: {
+        win_rate: 0.80,
+        green_days: 4,
+        total_days: 5,
+        streak: 1,
+        streak_dir: 'red',
+        classification: 'HOT'
+    },
+    danger_dates: {
+        fomc: ['2026-04-29','2026-04-30','2026-05-06','2026-05-07','2026-06-17','2026-06-18','2026-07-29','2026-07-30','2026-09-16','2026-09-17','2026-10-28','2026-10-29','2026-12-16','2026-12-17'],
+        rollover: ['2026-06','2026-09','2026-12']
+    },
+    simulation: {
+        note: 'Updated Mar 25 — 80% win rate, $180/day mean (momentum HOT), $250 std dev',
+        portfolio: { p10: 142800, p25: 151200, p50: 160500, p75: 170100, p90: 179400 },
+        accounts: [
+            { short:'TS-204', p10:34200, p25:37100, p50:40500, p75:43800, p90:46500, breach:0.0, avgP:25.8 },
+            { short:'TS-676', p10:33100, p25:36200, p50:39700, p75:43100, p90:45900, breach:0.0, avgP:25.2 },
+            { short:'TF-286', p10:32500, p25:35800, p50:39200, p75:42600, p90:45400, breach:2.1, avgP:24.9 },
+            { short:'AX-50K', p10:14200, p25:16500, p50:19400, p75:22800, p90:26500, breach:100.0,avgP:9.4 },
+            { short:'AX-100K',p10:13900, p25:16200, p50:19100, p75:22500, p90:26200, breach:100.0,avgP:9.2 },
+        ],
+        monthly: {
+            '2026-03': { p25:3200, p50:3500, p75:3800 },
+            '2026-04': { p25:19800, p50:22400, p75:25200 },
+            '2026-05': { p25:20500, p50:23100, p75:25900 },
+            '2026-06': { p25:24200, p50:27600, p75:31200 },
+            '2026-07': { p25:14800, p50:17600, p75:21000 },
+            '2026-08': { p25:12200, p50:14400, p75:17000 },
+            '2026-09': { p25:11900, p50:13900, p75:16100 },
+            '2026-10': { p25:12400, p50:14500, p75:16600 },
+            '2026-11': { p25:11100, p50:13000, p75:15000 },
+            '2026-12': { p25:12300, p50:14200, p75:16400 },
+        }
+    },
+    planned_actions: [
+        { target:'GROWING', short:'TS-204', action:'🏆 FIRST PAYOUT', amount:'$475+ net', reqs:'ELIGIBLE ✅ — $475 profit. 100% split. Riding to $1k.', confidence:'HIGH' },
+        { target:'APR 02', short:'TS-676', action:'PAYOUT ELIGIBLE', amount:'~$125 net', reqs:'4/5 win days — ONE MORE. $97 from breakeven.', confidence:'HIGH' },
+        { target:'APR 07', short:'AX-50K', action:'FIRST PAYOUT', amount:'$1,500', reqs:'Safety net $52,600 — $1,612 away', confidence:'HIGH' },
+        { target:'APR 10', short:'AX-100K', action:'FIRST PAYOUT', amount:'$2,000', reqs:'Safety net $103,100 — $2,208 away', confidence:'MEDIUM' },
+        { target:'APR 12', short:'TF-286', action:'EXTRACTION', amount:'~$1,350 net', reqs:'$3,000 profit trigger — $2,590 away', confidence:'MEDIUM' },
+    ]
+};
+
+// ── Firm Comparison Data ──
+const FIRMS = [
+    { name:'Topstep Express', cost:'$49/mo', acct:'50k', target:'$3,000', ddType:'Trailing EOD', dd:'$2,000', split:'90/10', firstPayout:'5 win days', verdict:'good', note:'YOUR FIRM. Cheapest eval. $149 activation fee.' },
+    { name:'Apex Trader Funding', cost:'$18-41/mo*', acct:'50k', target:'$3,000', ddType:'Trailing RT', dd:'$2,500', split:'100%/$25k', firstPayout:'10 days', verdict:'good', note:'YOUR FIRM. 80-90% off sales always running. $130-360 activation.' },
+    { name:'Tradeify Select', cost:'$159/mo', acct:'50k', target:'$2,000', ddType:'EOD', dd:'$2,000', split:'90/10', firstPayout:'5 win days', verdict:'good', note:'YOUR FIRM. No consistency rule. Same-day payouts. $0 activation.' },
+    { name:'My Funded Futures', cost:'$77/mo', acct:'50k', target:'$3,000', ddType:'EOD', dd:'$2,500', split:'90/10', firstPayout:'5 win days', verdict:'good', note:'BEST VALUE. $0 activation. EOD drawdown. Copy trading OK.' },
+    { name:'Take Profit Trader', cost:'~$150/mo', acct:'50k', target:'$3,000', ddType:'EOD', dd:'$2,000', split:'80/20', firstPayout:'5 days', verdict:'good', note:'DAILY PAYOUTS. No daily loss limit (removed Jan 2025). $130 activation.' },
+    { name:'Phidias', cost:'$55 once', acct:'25k', target:'~$1,500', ddType:'Static', dd:'varies', split:'80/20->90/10', firstPayout:'10 days', verdict:'good', note:'CHEAPEST ENTRY. One-time $55. Path to live acct. $0 activation.' },
+    { name:'Bulenox', cost:'$155/mo*', acct:'50k', target:'$3,000', ddType:'Trailing', dd:'$2,000', split:'100%/$10k', firstPayout:'10 days', verdict:'mid', note:'Promos drop to ~$55. 40% consistency rule. Weekly payouts Wed.' },
+    { name:'Leeloo Trading', cost:'$77/mo', acct:'50k', target:'$3,000', ddType:'Trailing', dd:'$2,500', split:'80/20->90/10', firstPayout:'10 days', verdict:'mid', note:'80/20 first 12mo then 90/10. WK accts pay every 4 days.' },
+    { name:'Earn2Trade', cost:'$150/mo*', acct:'50k', target:'$3,000', ddType:'EOD', dd:'$2,000', split:'80/20', firstPayout:'10 days', verdict:'mid', note:'Often 50% off ($75). Free monthly resets. 80/20 is below standard.' },
+    { name:'Elite Trader Funding', cost:'~$80/mo', acct:'50k', target:'$3,000', ddType:'Trailing EOD', dd:'$2,500', split:'100%/$12.5k', firstPayout:'15 days', verdict:'mid', note:'Max 5 accts (was 20). 40% consistency. Rules tightened Sept 2025.' },
+    { name:'FXIFY Futures', cost:'$89/mo', acct:'50k', target:'varies', ddType:'EOD', dd:'varies', split:'80-100%', firstPayout:'14 days', verdict:'mid', note:'Top rated newcomer. $125 activation. Path to 100% split.' },
+    { name:'FundedNext Bolt', cost:'$72-90', acct:'50k', target:'$3,000', ddType:'Trailing', dd:'$2,500', split:'80/20', firstPayout:'5 days', verdict:'mid', note:'$1,200 max/payout. 5 payouts total = $6k max. Limited extraction.' },
+];
+
+// ── Helpers ──
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+const fmt = n => (n < 0 ? '-$' + Math.abs(Math.round(n)).toLocaleString() : '$' + Math.round(n).toLocaleString());
+const fmtPnl = n => n > 0 ? '+$' + Math.round(n).toLocaleString() : '-$' + Math.abs(Math.round(n)).toLocaleString();
+const today = new Date().toISOString().slice(0,10);
+
+// ── Status Bar Clock ──
+function updateClock() {
+    const now = new Date();
+    const mstOffset = -7;
+    const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+    const mst = new Date(utc + (3600000 * mstOffset));
+    const h = mst.getHours(), m = mst.getMinutes(), s = mst.getSeconds();
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const h12 = h % 12 || 12;
+    $('#sb-time').textContent = `${String(h12).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')} ${ampm} MST`;
+
+    // ET session status
+    const etOffset = -4;
+    const et = new Date(utc + (3600000 * etOffset));
+    const etH = et.getHours(), etM = et.getMinutes();
+    const etMin = etH * 60 + etM;
+    const day = et.getDay();
+
+    if (day === 0 || day === 6) {
+        $('#sb-session').textContent = 'WEEKEND';
+    } else if (etMin < 570) {
+        $('#sb-session').textContent = 'PRE-MARKET';
+    } else if (etMin < 900) {
+        $('#sb-session').textContent = 'MARKET OPEN';
+        $('#sb-session').style.color = 'var(--green)';
+    } else if (etMin < 955) {
+        $('#sb-session').textContent = 'LATE SESSION';
+        $('#sb-session').style.color = 'var(--yellow)';
+    } else {
+        $('#sb-session').textContent = 'AFTER HOURS';
+    }
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+// ── Dynamic Header & Status Bar ──
+(function populateHeader() {
+    const m = PORTFOLIO.momentum;
+    const totalProfit = PORTFOLIO.accounts.filter(a => a.profit !== undefined).reduce((s, a) => s + (a.profit || 0), 0);
+    const lastDay = PORTFOLIO.daily_log[PORTFOLIO.daily_log.length - 1];
+    const eligible = PORTFOLIO.accounts.filter(a => a.payout_eligible).length;
+    const nextPayout = eligible > 0
+        ? PORTFOLIO.accounts.find(a => a.payout_eligible).short
+        : PORTFOLIO.planned_actions[0]?.short || 'TBD';
+    const nextPayoutDate = eligible > 0 ? 'ELIGIBLE NOW' : (PORTFOLIO.planned_actions[0]?.target || 'TBD');
+
+    // Status bar
+    const mColor = m.classification === 'HOT' ? 'var(--green)' : m.classification === 'WARMING' ? 'var(--yellow)' : 'var(--red)';
+    $('#sb-dot').style.background = mColor;
+    $('#sb-status').textContent = `${m.classification} — ${m.streak} ${m.streak_dir.toUpperCase()} STREAK`;
+    $('#sb-status').style.color = mColor;
+
+    // Header subtitle
+    const lastDate = lastDay.date;
+    $('#h-subtitle').textContent = `FLEET TERMINAL // ${PORTFOLIO.accounts.length} ACCOUNTS // UPDATED ${lastDate}`;
+
+    // Header stats
+    const profitColor = totalProfit >= 0 ? 'var(--green)' : 'var(--red)';
+    const wrColor = m.win_rate >= 0.6 ? 'var(--green)' : m.win_rate >= 0.4 ? 'var(--yellow)' : 'var(--red)';
+    const momColor = mColor;
+    const payColor = eligible > 0 ? 'var(--green)' : 'var(--cyan)';
+    const momSub = m.classification === 'HOT' ? 'stay disciplined' : m.classification === 'WARMING' ? 'building' : 'reduce size';
+
+    $('#header-stats').innerHTML = `
+        <div class="header-stat">
+            <div class="label">PORTFOLIO</div>
+            <div class="value" style="color:${profitColor}">${totalProfit >= 0 ? '+' : ''}$${Math.abs(Math.round(totalProfit)).toLocaleString()}</div>
+            <div class="sub">total P&L</div>
+        </div>
+        <div class="header-stat">
+            <div class="label">WIN RATE</div>
+            <div class="value" style="color:${wrColor}">${Math.round(m.win_rate * 100)}%</div>
+            <div class="sub">last ${m.total_days} sessions</div>
+        </div>
+        <div class="header-stat">
+            <div class="label">MOMENTUM</div>
+            <div class="value" style="color:${momColor}">${m.classification}</div>
+            <div class="sub">${momSub}</div>
+        </div>
+        <div class="header-stat">
+            <div class="label">NEXT PAYOUT</div>
+            <div class="value" style="color:${payColor}">${nextPayout}</div>
+            <div class="sub">${nextPayoutDate}</div>
+        </div>
+    `;
+})();
+
+// ── Tabs ──
+$$('.tab').forEach(t => t.addEventListener('click', () => {
+    $$('.tab').forEach(x => x.classList.remove('active'));
+    $$('.tab-panel').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    $('#panel-' + t.dataset.tab).classList.add('active');
+}));
+
+// ── KPI Strip ──
+const totalProfit = PORTFOLIO.accounts.filter(a => a.profit !== undefined).reduce((s, a) => s + (a.profit || 0), 0);
+const fundedCount = PORTFOLIO.accounts.filter(a => a.risk !== 'na').length;
+const totalAccounts = PORTFOLIO.accounts.length;
+const safeAccounts = PORTFOLIO.accounts.filter(a => a.risk === 'safe').length;
+const criticalAccounts = PORTFOLIO.accounts.filter(a => a.risk === 'critical' || a.risk === 'terminal').length;
+
+const kpis = [
+    { label:'FUNDED', value:`${fundedCount}/${totalAccounts}`, color:'var(--blue)', sub:'accounts active', cls:'kpi-cyan' },
+    { label:'TOTAL P&L', value:fmt(totalProfit), color: totalProfit >= 0 ? 'var(--green)' : 'var(--red)', sub:'since baseline', cls: totalProfit >= 0 ? 'kpi-green' : 'kpi-red' },
+    { label:'LAST SESSION', value:fmtPnl(PORTFOLIO.daily_log[PORTFOLIO.daily_log.length-1].pnl), color: PORTFOLIO.daily_log[PORTFOLIO.daily_log.length-1].pnl > 0 ? 'var(--green)' : 'var(--red)', sub:'Mar 26 🔥', cls: PORTFOLIO.daily_log[PORTFOLIO.daily_log.length-1].pnl > 0 ? 'kpi-green' : 'kpi-red' },
+    { label:'SAFE', value:safeAccounts, color:'var(--green)', sub:'accounts', cls:'kpi-green' },
+    { label:'CRITICAL', value:criticalAccounts, color:'var(--red)', sub:'accounts', cls:'kpi-red' },
+    { label:'EXTRACTION TARGET', value:'$3,000', color:'var(--cyan)', sub:'Tradeify trigger', cls:'kpi-cyan' },
+    { label:'NEXT FOMC', value:'APR 29', color:'var(--yellow)', sub:'37 days away', cls:'kpi-yellow' },
+];
+$('#kpi-strip').innerHTML = kpis.map(k => `
+    <div class="kpi ${k.cls}">
+        <div class="kpi-label">${k.label}</div>
+        <div class="kpi-value" style="color:${k.color}">${k.value}</div>
+        ${k.sub ? `<div class="kpi-sub">${k.sub}</div>` : ''}
+    </div>
+`).join('');
+
+// ── Sparkline Builder ──
+function buildSparkline(data) {
+    const vals = data.filter(v => v !== null);
+    if (vals.length === 0) return '';
+    const maxAbs = Math.max(...vals.map(v => Math.abs(v)), 1);
+    return vals.map(v => {
+        const h = Math.max(3, Math.abs(v) / maxAbs * 22);
+        const color = v >= 0 ? 'var(--green)' : 'var(--red)';
+        return `<div class="spark-bar" style="height:${h}px;background:${color}"></div>`;
+    }).join('');
+}
+
+// ── Risk Heatmap ──
+$('#heatmap').innerHTML = PORTFOLIO.accounts.filter(a => a.risk !== 'na').map(a => {
+    let cls = 'heat-safe';
+    let barColor = 'var(--green)';
+    let statusText = '';
+    let pct = 100;
+
+    if (a.risk === 'terminal') {
+        cls = 'heat-terminal'; barColor = 'var(--red)';
+        statusText = `<span style="color:var(--red);font-weight:700">DO NOT TRADE</span>`;
+        pct = Math.max(5, (a.dist_to_breach / a.mll) * 100);
+    } else if (a.risk === 'critical') {
+        cls = 'heat-critical'; barColor = 'var(--red)';
+        statusText = `$${a.dist_to_breach} to breach`;
+        pct = Math.max(10, (a.dist_to_breach / a.mll) * 100);
+    } else if (a.risk === 'high') {
+        cls = 'heat-warning'; barColor = 'var(--yellow)';
+        statusText = `$${a.dist_to_breach} to breach`;
+        pct = Math.max(15, (a.dist_to_breach / a.mll) * 100);
+    } else if (a.risk === 'medium') {
+        cls = 'heat-warning'; barColor = 'var(--yellow)';
+        statusText = `$${a.dist_to_breach} to breach`;
+        pct = Math.min(80, (a.dist_to_breach / a.mll) * 100);
+    } else {
+        statusText = `$${a.dist_to_breach} to breach`;
+        pct = Math.min(100, (a.dist_to_breach / a.mll) * 100);
+    }
+
+    return `
+    <div class="heat-cell ${cls}">
+        <div class="heat-name" style="color:${a.risk === 'terminal' || a.risk === 'critical' ? 'var(--red)' : a.risk === 'high' || a.risk === 'medium' ? 'var(--yellow)' : 'var(--green)'}">${a.short}</div>
+        <div class="heat-balance" style="color:${a.profit >= 0 ? 'var(--green)' : 'var(--red)'}">${fmt(a.profit)}</div>
+        <div class="heat-meta">${statusText}</div>
+        ${a.daily_pnl ? `<div class="sparkline">${buildSparkline(a.daily_pnl)}</div>` : ''}
+        <div class="heat-bar">
+            <div class="heat-bar-fill" style="width:${pct}%;background:${barColor}"></div>
+        </div>
+    </div>`;
+}).join('');
+
+// ── P&L Tracker ──
+const log = PORTFOLIO.daily_log;
+const streakDir = PORTFOLIO.momentum.streak_dir;
+const streakCount = PORTFOLIO.momentum.streak;
+
+$('#streak-display').innerHTML = `
+    <span class="streak-icon">${streakDir === 'red' ? '&#9760;' : '&#9889;'}</span>
+    <div class="streak-info">
+        <div class="streak-count" style="color:${streakDir === 'red' ? 'var(--red)' : 'var(--green)'}">${streakCount} DAY ${streakDir.toUpperCase()} STREAK</div>
+        <div class="streak-sub">${PORTFOLIO.momentum.green_days}/${PORTFOLIO.momentum.total_days} green days (${Math.round(PORTFOLIO.momentum.win_rate*100)}%)</div>
+    </div>
+    <div class="streak-dots">
+        ${log.slice(1).map(d => `<div class="streak-dot ${d.pnl > 0 ? 's-green' : 's-red'}"></div>`).join('')}
+    </div>
+`;
+
+$('#pnl-grid').innerHTML = log.map(d => {
+    if (d.pnl === null) return `
+        <div class="pnl-day" style="border-color:var(--card-border)">
+            <div class="pnl-date">${d.date.slice(5)}</div>
+            <div class="pnl-amount" style="color:var(--text-muted)">--</div>
+            <div class="pnl-label">${d.label}</div>
+        </div>`;
+    const isGreen = d.pnl > 0;
+    return `
+    <div class="pnl-day ${isGreen ? 'pnl-green' : 'pnl-red'}">
+        <div class="pnl-date">${d.date.slice(5)}</div>
+        <div class="pnl-amount" style="color:${isGreen ? 'var(--green)' : 'var(--red)'}">${fmtPnl(d.pnl)}</div>
+        <div class="pnl-label">${d.label}</div>
+    </div>`;
+}).join('');
+
+// ── Payout Countdowns ──
+function daysUntil(dateStr) {
+    const target = new Date(dateStr + 'T00:00:00');
+    const now = new Date();
+    now.setHours(0,0,0,0);
+    return Math.max(0, Math.ceil((target - now) / 86400000));
+}
+
+const countdowns = [
+    {
+        account: 'AX-50K', action: 'FIRST PAYOUT TARGET',
+        targetDate: '2026-04-08', color: 'var(--green)',
+        requirements: [
+            `Balance: $50,624 / $52,600 safety net ($1,976 away)`,
+            `Trading Days: 12/10 ✓`,
+            `Profit Days ($50+): 10/5 ✓`,
+            `Step 1 Cap: $1,500 (100% split)`,
+        ]
+    },
+    {
+        account: 'TF-286', action: 'EXTRACTION TRIGGER ($3K PROFIT)',
+        targetDate: '2026-04-14', color: 'var(--purple)',
+        requirements: [
+            `Profit: +$120 / $3,000 trigger ($2,880 away)`,
+            `Winning Days: 8/5 ✓`,
+            `Extract $1,500 (50% cap), keep $1,500 buffer`,
+            `Net after 90/10: $1,350`,
+        ]
+    },
+    {
+        account: 'AX-100K', action: 'FIRST PAYOUT TARGET',
+        targetDate: '2026-04-15', color: 'var(--yellow)',
+        requirements: [
+            `Balance: $100,515 / $103,100 safety net ($2,585 away)`,
+            `Trading Days: 12/10 ✓`,
+            `Profit Days ($50+): 10/5 ✓`,
+            `Buffer: $415 above floor — improving, MES only`,
+        ]
+    },
+];
+
+$('#countdown-grid').innerHTML = countdowns.map(cd => {
+    const days = daysUntil(cd.targetDate);
+    const weeks = Math.floor(days / 7);
+    const remDays = days % 7;
+    return `
+    <div class="countdown-card">
+        <div class="cd-account">${cd.account}</div>
+        <div class="cd-action" style="color:${cd.color}">${cd.action}</div>
+        <div class="cd-timer">
+            <div class="cd-unit"><div class="cd-num">${weeks}</div><div class="cd-lbl">WKS</div></div>
+            <div class="cd-unit"><div class="cd-num">${remDays}</div><div class="cd-lbl">DAYS</div></div>
+        </div>
+        <div class="cd-requirements">${cd.requirements.map(r => `• ${r}`).join('<br>')}</div>
+    </div>`;
+}).join('');
+
+// ── TS-204 Payout Decision Calculator ──
+(function buildPayoutCalc() {
+    const ts204 = PORTFOLIO.accounts.find(a => a.key === 'ts_204');
+    if (!ts204 || !ts204.payout_eligible) {
+        $('#payout-calc').style.display = 'none';
+        return;
+    }
+    const profit = ts204.profit;
+    const scenarios = [
+        { label: 'PULL NOW', pullAt: profit, wait: 0 },
+        { label: 'GROW TO $500', pullAt: 500, wait: Math.ceil((500 - profit) / 150) },
+        { label: 'GROW TO $1,000', pullAt: 1000, wait: Math.ceil((1000 - profit) / 150) },
+        { label: 'GROW TO $2,000', pullAt: 2000, wait: Math.ceil((2000 - profit) / 150) },
+    ];
+    const html = scenarios.map((s, i) => {
+        const cap = Math.min(s.pullAt * 0.5, 5000); // 50% balance cap, $5k max
+        const net = Math.round(cap); // 100% split on first $10k (pre-Jan 12 2026 accounts)
+        const postBalance = s.pullAt - cap;
+        const floorAfter = 0; // MLL locks to $0 after first payout on Topstep
+        const bufferAfter = postBalance - floorAfter;
+        const survivalDays = Math.floor(bufferAfter / 150); // at $150/day risk
+        const isRecommended = i === 2; // $1,000 is the sweet spot
+        const riskLevel = bufferAfter < 100 ? 'CRITICAL' : bufferAfter < 300 ? 'TIGHT' : bufferAfter < 500 ? 'OK' : 'SAFE';
+        const riskColor = bufferAfter < 100 ? 'var(--red)' : bufferAfter < 300 ? 'var(--yellow)' : bufferAfter < 500 ? 'var(--yellow)' : 'var(--green)';
+        return `
+        <div class="pc-scenario ${isRecommended ? 'pc-recommended' : ''}">
+            <div class="pc-label">${s.label} ${isRecommended ? '⭐' : ''}</div>
+            <div class="pc-amount" style="color:var(--green)">$${net.toLocaleString()}<span style="font-size:12px;color:var(--text-dim)"> net</span></div>
+            <div class="pc-row"><span class="pc-key">Wait</span><span class="pc-val">${s.wait === 0 ? 'None' : s.wait + ' days'}</span></div>
+            <div class="pc-row"><span class="pc-key">Gross payout</span><span class="pc-val">$${Math.round(cap).toLocaleString()}</span></div>
+            <div class="pc-row"><span class="pc-key">Post-payout bal</span><span class="pc-val">$${Math.round(postBalance).toLocaleString()}</span></div>
+            <div class="pc-row"><span class="pc-key">Floor locks at</span><span class="pc-val" style="color:var(--red)">$0 (MLL)</span></div>
+            <div class="pc-row"><span class="pc-key">Buffer after</span><span class="pc-val" style="color:${riskColor}">$${Math.round(bufferAfter).toLocaleString()}</span></div>
+            <div class="pc-row"><span class="pc-key">Survival days</span><span class="pc-val">${survivalDays} days</span></div>
+            <div class="pc-verdict-bar" style="background:${riskColor}22;color:${riskColor}">
+                ${riskLevel}${isRecommended ? ' — RECOMMENDED PULL POINT' : ''}
+            </div>
+        </div>`;
+    }).join('');
+
+    $('#payout-calc').innerHTML = `
+        <div class="pc-header">
+            <div>
+                <span class="pc-title">🏆 TS-204 PAYOUT CALCULATOR</span>
+                <div class="pc-subtitle">After first payout: MLL locks to $0, remaining balance = permanent floor. Buffer resets.</div>
+            </div>
+            <span class="badge badge-safe">ELIGIBLE</span>
+        </div>
+        <div class="pc-scenarios">${html}</div>
+    `;
+})();
+
+// ── Fleet Countdown Grids (All Accounts) ──
+(function buildFleetCountdowns() {
+    // Next 10 trading days from Mar 28 (next trading day)
+    const allDays = [
+        { date:'MAR 30', day:'MON' }, { date:'MAR 31', day:'TUE' },
+        { date:'APR 1', day:'WED' }, { date:'APR 2', day:'THU' }, { date:'APR 3', day:'FRI' },
+        { date:'APR 6', day:'MON' }, { date:'APR 7', day:'TUE' }, { date:'APR 8', day:'WED' },
+        { date:'APR 9', day:'THU' }, { date:'APR 10', day:'FRI' }, { date:'APR 13', day:'MON' },
+    ];
+
+    // Define targets for each account
+    const targets = [
+        {
+            key:'ax_eval', title:'⏰ AX-EVAL FUNDING — DEADLINE APR 2', color:'#ff5252', bg:'255,82,82',
+            current: 51553.97, start: 50000, target: 53000,
+            gap: 1446.03, deadline: 'APR 2', deadlineDays: 4, hasDeadline: true,
+            strategy: '<strong style="color:var(--red)">ACCOUNT DELETES APR 2 IF NOT AT $53,000.</strong> Need $362/day — requires 2 MES, $180+ per contract. Yesterday\'s -$143 ate into margin. One big day like last Wed (+$410) gets you back on track.',
+            riskLabel: '⏰ $1,446 — 4 DAYS'
+        },
+        {
+            key:'ts_204', title:'TS-204 OPTIMAL PAYOUT', color:'#00f0ff', bg:'0,240,255',
+            current: 474.99, start: 0, target: 1000,
+            gap: 525.01, deadline: null, deadlineDays: 4, hasDeadline: false,
+            strategy: 'PAYOUT ELIGIBLE NOW. Growing to $1k for optimal pull — $500 buffer post-payout. 100% split on first $10k. MLL at -$1,033 (trailing).',
+            riskLabel: '🏆 ELIGIBLE'
+        },
+        {
+            key:'ts_676', title:'TS-676 PAYOUT ELIGIBLE', color:'#00f0ff', bg:'0,240,255',
+            current: -96.69, start: -836.08, target: 150,
+            gap: 246.69, deadline: null, deadlineDays: 2, hasDeadline: false,
+            strategy: '4/5 win days. Need ONE more $150+ day + cross $0. MLL at -$1,611 (trailing). $1,514 to breach.',
+            riskLabel: '4/5 DAYS'
+        },
+        {
+            key:'ts_235', title:'TS-235 RECOVERY', color:'#ffa502', bg:'255,165,2',
+            current: -718.59, start: -1314.92, target: 0,
+            gap: 718.59, deadline: null, deadlineDays: 5, hasDeadline: false,
+            strategy: '2/5 win days. MLL at -$2,000 (floor). $1,281 to breach. Focus on survival — bonus swings only.',
+            riskLabel: 'RECOVERING'
+        },
+        {
+            key:'ax_50k', title:'AX-50K FIRST PAYOUT', color:'#00d4aa', bg:'0,212,170',
+            current: 50987.86, start: 50000, target: 52600,
+            gap: 1612.14, deadline: null, deadlineDays: 8, hasDeadline: false,
+            strategy: 'FLEET ANCHOR. $1,612 to safety net. Consistency 26% (under 30% cap ✅). 100% split, $1,500 first payout.',
+            riskLabel: '$1,612 TO GO'
+        },
+        {
+            key:'ax_100k', title:'AX-100K FIRST PAYOUT', color:'#00d4aa', bg:'0,212,170',
+            current: 100892.53, start: 100000, target: 103100,
+            gap: 2207.47, deadline: null, deadlineDays: 11, hasDeadline: false,
+            strategy: 'Profit $893. Buffer $793 above floor. Consistency 28.8% (under 30% cap ✅). 100% split, $2,000 first payout.',
+            riskLabel: '$2,208 TO GO'
+        },
+        {
+            key:'tf_286', title:'TF-286 EXTRACTION', color:'#a855f7', bg:'168,85,247',
+            current: 409.75, start: 0, target: 3000,
+            gap: 2590.25, deadline: null, deadlineDays: 14, hasDeadline: false,
+            strategy: '9 win days banked. $2,590 to $3k trigger. At trigger: extract $1,500, keep $1,500 buffer. Net ~$1,350 (90/10 split).',
+            riskLabel: '$2,590 TO GO'
+        },
+    ];
+
+    let html = '';
+    targets.forEach(t => {
+        const days = allDays.slice(0, t.deadlineDays);
+        const dailyNeeded = Math.ceil(t.gap / days.length);
+        const range = t.target - t.start;
+        const earned = t.current - t.start;
+        const pct = Math.max(0, Math.min(100, (earned / range) * 100));
+
+        const dayCards = days.map((d, i) => {
+            const remaining = Math.max(0, Math.round(t.gap - dailyNeeded * (i + 1)));
+            return `
+            <div class="ec-day ${i === 0 ? 'ec-next' : ''}" style="${i === 0 ? 'border-color:' + t.color : ''}">
+                <div class="ec-date">${d.date} (${d.day})</div>
+                <div class="ec-target" style="color:${t.color}">+$${dailyNeeded.toLocaleString()}</div>
+                <div class="ec-cumulative">$${remaining.toLocaleString()} left</div>
+                <div class="ec-label" style="color:${i === 0 ? t.color : 'var(--text-dim)'}">${i === 0 ? 'NEXT' : 'DAY ' + (i+1)}</div>
+            </div>`;
+        }).join('');
+
+        html += `
+        <div class="acct-countdown" style="border-color:rgba(${t.bg},0.3)">
+            <div class="ec-header">
+                <div>
+                    <span class="ec-title" style="color:${t.color}">${t.title}</span>
+                    <div class="ec-subtitle">
+                        ${t.hasDeadline ? '<span style="color:var(--red);font-weight:700">DEADLINE: ' + t.deadline + '</span> — ' : ''}
+                        <span style="color:${t.color};font-weight:700">${days.length} TRADING DAYS</span> —
+                        Need <span style="color:${t.color};font-weight:700">$${dailyNeeded}/day</span>
+                    </div>
+                </div>
+                <span class="badge" style="background:rgba(${t.bg},0.15);color:${t.color};border:1px solid rgba(${t.bg},0.3)">${t.riskLabel}</span>
+            </div>
+            <div class="ec-progress-wrap">
+                <div class="ec-progress-fill" style="width:${pct.toFixed(1)}%;background:linear-gradient(90deg,rgba(${t.bg},0.8),${t.color})"></div>
+                <div class="ec-progress-text">$${Math.round(earned).toLocaleString()} / $${range.toLocaleString()} (${pct.toFixed(0)}%)</div>
+            </div>
+            <div class="ec-daily-grid">${dayCards}</div>
+            <div class="ec-strategy">
+                <span style="color:${t.color};font-weight:700">STRATEGY:</span> ${t.strategy}
+            </div>
+        </div>`;
+    });
+
+    $('#fleet-countdowns').innerHTML = html;
+})();
+
+// ── Kill/Keep Decision Gate (TS-235) ──
+(function buildDecisionPanel() {
+    const ts235 = PORTFOLIO.accounts.find(a => a.key === 'ts_235');
+    if (!ts235 || ts235.risk !== 'terminal') {
+        $('#decision-panel').style.display = 'none';
+        return;
+    }
+    const daysToRecover = Math.ceil(Math.abs(ts235.profit) / 150);
+    const breachProb = Math.min(95, Math.round((1 - ts235.dist_to_breach / ts235.mll) * 100));
+    const evKeep = (0.25 * 150 * 5) - (0.75 * Math.abs(ts235.dist_to_breach));
+    const evKill = 0;
+
+    $('#decision-panel').innerHTML = `
+        <div class="dp-header">
+            <span class="dp-title">DECISION GATE: ${ts235.short}</span>
+            <span class="badge badge-terminal">TERMINAL</span>
+        </div>
+        <div class="dp-grid">
+            <div class="dp-option dp-kill">
+                <div class="dp-label" style="color:var(--red)">KILL (STOP TRADING)</div>
+                <div class="dp-stat"><span class="dp-key">Expected Value</span><span class="dp-val" style="color:var(--text-dim)">$0</span></div>
+                <div class="dp-stat"><span class="dp-key">Risk</span><span class="dp-val" style="color:var(--green)">None</span></div>
+                <div class="dp-stat"><span class="dp-key">Time Saved</span><span class="dp-val" style="color:var(--green)">~${daysToRecover} trading days</span></div>
+                <div class="dp-stat"><span class="dp-key">Focus redirected to</span><span class="dp-val" style="color:var(--cyan)">AX-50K, TF-286</span></div>
+                <div class="dp-stat"><span class="dp-key">Verdict</span><span class="dp-val" style="color:var(--green)">RECOMMENDED</span></div>
+            </div>
+            <div class="dp-option dp-keep">
+                <div class="dp-label" style="color:var(--yellow)">KEEP (FREE SWINGS ONLY)</div>
+                <div class="dp-stat"><span class="dp-key">Expected Value</span><span class="dp-val" style="color:${evKeep >= 0 ? 'var(--green)' : 'var(--red)'}">${fmt(evKeep)}</span></div>
+                <div class="dp-stat"><span class="dp-key">Breach Risk</span><span class="dp-val" style="color:var(--red)">${breachProb}%</span></div>
+                <div class="dp-stat"><span class="dp-key">Days to recover</span><span class="dp-val" style="color:var(--yellow)">${daysToRecover}+ days</span></div>
+                <div class="dp-stat"><span class="dp-key">Buffer remaining</span><span class="dp-val" style="color:var(--red)">$${ts235.dist_to_breach}</span></div>
+                <div class="dp-stat"><span class="dp-key">Only if</span><span class="dp-val" style="color:var(--yellow)">A++ setup, 1 MES</span></div>
+            </div>
+        </div>
+    `;
+})();
+
+// ── Weekly Targets ──
+(function buildWeeklyTargets() {
+    const targets = PORTFOLIO.accounts.filter(a => a.risk !== 'na' && a.risk !== 'terminal').map(a => {
+        let goal = '';
+        let dailyNeeded = 0;
+        let targetLabel = '';
+        let color = 'var(--cyan)';
+        let pct = 0;
+        const tradingDaysThisWeek = 5; // Mon-Fri
+
+        if (a.type === 'ax' && a.safety_net) {
+            // Apex: target is safety net
+            dailyNeeded = Math.ceil(a.dist_to_safety / 14); // ~14 trading days to Apr target
+            goal = `Safety net: $${a.safety_net.toLocaleString()}`;
+            targetLabel = `+$${dailyNeeded}/day for 14 days`;
+            pct = Math.max(5, ((a.balance - a.starting) / (a.safety_net - a.starting)) * 100);
+            color = pct > 60 ? 'var(--green)' : pct > 30 ? 'var(--yellow)' : 'var(--red)';
+        } else if (a.type === 'tf') {
+            // Tradeify: target is $3k profit
+            const needed = 3000 - Math.max(0, a.profit);
+            dailyNeeded = Math.ceil(needed / 18); // ~18 trading days
+            goal = `Extraction trigger: $3,000 profit`;
+            targetLabel = `+$${dailyNeeded}/day for 18 days`;
+            pct = Math.max(0, (a.profit / 3000) * 100);
+            color = pct > 50 ? 'var(--green)' : pct > 20 ? 'var(--yellow)' : 'var(--red)';
+        } else {
+            // Topstep: target is recovery + 5 win days
+            const winDaysLeft = Math.max(0, a.winning_req - a.winning_days);
+            dailyNeeded = 150;
+            goal = `${winDaysLeft} more winning days ($150+)`;
+            targetLabel = `$150/day secure & stop`;
+            pct = (a.winning_days / a.winning_req) * 100;
+            color = pct > 60 ? 'var(--green)' : pct > 30 ? 'var(--yellow)' : 'var(--red)';
+        }
+
+        const weekTarget = dailyNeeded * tradingDaysThisWeek;
+
+        return `
+        <div class="target-card">
+            <div class="tc-account">${a.short}</div>
+            <div class="tc-goal" style="color:${color}">${goal}</div>
+            <div class="tc-daily" style="color:var(--cyan)">$${dailyNeeded}<span style="font-size:12px;color:var(--text-dim)">/day</span></div>
+            <div class="tc-meta">
+                ${targetLabel}<br>
+                This week's target: <span style="color:var(--text);font-weight:600">+$${weekTarget.toLocaleString()}</span>
+            </div>
+            <div class="tc-progress">
+                <div class="tc-progress-fill" style="width:${Math.max(2, Math.min(100, pct))}%;background:${color}"></div>
+            </div>
+        </div>`;
+    });
+    $('#target-grid').innerHTML = targets.join('');
+})();
+
+// ── Post-Payout Simulator ──
+(function buildPayoutSimulator() {
+    const sims = [];
+
+    // Apex 50k simulation
+    const ax50 = PORTFOLIO.accounts.find(a => a.key === 'ax_50k');
+    if (ax50 && ax50.safety_net) {
+        const extractAmount = ax50.step_cap;
+        const postBalance = ax50.safety_net; // would be at safety net to extract
+        const postBuffer = postBalance - ax50.floor;
+        const survivalDays = Math.floor(postBuffer / 300);
+        const survivalPct = Math.min(99, Math.round((1 - Math.pow(0.4, survivalDays)) * 100));
+        sims.push(`
+        <div class="sim-card">
+            <div class="sc-header">
+                <span class="sc-title" style="color:var(--green)">${ax50.short}</span>
+                <span class="sc-badge" style="background:var(--green-glow);color:var(--green);border:1px solid rgba(0,212,170,0.3)">STEP 1</span>
+            </div>
+            <div class="sc-row"><span class="sc-key">Current Balance</span><span class="sc-val">${fmt(ax50.balance)}</span></div>
+            <div class="sc-row"><span class="sc-key">Need to reach</span><span class="sc-val" style="color:var(--cyan)">${fmt(ax50.safety_net)}</span></div>
+            <div class="sc-row"><span class="sc-key">Gap remaining</span><span class="sc-val" style="color:var(--yellow)">+$${ax50.dist_to_safety.toLocaleString()}</span></div>
+            <div class="sc-arrow">--- AFTER EXTRACTION ---</div>
+            <div class="sc-row"><span class="sc-key">Extract amount</span><span class="sc-val" style="color:var(--green)">$${extractAmount.toLocaleString()}</span></div>
+            <div class="sc-row"><span class="sc-key">Net to you (100%)</span><span class="sc-val" style="color:var(--green)">$${extractAmount.toLocaleString()}</span></div>
+            <div class="sc-row"><span class="sc-key">Post-payout balance</span><span class="sc-val">${fmt(ax50.safety_net - extractAmount)}</span></div>
+            <div class="sc-row"><span class="sc-key">New buffer above floor</span><span class="sc-val" style="color:var(--yellow)">$${(ax50.safety_net - extractAmount - ax50.floor).toLocaleString()}</span></div>
+            <div class="sc-row"><span class="sc-key">Survival days (at $300/day)</span><span class="sc-val">${Math.floor((ax50.safety_net - extractAmount - ax50.floor) / 300)}</span></div>
+            <div class="sc-verdict" style="background:var(--green-glow);color:var(--green)">
+                SAFE — Apex safety net protects. Trail DD stays above $50,100.
+            </div>
+        </div>`);
+    }
+
+    // Apex 100k simulation
+    const ax100 = PORTFOLIO.accounts.find(a => a.key === 'ax_100k');
+    if (ax100 && ax100.safety_net) {
+        sims.push(`
+        <div class="sim-card">
+            <div class="sc-header">
+                <span class="sc-title" style="color:var(--yellow)">${ax100.short}</span>
+                <span class="sc-badge" style="background:var(--yellow-glow);color:var(--yellow);border:1px solid rgba(255,165,2,0.3)">STEP 1</span>
+            </div>
+            <div class="sc-row"><span class="sc-key">Current Balance</span><span class="sc-val">${fmt(ax100.balance)}</span></div>
+            <div class="sc-row"><span class="sc-key">Need to reach</span><span class="sc-val" style="color:var(--cyan)">${fmt(ax100.safety_net)}</span></div>
+            <div class="sc-row"><span class="sc-key">Gap remaining</span><span class="sc-val" style="color:var(--red)">+$${ax100.dist_to_safety.toLocaleString()}</span></div>
+            <div class="sc-arrow">--- AFTER EXTRACTION ---</div>
+            <div class="sc-row"><span class="sc-key">Extract amount</span><span class="sc-val" style="color:var(--green)">$${ax100.step_cap.toLocaleString()}</span></div>
+            <div class="sc-row"><span class="sc-key">Net to you (100%)</span><span class="sc-val" style="color:var(--green)">$${ax100.step_cap.toLocaleString()}</span></div>
+            <div class="sc-row"><span class="sc-key">Post-payout balance</span><span class="sc-val">${fmt(ax100.safety_net - ax100.step_cap)}</span></div>
+            <div class="sc-row"><span class="sc-key">New buffer above floor</span><span class="sc-val" style="color:var(--yellow)">$${(ax100.safety_net - ax100.step_cap - ax100.floor).toLocaleString()}</span></div>
+            <div class="sc-verdict" style="background:var(--yellow-glow);color:var(--yellow)">
+                CAUTION — $208 above floor NOW. Must rebuild $2,792 before extraction possible.
+            </div>
+        </div>`);
+    }
+
+    // Tradeify simulation
+    const tf = PORTFOLIO.accounts.find(a => a.key === 'tf_286');
+    if (tf) {
+        const triggerProfit = 3000;
+        const extractAmount = Math.min(triggerProfit * 0.5, 3000);
+        const netExtract = extractAmount * 0.9;
+        const postProfit = triggerProfit - extractAmount;
+        sims.push(`
+        <div class="sim-card">
+            <div class="sc-header">
+                <span class="sc-title" style="color:var(--purple)">${tf.short}</span>
+                <span class="sc-badge" style="background:rgba(168,85,247,0.12);color:var(--purple);border:1px solid rgba(168,85,247,0.3)">FLEX</span>
+            </div>
+            <div class="sc-row"><span class="sc-key">Current Profit</span><span class="sc-val" style="color:var(--red)">${fmt(tf.profit)}</span></div>
+            <div class="sc-row"><span class="sc-key">Extraction trigger</span><span class="sc-val" style="color:var(--cyan)">$3,000 profit</span></div>
+            <div class="sc-row"><span class="sc-key">Gap remaining</span><span class="sc-val" style="color:var(--red)">+$${(triggerProfit - Math.max(0, tf.profit)).toLocaleString()}</span></div>
+            <div class="sc-arrow">--- AT $3K PROFIT ---</div>
+            <div class="sc-row"><span class="sc-key">Extract (50% cap)</span><span class="sc-val" style="color:var(--green)">$${extractAmount.toLocaleString()}</span></div>
+            <div class="sc-row"><span class="sc-key">Net after 90/10</span><span class="sc-val" style="color:var(--green)">$${netExtract.toLocaleString()}</span></div>
+            <div class="sc-row"><span class="sc-key">Remaining profit</span><span class="sc-val">$${postProfit.toLocaleString()}</span></div>
+            <div class="sc-row"><span class="sc-key">Post-payout floor</span><span class="sc-val" style="color:var(--red)">Balance = permanent floor</span></div>
+            <div class="sc-row"><span class="sc-key">New buffer</span><span class="sc-val" style="color:var(--green)">$${postProfit.toLocaleString()} (from remaining profit)</span></div>
+            <div class="sc-verdict" style="background:var(--green-glow);color:var(--green)">
+                OPTIMAL — $1,500 buffer survives 5 days at $300/day loss cap. MES only post-payout.
+            </div>
+        </div>`);
+    }
+
+    $('#sim-grid').innerHTML = sims.join('');
+})();
+
+// ── Planned Actions ──
+$('#plan-body').innerHTML = PORTFOLIO.planned_actions.map(p => {
+    const confColor = p.confidence === 'HIGH' ? 'var(--green)' : p.confidence === 'MED' ? 'var(--yellow)' : 'var(--red)';
+    return `<tr>
+        <td style="font-weight:700;color:var(--cyan)">${p.target}</td>
+        <td style="font-weight:600">${p.short}</td>
+        <td style="color:var(--green)">${p.action}</td>
+        <td style="font-weight:700">${p.amount}</td>
+        <td style="color:var(--text-dim);font-size:10px">${p.reqs}</td>
+        <td style="color:${confColor};font-weight:700">${p.confidence}</td>
+    </tr>`;
+}).join('');
+
+// ── Calendar ──
+const payDates = new Set(['2026-04-10','2026-04-15','2026-04-18']);
+const fundDates = new Set([]);
+const dangerDates = new Set(PORTFOLIO.danger_dates.fomc);
+const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+let calHtml = '';
+for (let m = 2; m < 12; m++) {
+    const first = new Date(2026, m, 1);
+    const daysInMonth = new Date(2026, m + 1, 0).getDate();
+    const startDow = first.getDay();
+    const offset = startDow === 0 ? 6 : startDow - 1;
+
+    calHtml += `<div class="month-card"><div class="mtitle">${monthNames[m]} 2026</div><div class="mgrid">`;
+    calHtml += ['M','T','W','T','F','S','S'].map(d => `<div class="dh">${d}</div>`).join('');
+
+    for (let i = 0; i < offset; i++) calHtml += '<div class="d"></div>';
+
+    for (let d = 1; d <= daysInMonth; d++) {
+        const dt = `2026-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        const dow = (offset + d - 1) % 7;
+        let cls = 'd';
+        if (dow >= 5) cls += ' we';
+        if (dt === today) cls += ' today';
+        if (dangerDates.has(dt)) cls += ' danger';
+        else if (payDates.has(dt)) cls += ' pay';
+        else if (fundDates.has(dt)) cls += ' fund';
+        calHtml += `<div class="${cls}">${d}</div>`;
+    }
+    calHtml += '</div></div>';
+}
+$('#cal-grid').innerHTML = calHtml;
+
+// ── Bar Chart ──
+const months = Object.keys(PORTFOLIO.simulation.monthly).sort();
+const maxBar = Math.max(...months.map(m => PORTFOLIO.simulation.monthly[m].p75));
+$('#bars').innerHTML = months.map(m => {
+    const d = PORTFOLIO.simulation.monthly[m];
+    const h = Math.max(8, d.p50 / maxBar * 180);
+    const mLabel = monthNames[parseInt(m.slice(5)) - 1].slice(0, 3).toUpperCase();
+    return `
+    <div class="bar-col">
+        <div class="bar-val">${fmt(d.p50)}</div>
+        <div class="bar main" style="height:${h}px"></div>
+        <div class="bar-lbl">${mLabel}</div>
+    </div>`;
+}).join('');
+
+// ── Percentile Table ──
+const sim = PORTFOLIO.simulation;
+let percHtml = sim.accounts.map(a => {
+    const bc = a.breach < 10 ? 'var(--green)' : (a.breach < 50 ? 'var(--yellow)' : 'var(--red)');
+    return `<tr>
+        <td style="font-weight:700">${a.short}</td>
+        <td>${fmt(a.p10)}</td><td>${fmt(a.p25)}</td>
+        <td style="color:var(--green);font-weight:700">${fmt(a.p50)}</td>
+        <td>${fmt(a.p75)}</td>
+        <td style="color:var(--cyan)">${fmt(a.p90)}</td>
+        <td style="color:${bc}">${a.breach}%</td>
+        <td>${a.avgP}</td>
+    </tr>`;
+}).join('');
+percHtml += `<tr style="border-top:2px solid var(--cyan)">
+    <td style="color:var(--cyan);font-weight:700">TOTAL</td>
+    <td>${fmt(sim.portfolio.p10)}</td><td>${fmt(sim.portfolio.p25)}</td>
+    <td style="color:var(--green);font-weight:800;font-size:13px">${fmt(sim.portfolio.p50)}</td>
+    <td>${fmt(sim.portfolio.p75)}</td>
+    <td style="color:var(--cyan)">${fmt(sim.portfolio.p90)}</td>
+    <td>-</td><td>-</td>
+</tr>`;
+$('#perc-body').innerHTML = percHtml;
+
+// ── Firm Comparison Table ──
+$('#firm-body').innerHTML = FIRMS.map(f => {
+    const vc = f.verdict === 'good' ? 'good' : f.verdict === 'mid' ? 'mid' : 'bad';
+    const vl = f.verdict === 'good' ? 'STRONG' : f.verdict === 'mid' ? 'DECENT' : 'AVOID';
+    return `<tr>
+        <td class="firm-name">${f.name}</td>
+        <td>${f.cost}</td>
+        <td>${f.acct}</td>
+        <td>${f.target}</td>
+        <td>${f.ddType}</td>
+        <td>${f.dd}</td>
+        <td class="${vc}">${f.split}</td>
+        <td>${f.firstPayout}</td>
+        <td class="${vc}">${vl}</td>
+    </tr>`;
+}).join('');
+
+// ── Keyboard nav ──
+document.addEventListener('keydown', e => {
+    const tabs = ['overview','calendar','simulation','rules','intel'];
+    if (e.key >= '1' && e.key <= '5') {
+        $$('.tab')[parseInt(e.key) - 1]?.click();
+    }
+});
+
+// ── Danger Alert ──
+(function checkDangers() {
+    const criticals = PORTFOLIO.accounts.filter(a => a.risk === 'terminal' || a.risk === 'critical');
+    const evalAcct = PORTFOLIO.accounts.find(a => a.key === 'ax_eval');
+    const alerts = [];
+    criticals.forEach(a => {
+        alerts.push(`${a.short}: $${a.dist_to_breach} TO BREACH — CAUTIOUS`);
+    });
+    if (evalAcct && evalAcct.gap) {
+        alerts.push(`AX-EVAL: $${Math.round(evalAcct.gap).toLocaleString()} to fund — DEADLINE APR 2`);
+    }
+    if (alerts.length) {
+        $('#danger-alert').style.display = 'flex';
+        $('#danger-text').innerHTML = alerts.join(' | ');
+    }
+})();
+
+// ── MLL Tracker ──
+(function buildMLL() {
+    const mllEl = $('#mll-tracker');
+    if (!mllEl) return;
+    const tsAccounts = PORTFOLIO.accounts.filter(a => a.type === 'ts');
+    let html = '<div class="mll-grid">';
+    tsAccounts.forEach(a => {
+        // For Topstep: balance is profit from $0. Floor is MLL (negative).
+        // Full range: floor to some positive max
+        const maxRange = a.mll; // 2000 total range from breach to $0 start
+        const balFromFloor = a.balance - a.floor; // how far balance is from MLL
+        const totalRange = a.mll + Math.max(a.balance, 500); // visual range
+        const balPct = Math.max(0, Math.min(100, (balFromFloor / totalRange) * 100));
+        const mllPct = 0; // MLL is at 0% (left edge = breach)
+
+        const distColor = a.dist_to_breach > 1500 ? 'var(--green)' : a.dist_to_breach > 800 ? 'var(--yellow)' : 'var(--red)';
+        const barColor = a.balance >= 0 ? 'rgba(0,212,170,0.4)' : 'rgba(255,202,40,0.3)';
+        const tagColor = a.balance >= 0 ? 'background:rgba(0,212,170,0.15);color:var(--green)' : 'background:rgba(255,202,40,0.15);color:var(--yellow)';
+        const mllLocked = a.floor > -a.mll;
+
+        html += `<div class="mll-card">
+            <div class="mll-card-head">
+                <span class="mll-card-name" style="color:var(--cyan)">${a.short}</span>
+                <span class="mll-card-tag" style="${tagColor}">${a.balance >= 0 ? 'IN PROFIT' : 'RECOVERY'}</span>
+            </div>
+            <div class="mll-bar-wrap">
+                <div class="mll-bar-balance" style="width:${balPct}%;background:${barColor}"></div>
+                <div class="mll-bar-labels">
+                    <span style="color:var(--red)">MLL ${fmt(a.floor)}</span>
+                    <span>BAL ${a.balance >= 0 ? '+' : ''}${fmt(a.balance)}</span>
+                </div>
+            </div>
+            <div class="mll-detail"><span class="lbl">Distance to Breach</span><span class="val" style="color:${distColor}">$${Math.round(a.dist_to_breach).toLocaleString()}</span></div>
+            <div class="mll-detail"><span class="lbl">MLL Status</span><span class="val">${mllLocked ? '🔒 TRAILING (active)' : '⚠️ AT FLOOR'}</span></div>
+            <div class="mll-detail"><span class="lbl">MLL Distance to $0</span><span class="val">${fmt(Math.abs(a.floor))}</span></div>
+            <div class="mll-note">${a.floor > -a.mll ? 'MLL has trailed up — locks at $0 when balance reaches $' + Math.abs(a.floor) : 'MLL at maximum — has not trailed yet'}</div>
+        </div>`;
+    });
+    html += '</div>';
+    html += '<div style="font-size:11px;color:var(--text-dim);margin-top:8px;padding:4px 8px;background:rgba(255,255,255,0.02);border-radius:3px">ℹ️ <strong>Topstep has NO consistency rule</strong> on funded accounts. After first payout, MLL resets to $0 and locks — your remaining balance becomes your total cushion.</div>';
+    mllEl.innerHTML = html;
+})();
+
+// ── Apex Consistency Tracker ──
+(function buildConsistency() {
+    const el = $('#consistency-tracker');
+    if (!el) return;
+    const axAccounts = PORTFOLIO.accounts.filter(a => a.type === 'ax');
+    if (axAccounts.length === 0 || axAccounts.every(a => a.profit <= 0)) {
+        el.innerHTML = '<div style="color:var(--text-dim);font-size:13px;padding:8px">Apex accounts need positive profit before consistency tracking applies.</div>';
+        return;
+    }
+    let html = '<div class="consist-grid">';
+    axAccounts.forEach(a => {
+        if (!a.profit || a.profit <= 0) return;
+        // Find best single green day from daily_pnl
+        const greenDays = (a.daily_pnl || []).filter(d => d !== null && d > 0);
+        const bestDay = greenDays.length > 0 ? Math.max(...greenDays) : 0;
+        const bestPct = a.profit > 0 ? (bestDay / a.profit) * 100 : 0;
+        const limit = 30;
+        const status = bestPct <= limit;
+        const statusColor = status ? 'var(--green)' : 'var(--red)';
+        const statusText = status ? '✅ CLEAR' : '⚠️ OVER LIMIT';
+        const maxAllowed = a.profit * 0.30;
+        const gaugeWidth = Math.min(100, bestPct / 40 * 100); // scale so 40% fills bar
+        const limitPos = (limit / 40) * 100;
+
+        html += `<div class="consist-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                <span style="font-size:14px;font-weight:800;color:var(--cyan)">${a.short}</span>
+                <span style="font-size:12px;font-weight:700;color:${statusColor}">${statusText}</span>
+            </div>
+            <div class="consist-gauge-wrap">
+                <div class="consist-gauge">
+                    <div class="consist-gauge-fill" style="width:${gaugeWidth}%;background:${status ? 'rgba(0,212,170,0.4)' : 'rgba(255,82,82,0.4)'}"></div>
+                    <div class="consist-gauge-limit" style="left:${limitPos}%"></div>
+                    <div class="consist-gauge-text">${bestPct.toFixed(1)}% / 30%</div>
+                </div>
+                <div class="consist-pct" style="color:${statusColor}">${bestPct.toFixed(1)}%</div>
+            </div>
+            <div class="consist-detail"><span class="lbl">Best Single Day</span><span class="val">+$${Math.round(bestDay).toLocaleString()}</span></div>
+            <div class="consist-detail"><span class="lbl">Total Profit</span><span class="val" style="color:var(--green)">+$${Math.round(a.profit).toLocaleString()}</span></div>
+            <div class="consist-detail"><span class="lbl">Max Allowed Day</span><span class="val">$${Math.round(maxAllowed).toLocaleString()}</span></div>
+            <div class="consist-detail"><span class="lbl">Room Before Cap</span><span class="val" style="color:${status ? 'var(--green)' : 'var(--red)'}">$${Math.max(0, Math.round(maxAllowed - bestDay)).toLocaleString()}</span></div>
+        </div>`;
+    });
+    html += '</div>';
+    html += '<div style="font-size:11px;color:var(--text-dim);margin-top:8px;padding:4px 8px;background:rgba(255,255,255,0.02);border-radius:3px">ℹ️ <strong>Apex 30% rule:</strong> No single day\'s profit can exceed 30% of total profit at payout request time (payouts 1-5). Keep daily gains even to stay under the cap.</div>';
+    el.innerHTML = html;
+})();
+
+// ── Weekend Prep Report ──
+(function buildWeekendPrep() {
+    const el = $('#weekend-prep');
+    if (!el) return;
+
+    const m = PORTFOLIO.momentum;
+    const accounts = PORTFOLIO.accounts;
+    const lastPnl = PORTFOLIO.daily_log[PORTFOLIO.daily_log.length - 1];
+
+    // Check if it's Friday-Sunday (show prep report)
+    const now = new Date();
+    const day = now.getDay();
+    // Always show it — useful for planning regardless of day
+
+    // Priority accounts — sorted by urgency
+    const evalAcct = accounts.find(a => a.type === 'ev');
+    const eligibleAccts = accounts.filter(a => a.payout_eligible);
+    const nearEligible = accounts.filter(a => a.type === 'ts' && !a.payout_eligible && a.winning_days >= 3);
+    const apexAccts = accounts.filter(a => a.type === 'ax' && a.safety_net);
+
+    // Calculate week's P&L from daily_log
+    const weekLogs = PORTFOLIO.daily_log.slice(-5).filter(d => d.pnl !== null);
+    const weekTotal = weekLogs.reduce((s, d) => s + d.pnl, 0);
+    const greenDays = weekLogs.filter(d => d.pnl > 0).length;
+    const redDays = weekLogs.filter(d => d.pnl < 0).length;
+
+    let html = '<div class="prep-grid">';
+
+    // Card 1: Week Summary
+    const weekColor = weekTotal >= 0 ? 'var(--green)' : 'var(--red)';
+    html += `<div class="prep-card">
+        <h4>📊 THIS WEEK'S SUMMARY</h4>
+        <div class="prep-item"><span class="prep-bullet">▸</span> Fleet P&L: <strong style="color:${weekColor}">${weekTotal >= 0 ? '+' : ''}$${Math.abs(Math.round(weekTotal)).toLocaleString()}</strong></div>
+        <div class="prep-item"><span class="prep-bullet">▸</span> Record: <strong style="color:var(--green)">${greenDays}G</strong> / <strong style="color:var(--red)">${redDays}R</strong> (${Math.round(greenDays/(greenDays+redDays)*100)}% win rate)</div>
+        <div class="prep-item"><span class="prep-bullet">▸</span> Momentum: <strong style="color:${m.classification === 'HOT' ? 'var(--green)' : 'var(--yellow)'}">${m.classification}</strong> (${Math.round(m.win_rate * 100)}% last 5)</div>
+        <div class="prep-item"><span class="prep-bullet">▸</span> Streak: <strong>${m.streak} ${m.streak_dir}</strong></div>
+    </div>`;
+
+    // Card 2: Priority Actions Next Week
+    html += `<div class="prep-card">
+        <h4>🎯 PRIORITY ACTIONS</h4>`;
+
+    if (evalAcct && evalAcct.gap > 0) {
+        const daysLeft = 4; // Update based on eval deadline
+        html += `<div class="prep-item"><span class="prep-priority prep-p1">P1</span> AX-EVAL: $${Math.round(evalAcct.gap).toLocaleString()} in ${daysLeft} days ($${Math.round(evalAcct.gap / daysLeft)}/day)</div>`;
+    }
+    eligibleAccts.forEach(a => {
+        html += `<div class="prep-item"><span class="prep-priority prep-p2">P2</span> ${a.short}: PAYOUT ELIGIBLE — grow to $1k before pulling</div>`;
+    });
+    nearEligible.forEach(a => {
+        html += `<div class="prep-item"><span class="prep-priority prep-p2">P2</span> ${a.short}: ${a.winning_days}/${a.winning_req} win days — ${a.winning_req - a.winning_days} more needed</div>`;
+    });
+    apexAccts.forEach(a => {
+        html += `<div class="prep-item"><span class="prep-priority prep-p3">P3</span> ${a.short}: $${Math.round(a.dist_to_safety).toLocaleString()} to safety net</div>`;
+    });
+    html += `</div>`;
+
+    // Card 3: Risk Alerts
+    html += `<div class="prep-card">
+        <h4>⚠️ RISK WATCHLIST</h4>`;
+
+    accounts.filter(a => a.risk === 'critical' || a.risk === 'terminal').forEach(a => {
+        html += `<div class="prep-item"><span class="prep-priority prep-p1">DANGER</span> ${a.short}: ${a.risk.toUpperCase()} — $${Math.round(a.dist_to_breach).toLocaleString()} to breach</div>`;
+    });
+    accounts.filter(a => a.risk === 'high').forEach(a => {
+        html += `<div class="prep-item"><span class="prep-priority prep-p2">CAUTION</span> ${a.short}: $${Math.round(a.dist_to_breach).toLocaleString()} to breach</div>`;
+    });
+
+    // Check for upcoming danger dates
+    const nextFomc = PORTFOLIO.danger_dates.fomc.find(d => d >= '2026-03-27');
+    if (nextFomc) {
+        html += `<div class="prep-item"><span class="prep-priority prep-p1">FOMC</span> Next: ${nextFomc} — NO TRADING</div>`;
+    }
+
+    // Technical issues note
+    if (lastPnl && lastPnl.pnl < 0) {
+        html += `<div class="prep-item"><span class="prep-priority prep-p2">NOTE</span> Last session red — check technical setup before Monday open</div>`;
+    }
+
+    html += `</div>`;
+
+    // Card 4: Per-Account Daily Targets
+    html += `<div class="prep-card">
+        <h4>📋 DAILY TARGETS NEXT WEEK</h4>`;
+    accounts.forEach(a => {
+        let target = '';
+        if (a.type === 'ev' && a.gap > 0) {
+            target = `$${Math.round(a.gap / 4)}/day (eval deadline)`;
+        } else if (a.payout_eligible) {
+            target = `$150+ (grow payout balance)`;
+        } else if (a.type === 'ts') {
+            target = `$150+ (win day ${a.winning_days}/${a.winning_req})`;
+        } else if (a.type === 'ax' && a.dist_to_safety) {
+            target = `$200+ (safety net in ~${Math.ceil(a.dist_to_safety / 200)} days)`;
+        } else if (a.type === 'tf') {
+            target = `$150+ (extraction: $${Math.round(3000 - (a.profit || 0))} to go)`;
+        }
+        const color = a.risk === 'safe' ? 'var(--green)' : a.risk === 'medium' ? 'var(--yellow)' : 'var(--text)';
+        html += `<div class="prep-item"><span class="prep-bullet" style="color:${color}">▸</span> <strong>${a.short}</strong>: ${target}</div>`;
+    });
+    html += `</div>`;
+
+    html += '</div>';
+    el.innerHTML = html;
+})();
+
+// ── PWA Service Worker Registration ──
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').then(reg => {
+        console.log('[PWA] Service worker registered', reg.scope);
+    }).catch(err => {
+        console.log('[PWA] SW registration failed', err);
+    });
+}
+
+// ── PWA Install Prompt ──
+(function setupInstallPrompt() {
+    let deferredPrompt = null;
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+        || window.navigator.standalone === true;
+
+    if (isStandalone) return; // Already installed
+
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const dismissed = localStorage.getItem('pwa-install-dismissed');
+    if (dismissed && Date.now() - parseInt(dismissed) < 86400000 * 3) return; // Don't show for 3 days after dismiss
+
+    // Android/Chrome: capture beforeinstallprompt
+    window.addEventListener('beforeinstallprompt', e => {
+        e.preventDefault();
+        deferredPrompt = e;
+        showInstallBanner(false);
+    });
+
+    // iOS: show manual guide
+    if (isIOS) {
+        setTimeout(() => showInstallBanner(true), 2000);
+    }
+
+    function showInstallBanner(isIOSDevice) {
+        const banner = document.createElement('div');
+        banner.className = 'install-banner';
+        banner.innerHTML = `
+            <div class="ib-text">
+                <div class="ib-title">ADD TO HOMESCREEN</div>
+                <div class="ib-sub">Access Payout Command like a native app</div>
+            </div>
+            <div class="ib-actions">
+                <button class="ib-btn ib-install" id="ib-install">INSTALL</button>
+                <button class="ib-btn ib-dismiss" id="ib-dismiss">LATER</button>
+            </div>
+        `;
+        document.body.appendChild(banner);
+
+        document.getElementById('ib-dismiss').addEventListener('click', () => {
+            banner.remove();
+            localStorage.setItem('pwa-install-dismissed', Date.now().toString());
+        });
+
+        document.getElementById('ib-install').addEventListener('click', () => {
+            if (isIOSDevice) {
+                showIOSGuide();
+                banner.remove();
+            } else if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then(choice => {
+                    deferredPrompt = null;
+                    banner.remove();
+                });
+            }
+        });
+    }
+
+    function showIOSGuide() {
+        const guide = document.createElement('div');
+        guide.className = 'ios-guide';
+        guide.innerHTML = `
+            <div class="ios-guide-card">
+                <h3>INSTALL PAYOUT COMMAND</h3>
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <span>Tap the <strong style="color:var(--cyan)">Share</strong> button in Safari (box with arrow at bottom)</span>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <span>Scroll down and tap <strong style="color:var(--cyan)">Add to Home Screen</strong></span>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <span>Tap <strong style="color:var(--cyan)">Add</strong> in the top right</span>
+                </div>
+                <div class="step" style="border-bottom:none">
+                    <div class="step-num" style="background:var(--green-glow);border-color:rgba(0,212,170,0.3);color:var(--green)">!</div>
+                    <span>The app will appear on your homescreen with full-screen mode</span>
+                </div>
+                <button class="close-guide" id="close-guide">GOT IT</button>
+            </div>
+        `;
+        document.body.appendChild(guide);
+        document.getElementById('close-guide').addEventListener('click', () => {
+            guide.remove();
+            localStorage.setItem('pwa-install-dismissed', Date.now().toString());
+        });
+        guide.addEventListener('click', e => {
+            if (e.target === guide) {
+                guide.remove();
+                localStorage.setItem('pwa-install-dismissed', Date.now().toString());
+            }
+        });
+    }
+})();
+</script>
+</body>
+</html>
