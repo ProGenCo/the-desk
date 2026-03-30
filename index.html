@@ -659,34 +659,34 @@ a{color:inherit;text-decoration:none}
 /* ══ DATA ══ */
 const D={
 accounts:[
-{k:'ts_204',s:'TS-204',f:'Topstep Express',ty:'ts',bal:474.99,pft:474.99,mll:-1032.59,mm:2000,db:1507.58,wd:6,wr:5,sp:1,cap:5000,el:true,rk:'safe',
- pnl:[null,-150,-800,143,-425,191,129,195,262,-38],
- n:'Payout eligible. 6 winning days banked. 100% split on first $10k. Growing to $1k before pulling.',
- tgt:{l:'Optimal Pull',v:1000,g:525,d:5}},
-{k:'ts_676',s:'TS-676',f:'Topstep Express',ty:'ts',bal:-96.69,pft:-96.69,mll:-1610.52,mm:2000,db:1513.83,wd:4,wr:5,sp:1,cap:5000,el:false,rk:'medium',
- pnl:[null,-149,-796,143,-424,191,129,195,262,-38],
- n:'4/5 win days. $97 from breakeven. One strong green session unlocks payout eligibility.',
- tgt:{l:'Payout Eligible',v:150,g:247,d:2}},
-{k:'ts_235',s:'TS-235',f:'Topstep Express',ty:'ts',bal:-718.59,pft:-718.59,mll:-2000,mm:2000,db:1281.41,wd:2,wr:5,sp:1,cap:5000,el:false,rk:'high',
- pnl:[null,-242,-798,146,-421,49,128,195,262,-38],
- n:'Floor locked at -$2,000. $1,281 buffer. 1-contract limit per playbook.',
- tgt:{l:'Breakeven',v:0,g:719,d:6}},
-{k:'tf_286',s:'TF-286',f:'Tradeify',ty:'tf',bal:50409.75,pft:409.75,db:2410,wd:9,wr:5,sp:.9,cap:3000,el:false,rk:'medium',
- pnl:[null,-205,-836,118,-482,191,32,166,240,-149],
- n:'9 win days. $2,590 to $3k extraction trigger. Let it ride, do not pull early.',
- tgt:{l:'$3k Extraction',v:3000,g:2590,d:14}},
-{k:'ax_100k',s:'AX-100K',f:'Apex Trader',ty:'ax',bal:100892.53,pft:892.53,fl:100100,db:793,sn:103100,ds:2208,sp:1,cp:.30,bd:257,el:false,rk:'medium',
- pnl:[null,-179,-802,139,-451,207,75,189,257,-144],
- n:'Buffer $793 above floor. $2,208 to safety net. 30% rule currently clear.',
- tgt:{l:'Safety Net',v:103100,g:2208,d:11}},
-{k:'ax_50k',s:'AX-50K',f:'Apex Trader',ty:'ax',bal:50987.86,pft:987.86,fl:47500,db:3488,sn:52600,ds:1612,sp:1,cp:.30,bd:257,el:false,rk:'safe',
- pnl:[null,-144,-806,142,-457,216,55,190,257,-139],
- n:'Fleet anchor. Strongest buffer at $3,488. $1,612 to safety net.',
- tgt:{l:'Safety Net',v:52600,g:1612,d:8}},
+{k:'ts_204',s:'TS-204',f:'Topstep Express',ty:'ts',bal:190.72,pft:190.72,mll:-1032.59,mm:2000,db:1223.31,wd:6,wr:5,sp:1,cap:5000,el:true,rk:'medium',
+ pnl:[null,-150,-800,143,-425,191,129,195,262,-38,-284],
+ n:'Payout eligible. $191 profit after -$284 red day. Buffer $1,223. 100% split on first $10k.',
+ tgt:{l:'Optimal Pull',v:1000,g:809,d:6}},
+{k:'ts_676',s:'TS-676',f:'Topstep Express',ty:'ts',bal:4.12,pft:4.12,mll:-1610.52,mm:2000,db:1614.64,wd:5,wr:5,sp:1,cap:5000,el:true,rk:'safe',
+ pnl:[null,-149,-796,143,-424,191,129,195,262,-38,101],
+ n:'PAYOUT ELIGIBLE. 5th winning day hit Mar 30. $4 profit. 100% split on first $10k. Let it grow.',
+ tgt:{l:'Optimal Pull',v:500,g:496,d:4}},
+{k:'ts_235',s:'TS-235',f:'Topstep Express',ty:'ts',bal:-619.03,pft:-619.03,mll:-2000,mm:2000,db:1380.97,wd:3,wr:5,sp:1,cap:5000,el:false,rk:'high',
+ pnl:[null,-242,-798,146,-421,49,128,195,262,-38,100],
+ n:'Floor locked at -$2,000. $1,381 buffer. 3/5 win days. 1-contract limit per playbook.',
+ tgt:{l:'Breakeven',v:0,g:619,d:5}},
+{k:'tf_286',s:'TF-286',f:'Tradeify',ty:'tf',bal:50474.60,pft:474.60,db:2474,wd:10,wr:5,sp:.9,cap:3000,el:false,rk:'medium',
+ pnl:[null,-205,-836,118,-482,191,32,166,240,-149,65],
+ n:'10 win days. $2,525 to $3k extraction trigger. Steady growth.',
+ tgt:{l:'$3k Extraction',v:3000,g:2525,d:13}},
+{k:'ax_100k',s:'AX-100K',f:'Apex Trader',ty:'ax',bal:100980.91,pft:980.91,fl:100100,db:880.91,sn:103100,ds:2119,sp:1,cp:.30,bd:257,el:false,rk:'medium',
+ pnl:[null,-179,-802,139,-451,207,75,189,257,-144,88],
+ n:'Buffer $881 above floor. $2,119 to safety net. 30% rule clear at 26.2%.',
+ tgt:{l:'Safety Net',v:103100,g:2119,d:10}},
+{k:'ax_50k',s:'AX-50K',f:'Apex Trader',ty:'ax',bal:51073.74,pft:1073.74,fl:47500,db:3573.74,sn:52600,ds:1526,sp:1,cp:.30,bd:257,el:false,rk:'safe',
+ pnl:[null,-144,-806,142,-457,216,55,190,257,-139,86],
+ n:'Fleet anchor. Strongest buffer at $3,574. $1,526 to safety net. 30% rule clear at 24.0%.',
+ tgt:{l:'Safety Net',v:52600,g:1526,d:7}},
 /* AX-EVAL — SHELVED 2026-03-30. Went heavy trying to close the gap. Account blown. */
 ],
-log:[{d:'3/17',p:-1244},{d:'3/18',p:-5640,t:'FOMC'},{d:'3/19',p:970},{d:'3/20',p:-3106},{d:'3/23',p:1326},{d:'3/24',p:626},{d:'3/25',p:1540},{d:'3/26',p:1808},{d:'3/27',p:-687}],
-mo:{wr:.80,g:4,tot:5,st:1,sd:'red',cl:'HOT'},
+log:[{d:'3/17',p:-1244},{d:'3/18',p:-5640,t:'FOMC'},{d:'3/19',p:970},{d:'3/20',p:-3106},{d:'3/23',p:1326},{d:'3/24',p:626},{d:'3/25',p:1540},{d:'3/26',p:1808},{d:'3/27',p:-687},{d:'3/30',p:155}],
+mo:{wr:.83,g:5,tot:6,st:1,sd:'green',cl:'HOT'},
 fomc:['Apr 29','May 6','Jun 17','Jul 29','Sep 16','Oct 28','Dec 16']
 };
 
@@ -1105,7 +1105,7 @@ function showAccountView(key){
     }
 
     /* P&L History */
-    const dt=['Mar 16','Mar 17','Mar 18','Mar 19','Mar 20','Mar 23','Mar 24','Mar 25','Mar 26','Mar 27'];
+    const dt=['Mar 16','Mar 17','Mar 18','Mar 19','Mar 20','Mar 23','Mar 24','Mar 25','Mar 26','Mar 27','Mar 30'];
     h+='<div class="card" style="margin-bottom:20px"><div class="card-body">'
         +'<span class="eyebrow">P&L History</span>'
         +'<h3 class="h3" style="margin-bottom:14px">Daily performance</h3>'
