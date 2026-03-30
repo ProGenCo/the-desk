@@ -160,12 +160,15 @@
       "id": "APEX-285778-101",
       "short_id": "101",
       "type": "apex_eval",
-      "status": "not_funded",
+      "status": "shelved",
+      "shelved_date": "2026-03-30",
+      "shelved_reason": "Blew account going heavy trying to hit funding target before Apr 2 deadline",
       "balance": 51553.97,
+      "final_balance": null,
       "target": 53000,
       "gap": 1446.03,
       "risk_level": "na",
-      "notes": "Eval — $1,446 from funding. 4 trading days left (Apr 2 deadline). $362/day needed. Tighter but doable."
+      "notes": "SHELVED — Went heavy Mar 30 trying to close the $1,446 gap. Account blown. Lesson: don't force the timeline."
     }
   },
   "daily_log": [
