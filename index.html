@@ -255,6 +255,25 @@ a{color:inherit;text-decoration:none}
 .sb-spark{display:flex;align-items:flex-end;gap:2px;height:18px;margin-top:8px}
 .sb-spark-bar{flex:1;border-radius:2px;min-width:3px}
 
+/* Sidebar shelved section */
+.sb-shelved-toggle{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:12px 16px;cursor:pointer;
+    border-top:1px solid var(--border);
+    background:none;border-left:none;border-right:none;border-bottom:none;
+    width:100%;font-family:var(--font-body);
+    color:var(--tx-muted);font-size:11px;font-weight:700;
+    text-transform:uppercase;letter-spacing:1px;
+    transition:background 0.2s;
+}
+.sb-shelved-toggle:hover{background:var(--bg-secondary)}
+.sb-shelved-toggle i{width:12px;height:12px;transition:transform 0.25s var(--spring)}
+.sb-shelved-toggle.open i{transform:rotate(180deg)}
+.sb-shelved-list{display:none;border-top:1px solid var(--border)}
+.sb-shelved-list.open{display:block}
+.sb-account.shelved{opacity:0.45;filter:grayscale(0.6)}
+.sb-account.shelved:hover{opacity:0.7;filter:grayscale(0.2)}
+
 /* ════════════════════════════════════
    MAIN CONTENT
 ════════════════════════════════════ */
@@ -683,7 +702,13 @@ accounts:[
  pnl:[null,-144,-806,142,-457,216,55,190,257,-139,86],
  n:'Fleet anchor. Strongest buffer at $3,574. $1,526 to safety net. 30% rule clear at 24.0%.',
  tgt:{l:'Safety Net',v:52600,g:1526,d:7}},
-/* AX-EVAL — SHELVED 2026-03-30. Went heavy trying to close the gap. Account blown. */
+],
+shelved:[
+{k:'ax_eval',s:'AX-EVAL',f:'Apex Trader',ty:'ev',bal:51553.97,pft:1553.97,
+ date:'2026-03-30',
+ reason:'Went heavy trying to close $1,446 gap before Apr 2 deadline. Account blown.',
+ lesson:'Do not force the timeline. If the math requires oversizing, the math is wrong.',
+ pnl:[null,-176,-802,138,-446,281,77,410,259,-143]},
 ],
 log:[{d:'3/17',p:-1244},{d:'3/18',p:-5640,t:'FOMC'},{d:'3/19',p:970},{d:'3/20',p:-3106},{d:'3/23',p:1326},{d:'3/24',p:626},{d:'3/25',p:1540},{d:'3/26',p:1808},{d:'3/27',p:-687},{d:'3/30',p:155}],
 mo:{wr:.83,g:5,tot:6,st:1,sd:'green',cl:'HOT'},
@@ -773,6 +798,38 @@ function buildSidebar(){
             +'</div>'
         +'</div>';
     }).join('');
+
+    // Shelved accounts section
+    if(D.shelved&&D.shelved.length){
+        const shelvedHtml=D.shelved.map(a=>{
+            return'<div class="sb-account shelved" id="sb-'+a.k+'" onclick="showShelvedView(\''+a.k+'\')">'
+                +'<div class="sb-stripe" style="background:var(--tx-light)"></div>'
+                +'<div class="sb-body">'
+                    +'<div class="sb-top">'
+                        +'<div><div class="sb-name">'+a.s+'</div><div class="sb-firm">'+a.f+'</div></div>'
+                        +'<div style="text-align:right">'
+                            +'<span class="sb-tag" style="background:var(--bg-tertiary);color:var(--tx-muted)">Shelved</span>'
+                        +'</div>'
+                    +'</div>'
+                    +'<div class="tx-sm" style="font-size:10px;margin-top:6px">'+a.date+' · '+a.reason.split('.')[0]+'</div>'
+                +'</div>'
+            +'</div>';
+        }).join('');
+
+        document.getElementById('sb-list').innerHTML+=
+            '<button class="sb-shelved-toggle" id="sb-shelved-toggle" onclick="toggleShelved(event)">'
+                +'<span>Shelved ('+D.shelved.length+')</span>'
+                +'<i data-lucide="chevron-down"></i>'
+            +'</button>'
+            +'<div class="sb-shelved-list" id="sb-shelved-list">'+shelvedHtml+'</div>';
+    }
+}
+
+function toggleShelved(e){
+    e.stopPropagation();
+    document.getElementById('sb-shelved-toggle').classList.toggle('open');
+    document.getElementById('sb-shelved-list').classList.toggle('open');
+    lucide.createIcons();
 }
 
 function openSidebar(){
@@ -960,6 +1017,57 @@ function showFleetView(){
 /* ══════════════════════════════════
    ACCOUNT DETAIL VIEW
 ══════════════════════════════════ */
+function showShelvedView(key){
+    const a=D.shelved.find(x=>x.k===key);if(!a)return;
+    setActiveAccount(key);
+    setNavActive(null);
+    document.querySelectorAll('.full-page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('app-shell').style.display='';
+    closeSidebar();
+
+    const dt=['Mar 16','Mar 17','Mar 18','Mar 19','Mar 20','Mar 23','Mar 24','Mar 25','Mar 26','Mar 27','Mar 30'];
+    let h='';
+
+    h+='<div class="alert" style="background:var(--bg-tertiary);color:var(--tx-muted);border:1px solid var(--border)"><i data-lucide="archive"></i>This account was shelved on '+a.date+'</div>';
+
+    h+='<div style="margin-bottom:32px">'
+        +'<span class="eyebrow" style="color:var(--tx-muted)">'+a.f+' · Shelved</span>'
+        +'<h1 class="h1" style="margin-bottom:10px;font-size:48px;opacity:0.5">'+a.s+'</h1>'
+        +'<div style="font-size:15px;color:var(--tx-secondary);line-height:1.7;max-width:600px;margin-top:16px">'
+            +'<strong style="color:var(--rd)">What happened:</strong> '+a.reason
+        +'</div>'
+        +'<div style="font-size:15px;color:var(--tx-secondary);line-height:1.7;max-width:600px;margin-top:10px">'
+            +'<strong style="color:var(--accent)">Lesson:</strong> '+a.lesson
+        +'</div>'
+    +'</div>';
+
+    h+='<div class="grid grid-3" style="margin-bottom:32px">'
+        +'<div class="card"><div class="card-body"><span class="eyebrow">Final Balance</span><div class="metric-lg" style="margin-top:8px">'+fm(a.bal)+'</div></div></div>'
+        +'<div class="card"><div class="card-body"><span class="eyebrow">Lifetime P&L</span><div class="metric-lg" style="color:'+(a.pft>=0?'var(--gn)':'var(--rd)')+';margin-top:8px">'+fp(a.pft)+'</div></div></div>'
+        +'<div class="card"><div class="card-body"><span class="eyebrow">Shelved</span><div class="metric-lg" style="margin-top:8px;color:var(--tx-muted)">'+a.date.split('-').slice(1).join('/')+'</div></div></div>'
+    +'</div>';
+
+    h+='<div class="card" style="margin-bottom:20px"><div class="card-body">'
+        +'<span class="eyebrow">P&L History</span>'
+        +'<h3 class="h3" style="margin-bottom:14px">Performance before shelving</h3>'
+        +spark(a.pnl,44)
+        +'<table class="data-table" style="margin-top:14px"><thead><tr><th>Date</th><th>P&L</th><th>Cumulative</th></tr></thead><tbody>';
+    let cu=0;
+    a.pnl.forEach(function(p,i){
+        if(p!=null)cu+=p;
+        h+='<tr><td style="color:var(--tx-muted)">'+(dt[i]||'')+'</td><td style="color:'+(p==null?'':p>=0?'var(--gn)':'var(--rd)')+'">'+( p!=null?fp(p):'—')+'</td><td>'+fm(cu)+'</td></tr>';
+    });
+    h+='</tbody></table></div></div>';
+
+    document.getElementById('main-content').innerHTML=
+        '<div style="padding:36px 0 80px"><div class="container">'
+        +'<button class="back-btn" onclick="showFleetView()"><i data-lucide="arrow-left"></i> Fleet overview</button>'
+        +h
+        +'</div></div>';
+    setTimeout(function(){lucide.createIcons();},60);
+    window.scrollTo({top:0,behavior:'smooth'});
+}
+
 function showAccountView(key){
     const a=D.accounts.find(x=>x.k===key);if(!a)return;
     setActiveAccount(key);
