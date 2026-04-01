@@ -546,6 +546,69 @@ a{color:inherit;text-decoration:none}
 .back-btn{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--tx-muted);cursor:pointer;background:none;border:none;font-family:var(--font-body);padding:0;transition:color 0.2s;margin-bottom:28px}
 .back-btn:hover{color:var(--accent)}
 .back-btn i{width:14px;height:14px}
+
+/* ════════════════════════════════════
+   ROADMAP — RUNWAY CARDS
+════════════════════════════════════ */
+.runway-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:60px}
+.runway-card{background:var(--bg-card);border:1px solid var(--border);border-radius:18px;padding:24px;position:relative;overflow:hidden;transition:box-shadow 0.25s var(--spring),transform 0.25s var(--spring)}
+.runway-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+.runway-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gn);border-radius:18px 18px 0 0}
+.runway-card.tf-card::after{background:#22d3ee}
+.runway-card.ax-card::after{background:var(--pp)}
+.runway-acct{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--tx-muted);margin-bottom:2px}
+.runway-firm{font-size:10px;color:var(--tx-light);margin-bottom:14px}
+.runway-mode{display:inline-flex;align-items:center;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;padding:3px 9px;border-radius:9999px;margin-bottom:14px}
+.runway-pft{font-family:var(--font-mono);font-size:30px;font-weight:800;letter-spacing:-1.2px;font-variant-numeric:tabular-nums;line-height:1;margin-bottom:3px}
+.runway-gap{font-size:12px;color:var(--tx-secondary);margin-bottom:14px}
+.runway-bar{height:5px;background:var(--bg-tertiary);border-radius:9999px;overflow:hidden;margin-bottom:8px}
+.runway-fill{height:100%;border-radius:9999px;transition:width 1.2s var(--spring)}
+.runway-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--tx-muted);margin-bottom:12px}
+.runway-eta{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;background:var(--bg-secondary);border-radius:9px;font-size:11px;font-weight:600;color:var(--tx-secondary)}
+.runway-eta-date{font-family:var(--font-mono);font-size:12px;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums}
+.runway-extras{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:6px}
+.runway-extra-row{display:flex;justify-content:space-between;font-size:11px;color:var(--tx-muted)}
+.runway-extra-row span:last-child{font-weight:700;color:var(--tx-secondary)}
+.runway-note{margin-top:12px;padding:10px 12px;border-radius:9px;font-size:11px;line-height:1.65;font-weight:600}
+
+/* ════════════════════════════════════
+   ROADMAP — CALENDAR
+════════════════════════════════════ */
+.cal-wrap{background:var(--bg-card);border:1px solid var(--border);border-radius:20px;overflow:hidden}
+.cal-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--border);gap:16px}
+.cal-nav{display:flex;gap:6px;flex-shrink:0}
+.cal-nav-btn{width:34px;height:34px;border-radius:9px;background:var(--bg-tertiary);border:1px solid var(--border-strong);color:var(--tx-secondary);cursor:pointer;display:grid;place-items:center;transition:all 0.2s;font-size:15px;font-family:inherit}
+.cal-nav-btn:hover{background:var(--accent-bg);color:var(--accent);border-color:var(--accent)}
+.cal-center{text-align:center;flex:1}
+.cal-eyebrow{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);margin-bottom:2px}
+.cal-month-name{font-family:var(--font-head);font-size:18px;font-weight:800;letter-spacing:-0.4px}
+.cal-total-block{text-align:right;flex-shrink:0}
+.cal-total-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--tx-muted);margin-bottom:3px}
+.cal-total-val{font-family:var(--font-mono);font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-0.5px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr)}
+.cal-dow{padding:10px 6px;text-align:center;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--tx-muted);border-bottom:1px solid var(--border)}
+.cal-dow.wk-col{background:var(--bg-secondary);color:var(--accent);letter-spacing:0.5px}
+.cal-cell{min-height:78px;padding:10px 10px 8px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);position:relative;transition:background 0.15s;cursor:default}
+.cal-cell:hover:not(.cal-empty):not(.cal-sat){background:var(--bg-secondary)!important}
+.cal-cell.cal-empty{border-color:var(--border)}
+.cal-cell.cal-sat{background:var(--bg-secondary);border-right:none}
+.cal-cell.cal-today{outline:2px solid var(--accent);outline-offset:-2px;border-radius:2px}
+.cal-cell.cal-future{opacity:0.55}
+.cal-date{font-size:11px;font-weight:700;color:var(--tx-muted);margin-bottom:5px}
+.cal-pnl{font-family:var(--font-mono);font-size:13px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.2}
+.cal-dash{font-size:11px;color:var(--tx-light)}
+.cal-wk-label{font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:var(--accent);margin-top:1px;margin-bottom:3px}
+.cal-wk-val{font-family:var(--font-mono);font-size:14px;font-weight:800;font-variant-numeric:tabular-nums}
+.cal-pins{display:flex;flex-wrap:wrap;gap:2px;margin-top:5px}
+.cal-pin{font-size:7px;font-weight:800;padding:2px 5px;border-radius:9999px;background:rgba(196,151,42,0.18);color:var(--accent);letter-spacing:0.3px;white-space:nowrap;border:1px solid rgba(196,151,42,0.3)}
+@media(max-width:640px){
+    .runway-grid{grid-template-columns:1fr}
+    .cal-cell{min-height:58px;padding:7px 6px}
+    .cal-pnl{font-size:11px}
+    .cal-wk-val{font-size:12px}
+    .cal-header{padding:16px}
+    .cal-month-name{font-size:15px}
+}
 </style>
 </head>
 <body>
@@ -558,6 +621,7 @@ a{color:inherit;text-decoration:none}
         <span class="nav-title"><span>The</span> Desk</span>
         <div class="nav-links">
             <button class="nav-link active" id="nl-fleet" onclick="showFleetView()">Fleet</button>
+            <button class="nav-link" id="nl-roadmap" onclick="showPage('roadmap')">Roadmap</button>
             <button class="nav-link" id="nl-playbook" onclick="showPage('playbook')">Playbook</button>
             <button class="nav-link" id="nl-prep" onclick="showPage('prep')">Week Prep</button>
         </div>
@@ -672,6 +736,19 @@ a{color:inherit;text-decoration:none}
 </div>
 
 <!-- ════════════════════════════════════
+     ROADMAP PAGE
+════════════════════════════════════ -->
+<div class="full-page" id="page-roadmap">
+    <div class="fp-container" style="max-width:1100px">
+        <button class="back-btn" onclick="showFleetView()"><i data-lucide="arrow-left"></i> Back to Fleet</button>
+        <span class="eyebrow">Strategy View</span>
+        <h1 class="h1" style="margin-bottom:10px">Roadmap</h1>
+        <p class="tx-sec" style="margin-bottom:48px;max-width:640px">Build $2,000 P&L on each TS & Tradeify account → pull $1,000 → MLL locks permanently → $1,000 static buffer remains. Then grow the next $1,000. Apex targets the safety net balance for extraction.</p>
+        <div id="roadmap-content"></div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════
      SCRIPT
 ════════════════════════════════════ -->
 <script>
@@ -680,20 +757,20 @@ const D={
 accounts:[
 {k:'ts_204',s:'TS-204',f:'Topstep Express',ty:'ts',bal:462.53,pft:462.53,mll:-1032.59,mm:2000,db:1495.12,wd:7,wr:5,sp:1,cap:5000,el:true,rk:'safe',
  pnl:[null,-150,-800,143,-425,191,129,195,262,-38,-284,272],
- n:'Payout eligible. $463 profit. Buffer $1,495. Growing to $1k. 100% split on first $10k.',
- tgt:{l:'Optimal Pull',v:1000,g:537,d:3}},
+ n:'Payout eligible. $463 profit. Building to $2k P&L target — then pull $1k. MLL locks permanently after first payout. 100% split on first $10k.',
+ tgt:{l:'$2k Buffer',v:2000,g:1537,d:19}},
 {k:'ts_676',s:'TS-676',f:'Topstep Express',ty:'ts',bal:384.83,pft:384.83,mll:-1610.52,mm:2000,db:1995.35,wd:6,wr:5,sp:1,cap:5000,el:true,rk:'safe',
  pnl:[null,-149,-796,143,-424,191,129,195,262,-38,101,381],
- n:'Payout eligible. +$381 monster day. Buffer nearly $2k. 100% split on first $10k.',
- tgt:{l:'Optimal Pull',v:1000,g:615,d:3}},
+ n:'Payout eligible. +$381 monster day. Building to $2k P&L target — then pull $1k. MLL locks permanently after first payout. 100% split on first $10k.',
+ tgt:{l:'$2k Buffer',v:2000,g:1615,d:9}},
 {k:'ts_235',s:'TS-235',f:'Topstep Express',ty:'ts',bal:-239.57,pft:-239.57,mll:-2000,mm:2000,db:1760.43,wd:4,wr:5,sp:1,cap:5000,el:false,rk:'medium',
  pnl:[null,-242,-798,146,-421,49,128,195,262,-38,100,379],
- n:'4/5 win days! +$379 day. One more winning session = payout eligible. $240 from breakeven.',
- tgt:{l:'Breakeven',v:0,g:240,d:1}},
+ n:'4/5 win days! +$379 day. One more winning session = payout eligible. Building to $2k P&L target, then pull $1k.',
+ tgt:{l:'$2k Buffer',v:2000,g:2240,d:13}},
 {k:'tf_286',s:'TF-286',f:'Tradeify',ty:'tf',bal:50819.70,pft:819.70,db:1486,wd:11,wr:5,sp:.9,cap:3000,el:false,rk:'medium',
  pnl:[null,-205,-836,118,-482,191,32,166,240,-149,65,345],
- n:'11 win days. $2,180 to $3k extraction trigger. +$345 green day.',
- tgt:{l:'$3k Extraction',v:3000,g:2180,d:11}},
+ n:'11 win days. Building to $2k P&L target — then pull $1k. +$345 green day. Strategy updated: $2k buffer then extract.',
+ tgt:{l:'$2k Buffer',v:2000,g:1180,d:9}},
 {k:'ax_100k',s:'AX-100K',f:'Apex Trader',ty:'ax',bal:101351.99,pft:1351.99,fl:100100,db:4352,sn:103100,ds:1748,sp:1,cp:.30,bd:371,el:false,rk:'safe',
  pnl:[null,-179,-802,139,-451,207,75,189,257,-144,88,371],
  n:'Buffer $4,352. $1,748 to safety net. 30% rule clear at 27.4%. New best day $371.',
@@ -1248,6 +1325,7 @@ function showPage(page){
     document.getElementById('page-'+page).classList.add('active');
     setNavActive('nl-'+page);
     if(page==='prep')buildPrep();
+    if(page==='roadmap')buildRoadmap();
     setTimeout(function(){lucide.createIcons();},60);
     window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -1309,6 +1387,244 @@ function buildPrep(){
             +'</div>'
         +'</div>';
     setTimeout(function(){lucide.createIcons();},60);
+}
+
+/* ══════════════════════════════════
+   ROADMAP — DATA ENGINE
+══════════════════════════════════ */
+let calYear=2026,calMonth=2;
+
+function calcAvgDaily(pnl){
+    const v=pnl.filter(function(x){return x!=null;}).slice(-5);
+    return v.length?v.reduce(function(s,x){return s+x;},0)/v.length:0;
+}
+
+function addTradingDays(startDate,n){
+    const d=new Date(startDate);let c=0;
+    while(c<n){d.setDate(d.getDate()+1);const dw=d.getDay();if(dw!==0&&dw!==6)c++;}
+    return d;
+}
+
+function getProjections(){
+    const today=new Date(2026,2,31);
+    return D.accounts.map(function(a){
+        const avg=calcAvgDaily(a.pnl);
+        let gap,target,label,color,maxPayout,mode,extraInfo;
+        if(a.ty==='ts'){
+            target=2000;gap=Math.max(0,target-(a.pft||0));
+            label='$2k P&L';color='var(--gn)';maxPayout=1000;
+            mode=gap<=0?'Pull $1,000 Now':'Building Buffer';
+        }else if(a.ty==='tf'){
+            target=2000;gap=Math.max(0,target-(a.pft||0));
+            label='$2k P&L';color='#22d3ee';maxPayout=1000;
+            mode=gap<=0?'Pull $1,000 Now':'Building Buffer';
+        }else if(a.ty==='ax'){
+            target=a.sn;gap=Math.max(0,a.ds||0);
+            label='Safety Net';color='var(--pp)';
+            maxPayout=a.k==='ax_100k'?2500:2000;
+            mode=gap<=0?'Request Payout':'To Safety Net';
+            const cpPct=a.pft>0?a.bd/a.pft*100:0;
+            const minPftFor30=a.bd/0.30;
+            extraInfo={cpPct,minPftFor30,cpOk:cpPct<=30};
+        }else return null;
+        const pct=target>0?Math.min(100,Math.max(0,(target-gap)/target*100)):100;
+        const daysNeeded=avg>0&&gap>0?Math.ceil(gap/avg):null;
+        const projDate=daysNeeded?addTradingDays(today,daysNeeded):null;
+        return{k:a.k,s:a.s,f:a.f,ty:a.ty,pft:a.pft,gap,target,label,color,maxPayout,mode,avg,pct,daysNeeded,projDate,rk:a.rk,extraInfo};
+    }).filter(Boolean);
+}
+
+/* ══════════════════════════════════
+   ROADMAP — RENDER
+══════════════════════════════════ */
+function buildRoadmap(){
+    const projs=getProjections();
+    let h='';
+
+    /* ── Runway cards ── */
+    h+='<h2 class="h2" style="margin-bottom:6px">Payout Runway</h2>'
+        +'<p class="tx-sec" style="margin-bottom:28px;font-size:13px">Avg daily P&L from last 5 trading sessions per account (conservative). Projections assume same pace continues.</p>'
+        +'<div class="runway-grid">';
+
+    projs.forEach(function(p){
+        const cardClass=p.ty==='tf'?'tf-card':p.ty==='ax'?'ax-card':'';
+        const pftColor=(p.pft||0)>=0?'var(--gn)':'var(--rd)';
+        const modeColor=p.gap<=0?'var(--gn)':p.color;
+        const modeBg=p.gap<=0?'var(--gn-bg)':p.ty==='ax'?'var(--pp-bg)':p.ty==='tf'?'rgba(34,211,238,0.1)':'var(--gn-bg)';
+
+        /* ETA row */
+        let eta='';
+        if(p.gap<=0){
+            eta='<div class="runway-eta"><span>Status</span><span class="runway-eta-date" style="color:var(--gn)">Criteria Met ✓</span></div>';
+        }else if(p.avg>0&&p.projDate){
+            const ds=p.projDate.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+            eta='<div class="runway-eta"><span>~'+p.daysNeeded+' trading days out</span><span class="runway-eta-date">Est. '+ds+'</span></div>';
+        }else{
+            eta='<div class="runway-eta"><span>5-day avg</span><span class="runway-eta-date" style="color:var(--rd)">'+fp(Math.round(p.avg))+'/day</span></div>';
+        }
+
+        /* Extra info block */
+        let extra='';
+        if(p.ty==='ax'&&p.extraInfo){
+            const ei=p.extraInfo;
+            extra='<div class="runway-extras">'
+                +'<div class="runway-extra-row"><span>Max payout (first 5)</span><span>$'+p.maxPayout.toLocaleString()+'</span></div>'
+                +'<div class="runway-extra-row"><span>30% consistency</span><span style="color:'+(ei.cpOk?'var(--gn)':'var(--rd)')+'">'+ei.cpPct.toFixed(1)+'% '+(ei.cpOk?'✓':'✗ — need '+fm(ei.minPftFor30)+'+ total')+'</span></div>'
+                +'<div class="runway-extra-row"><span>Payout cycle</span><span>8 trading days min</span></div>'
+                +'<div class="runway-extra-row"><span>Profit day req.</span><span>5 of 8 days ≥ $50</span></div>'
+                +'<div class="runway-extra-row"><span>100% payouts start</span><span>6th payout</span></div>'
+                +'</div>';
+        }else{
+            if(p.gap<=0){
+                extra='<div class="runway-note" style="background:var(--gn-bg);color:var(--gn)">Pull $1,000 → MLL locks permanently at $0 → $1,000 static buffer remains → next target: another $1,000</div>';
+            }else{
+                extra='<div class="runway-note" style="background:var(--bg-secondary);color:var(--tx-muted)">After pull: MLL locks at $0. $1k static buffer stays. Next payout: build another $1k above locked floor.</div>';
+            }
+        }
+
+        h+='<div class="runway-card '+cardClass+'">'
+            +'<div class="runway-acct">'+p.s+'</div>'
+            +'<div class="runway-firm">'+p.f+'</div>'
+            +'<span class="runway-mode" style="background:'+modeBg+';color:'+modeColor+'">'+p.mode+'</span>'
+            +'<div class="runway-pft" style="color:'+pftColor+'">'+fp(p.pft||0)+'</div>'
+            +'<div class="runway-gap">'+(p.gap>0?fm(p.gap)+' to '+p.label:'Target reached!')+'</div>'
+            +'<div class="runway-bar"><div class="runway-fill" style="width:'+p.pct.toFixed(0)+'%;background:'+p.color+'"></div></div>'
+            +'<div class="runway-meta"><span>'+p.pct.toFixed(0)+'% complete</span><span style="font-weight:700;color:'+p.color+'">'+fp(Math.round(p.avg))+'/day avg</span></div>'
+            +eta+extra
+            +'</div>';
+    });
+    h+='</div>';
+
+    /* ── Calendar ── */
+    h+='<h2 class="h2" style="margin-bottom:6px">Fleet Journal</h2>'
+        +'<p class="tx-sec" style="margin-bottom:24px;font-size:13px">Historical fleet P&L by session. Gold pins mark projected payout dates for each account. Navigate forward to see forecasted extraction windows.</p>'
+        +'<div id="cal-container"></div>';
+
+    document.getElementById('roadmap-content').innerHTML=h;
+    buildCalendar(calYear,calMonth);
+}
+
+/* ══════════════════════════════════
+   CALENDAR HEATMAP
+══════════════════════════════════ */
+function buildCalendar(year,month){
+    calYear=year;calMonth=month;
+    const MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const today=new Date(2026,2,31);
+    const firstDay=new Date(year,month,1).getDay();
+    const daysInMonth=new Date(year,month+1,0).getDate();
+
+    /* Map log data to day numbers for this month */
+    const logMap={};
+    D.log.forEach(function(e){
+        if(!e.d)return;
+        const pts=e.d.split('/');
+        const em=parseInt(pts[0])-1;
+        const ed=parseInt(pts[1]);
+        if(em===month&&year===2026)logMap[ed]=e.p;
+    });
+
+    /* Projection pins */
+    const projs=getProjections();
+    const pinMap={};
+    projs.forEach(function(p){
+        if(!p.projDate)return;
+        if(p.projDate.getFullYear()===year&&p.projDate.getMonth()===month){
+            const pd=p.projDate.getDate();
+            if(!pinMap[pd])pinMap[pd]=[];
+            pinMap[pd].push({s:p.s,color:p.color});
+        }
+    });
+
+    /* Month total */
+    let monthTotal=0;
+    Object.values(logMap).forEach(function(v){monthTotal+=v;});
+
+    /* Nav */
+    const pY=month===0?year-1:year,pM=month===0?11:month-1;
+    const nY=month===11?year+1:year,nM=month===11?0:month+1;
+
+    let html='<div class="cal-wrap">'
+        +'<div class="cal-header">'
+            +'<div class="cal-nav">'
+                +'<button class="cal-nav-btn" onclick="buildCalendar('+pY+','+pM+')">&#8592;</button>'
+                +'<button class="cal-nav-btn" onclick="buildCalendar('+nY+','+nM+')">&#8594;</button>'
+            +'</div>'
+            +'<div class="cal-center">'
+                +'<div class="cal-eyebrow">CALENDAR HEATMAP</div>'
+                +'<div class="cal-month-name">'+MN[month]+' '+year+'</div>'
+            +'</div>'
+            +'<div class="cal-total-block">'
+                +'<div class="cal-total-label">Total P&L</div>'
+                +'<div class="cal-total-val" style="color:'+(monthTotal>=0?'var(--gn)':'var(--rd)')+'">'+fp(monthTotal)+'</div>'
+            +'</div>'
+        +'</div>'
+        +'<div class="cal-grid">';
+
+    /* DOW headers — SAT becomes "WEEK" column */
+    ['SUN','MON','TUE','WED','THU','FRI','WEEK'].forEach(function(d){
+        html+='<div class="cal-dow'+(d==='WEEK'?' wk-col cal-dow-sat':'')+'">'+d+'</div>';
+    });
+
+    /* Build cells array */
+    const cells=[];
+    for(let i=0;i<firstDay;i++)cells.push({empty:true});
+    for(let d=1;d<=daysInMonth;d++){
+        const dt=new Date(year,month,d);
+        const dw=dt.getDay();
+        const isFuture=dt>today;
+        const isToday=year===today.getFullYear()&&month===today.getMonth()&&d===today.getDate();
+        cells.push({d,dw,isFuture,isToday,pnl:logMap[d]!==undefined?logMap[d]:null,pins:pinMap[d]||[]});
+    }
+    while(cells.length%7!==0)cells.push({empty:true,pad:true});
+
+    /* Render rows */
+    for(let i=0;i<cells.length;i+=7){
+        const row=cells.slice(i,i+7);
+        /* Week total = sum of Mon–Fri in this row */
+        let wkTotal=0;
+        row.forEach(function(c){if(!c.empty&&c.pnl!=null&&c.dw>=1&&c.dw<=5)wkTotal+=c.pnl;});
+
+        row.forEach(function(c,ci){
+            const isSat=ci===6;
+            if(c.empty){
+                html+='<div class="cal-cell cal-empty'+(isSat?' cal-sat':'')+'"></div>';
+                return;
+            }
+            if(isSat){
+                /* Week total column */
+                const wkC=wkTotal>=0?'var(--gn)':'var(--rd)';
+                html+='<div class="cal-cell cal-sat">'
+                    +'<div class="cal-date">'+c.d+'</div>'
+                    +'<div class="cal-wk-label">WEEK</div>'
+                    +'<div class="cal-wk-val" style="color:'+wkC+'">'+fp(wkTotal)+'</div>'
+                    +'</div>';
+                return;
+            }
+            /* Regular trading cell */
+            const hasData=c.pnl!=null;
+            const intensity=hasData?Math.min(0.24,Math.abs(c.pnl)/2500*0.24):0;
+            const bg=hasData?(c.pnl>=0?'rgba(77,136,224,'+intensity+')':'rgba(255,32,32,'+intensity+')'):'transparent';
+            const pnlColor=hasData?(c.pnl>=0?'var(--gn)':'var(--rd)'):'var(--tx-light)';
+            let cls='cal-cell';
+            if(c.isToday)cls+=' cal-today';
+            if(c.isFuture)cls+=' cal-future';
+
+            let pins='';
+            if(c.pins.length){
+                pins='<div class="cal-pins">'+c.pins.map(function(p){return'<span class="cal-pin">'+p.s+'</span>';}).join('')+'</div>';
+            }
+
+            html+='<div class="'+cls+'" style="background:'+bg+'">'
+                +'<div class="cal-date">'+c.d+'</div>'
+                +(hasData?'<div class="cal-pnl" style="color:'+pnlColor+'">'+fp(c.pnl)+'</div>':'<div class="cal-dash">--</div>')
+                +pins
+                +'</div>';
+        });
+    }
+
+    html+='</div></div>';
+    document.getElementById('cal-container').innerHTML=html;
 }
 
 /* ══════════════════════════════════
