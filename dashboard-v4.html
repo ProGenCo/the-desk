@@ -688,12 +688,12 @@ a{color:inherit;text-decoration:none}
 
         <h3 class="h3" style="color:var(--gn);margin:36px 0 16px">🔵 Payout Rules</h3>
         <div class="rule-card payout">
-            <div class="rule-title"><span class="rule-badge" style="background:var(--gn-bg);color:var(--gn)">Topstep</span>Grow to $1,000 Before Pulling</div>
-            <div class="rule-body">100% split on first $10k means every dollar counts. Pulling at $475 = $475 cash. Waiting to $1k = $1,000 cash. Waiting costs nothing — account keeps running. Default: $1k minimum before requesting.</div>
+            <div class="rule-title"><span class="rule-badge" style="background:var(--gn-bg);color:var(--gn)">Topstep</span>Build $2,000 P&L → Pull $1,000</div>
+            <div class="rule-body">Target $2,000 total profit per account before requesting a payout. Then pull exactly $1,000. After the first payout, MLL locks permanently — your floor becomes static. The remaining $1,000 is your permanent buffer. From there, build another $1,000 above the locked floor for the next pull.</div>
         </div>
         <div class="rule-card payout">
-            <div class="rule-title"><span class="rule-badge" style="background:var(--gn-bg);color:var(--gn)">Tradeify</span>$3,000 Trigger</div>
-            <div class="rule-body">TF-286 has a $3k extraction target at 90% split. Do not pull before $3k — partial pulls leave money on the table and break the momentum. Let it build, then extract.</div>
+            <div class="rule-title"><span class="rule-badge" style="background:var(--gn-bg);color:var(--gn)">Tradeify</span>$2,000 P&L → Pull $1,000</div>
+            <div class="rule-body">TF-286 now follows the same $2k buffer strategy as Topstep. Build to $2,000 profit, pull $1,000, leave $1,000 as static buffer. 90/10 split means $1,000 pull = $900 net. Do not pull early — partial pulls kill momentum and expose the account.</div>
         </div>
         <div class="rule-card payout">
             <div class="rule-title"><span class="rule-badge" style="background:var(--gn-bg);color:var(--gn)">Post-Payout</span>Survival Mode After Pull</div>
@@ -706,8 +706,8 @@ a{color:inherit;text-decoration:none}
             <div class="rule-body">Any Topstep account with less than $800 between balance and MLL = 1 contract only. Below $500 = no new positions. The MLL breach ends the account permanently.</div>
         </div>
         <div class="rule-card risk">
-            <div class="rule-title"><span class="rule-badge" style="background:var(--yl-bg);color:var(--yl)">TS-235</span>High Risk Protocol</div>
-            <div class="rule-body">TS-235 floor locked at -$2,000. Only $1,281 between balance and deletion. 1-contract limit. Scalp only. No holds through any news event.</div>
+            <div class="rule-title"><span class="rule-badge" style="background:var(--yl-bg);color:var(--yl)">TS-235</span>Nearly Eligible — Stay Disciplined</div>
+            <div class="rule-body">TS-235 hit 5/5 win days on Apr 1. Balance -$14. One positive session = payout eligible. Floor is -$2,000 with $1,986 buffer — safe range now. No need to overswing. One clean green day closes this out.</div>
         </div>
 
         <h3 class="h3" style="color:var(--pp);margin:36px 0 16px">🟣 Apex-Specific Rules</h3>
@@ -728,9 +728,9 @@ a{color:inherit;text-decoration:none}
 <div class="full-page" id="page-prep">
     <div class="fp-container">
         <button class="back-btn" onclick="showFleetView()"><i data-lucide="arrow-left"></i> Back to Fleet</button>
-        <span class="eyebrow">Weekend Review</span>
+        <span class="eyebrow">Weekly Review</span>
         <h1 class="h1" style="margin-bottom:10px">Week Prep Report</h1>
-        <p class="tx-sec" style="margin-bottom:48px;max-width:560px">Week of March 24–27. Reset, review, walk into Monday with a clear plan.</p>
+        <p class="tx-sec" style="margin-bottom:48px;max-width:560px">Week of Mar 30 – Apr 4. Fleet is HOT. 3-day green streak. Every account building toward $2k payout trigger.</p>
         <div id="prep-content"></div>
     </div>
 </div>
@@ -1340,44 +1340,46 @@ function buildPrep(){
     const ev=D.accounts.find(a=>a.dl);
 
     document.getElementById('prep-content').innerHTML=
-        '<h3 class="h3" style="margin-bottom:18px">📊 Week in Review: Mar 24–27</h3>'
+        '<h3 class="h3" style="margin-bottom:18px">📊 Week in Review: Mar 30 – Apr 1</h3>'
         +'<div class="grid grid-4" style="margin-bottom:24px">'
             +'<div class="prep-stat"><div class="tx-sm">Week P&L</div><div class="prep-stat-val" style="color:'+(wk>=0?'var(--gn)':'var(--rd)')+'">'+fp(wk)+'</div></div>'
-            +'<div class="prep-stat"><div class="tx-sm">Win Rate</div><div class="prep-stat-val" style="color:var(--gn)">'+wins+'/4</div></div>'
-            +'<div class="prep-stat"><div class="tx-sm">Best Day</div><div class="prep-stat-val" style="color:var(--gn)">+$1,808</div><div class="tx-sm">Career best</div></div>'
+            +'<div class="prep-stat"><div class="tx-sm">Win Rate</div><div class="prep-stat-val" style="color:var(--gn)">'+wins+'/'+Math.min(D.log.slice(-5).length,5)+'</div></div>'
+            +'<div class="prep-stat"><div class="tx-sm">Best Day</div><div class="prep-stat-val" style="color:var(--gn)">+$2,109</div><div class="tx-sm">Mar 31</div></div>'
             +'<div class="prep-stat"><div class="tx-sm">Fleet Total</div><div class="prep-stat-val" style="color:'+(tot>=0?'var(--gn)':'var(--rd)')+'">'+fp(tot)+'</div></div>'
         +'</div>'
         +'<div class="card" style="margin-bottom:32px"><div class="card-body">'
-            +'<div class="detail-row"><span class="detail-label">Best session</span><span class="detail-value" style="color:var(--gn)">Mar 26 — +$1,808 (career best)</span></div>'
-            +'<div class="detail-row"><span class="detail-label">Red session</span><span class="detail-value" style="color:var(--rd)">Mar 27 — -$687 (technical issues)</span></div>'
-            +'<div class="detail-row"><span class="detail-label">Momentum</span><span class="detail-value" style="color:var(--gn)">HOT — 80% win rate</span></div>'
-            +'<div class="detail-row"><span class="detail-label">Big win</span><span class="detail-value" style="color:var(--gn)">TS-204 hit 5th win day — payout eligible</span></div>'
+            +'<div class="detail-row"><span class="detail-label">3-day streak</span><span class="detail-value" style="color:var(--gn)">Mar 30 +$155 · Mar 31 +$2,109 · Apr 1 +$1,325</span></div>'
+            +'<div class="detail-row"><span class="detail-label">TS-235 milestone</span><span class="detail-value" style="color:var(--gn)">Hit 5/5 win days Apr 1 — one green day from payout eligible</span></div>'
+            +'<div class="detail-row"><span class="detail-label">TS-676</span><span class="detail-value" style="color:var(--gn)">New equity high — MLL moved from -$1,611 → -$1,388</span></div>'
+            +'<div class="detail-row"><span class="detail-label">AX-50K alert</span><span class="detail-value" style="color:var(--yl)">30% consistency at 32.6% — $95 more profit clears it</span></div>'
+            +'<div class="detail-row"><span class="detail-label">Momentum</span><span class="detail-value" style="color:var(--gn)">HOT — 80% win rate, 3-day green streak</span></div>'
         +'</div></div>'
 
-        +'<h3 class="h3" style="margin-bottom:18px">📋 Monday Game Plan (Mar 30)</h3>'
-        +'<div class="alert alert-danger">'+( ev?'<i data-lucide="clock"></i><strong>AX-EVAL:</strong> Need +'+fm(Math.ceil((ev.gap||1446)/(ev.tgt&&ev.tgt.d||4)))+'/day before April 2. Highest priority all week.':'')+'</div>'
-        +'<div class="alert alert-success"><i data-lucide="trophy"></i><strong>TS-204:</strong> Payout eligible. Growing to $1,000 before requesting.</div>'
+        +'<h3 class="h3" style="margin-bottom:18px">📋 Week Game Plan (Apr 2–4)</h3>'
+        +'<div class="alert alert-success"><i data-lucide="trophy"></i><strong>TS-204 + TS-676:</strong> Both payout eligible. Building to $2k P&L — do not pull yet.</div>'
+        +'<div class="alert alert-success"><i data-lucide="check-circle"></i><strong>TS-235:</strong> 5/5 win days. Balance -$14. One positive session = fully eligible.</div>'
         +'<div class="card" style="margin-bottom:32px"><div class="card-body">'
-            +'<div class="detail-row"><span class="detail-label">TS-235</span><span class="detail-value" style="color:var(--rd)">High risk — 1 contract only. Floor locked.</span></div>'
-            +'<div class="detail-row"><span class="detail-label">TS-676</span><span class="detail-value" style="color:var(--yl)">4/5 win days — one more session for eligibility</span></div>'
-            +'<div class="detail-row"><span class="detail-label">Apex accounts</span><span class="detail-value">30% rule clear. Normal size OK.</span></div>'
-            +'<div class="detail-row"><span class="detail-label">TF-286</span><span class="detail-value">$2,590 to $3k trigger. Let it build.</span></div>'
+            +'<div class="detail-row"><span class="detail-label">AX-50K</span><span class="detail-value" style="color:var(--yl)">30% rule at 32.6% — keep daily gains steady, clears automatically</span></div>'
+            +'<div class="detail-row"><span class="detail-label">AX-100K</span><span class="detail-value" style="color:var(--gn)">30% clear at 22.4%. $1,443 to safety net. Normal size.</span></div>'
+            +'<div class="detail-row"><span class="detail-label">TF-286</span><span class="detail-value">$1,180 to $2k target. Data missing Apr 1 — confirm balance.</span></div>'
+            +'<div class="detail-row"><span class="detail-label">All accounts</span><span class="detail-value">Daily loss cap $400. No FOMC until Apr 29.</span></div>'
         +'</div></div>'
 
         +'<h3 class="h3" style="margin-bottom:18px">🎯 Week Targets & Rules</h3>'
         +'<div class="grid grid-2">'
             +'<div class="card"><div class="card-body"><span class="eyebrow">Must Accomplish</span>'
                 +'<ul style="margin-top:12px;list-style:none;display:flex;flex-direction:column;gap:10px">'
-                    +'<li style="display:flex;gap:10px"><span style="color:var(--rd);font-weight:800">→</span><span class="tx-sec" style="font-size:13px">Fund AX-EVAL: +$1,446 by Apr 2</span></li>'
-                    +'<li style="display:flex;gap:10px"><span style="color:var(--yl);font-weight:800">→</span><span class="tx-sec" style="font-size:13px">TS-676: Get 5th win day</span></li>'
-                    +'<li style="display:flex;gap:10px"><span style="color:var(--gn);font-weight:800">→</span><span class="tx-sec" style="font-size:13px">TS-204: Grow to $1k for payout</span></li>'
+                    +'<li style="display:flex;gap:10px"><span style="color:var(--gn);font-weight:800">→</span><span class="tx-sec" style="font-size:13px">TS-235: One green session → payout eligible</span></li>'
+                    +'<li style="display:flex;gap:10px"><span style="color:var(--yl);font-weight:800">→</span><span class="tx-sec" style="font-size:13px">AX-50K: Clear 30% rule — need $95 more profit</span></li>'
+                    +'<li style="display:flex;gap:10px"><span style="color:var(--gn);font-weight:800">→</span><span class="tx-sec" style="font-size:13px">TS-676: Push toward $2k P&L (~$1,388 gap)</span></li>'
+                    +'<li style="display:flex;gap:10px"><span style="color:var(--gn);font-weight:800">→</span><span class="tx-sec" style="font-size:13px">Confirm TF-286 Apr 1 balance</span></li>'
                 +'</ul>'
             +'</div></div>'
             +'<div class="card"><div class="card-body"><span class="eyebrow">Risk Rules This Week</span>'
                 +'<ul style="margin-top:12px;list-style:none;display:flex;flex-direction:column;gap:10px">'
-                    +'<li style="display:flex;gap:10px"><span style="color:var(--rd);font-weight:800">✕</span><span class="tx-sec" style="font-size:13px">TS-235: 1 contract max, scalp only</span></li>'
                     +'<li style="display:flex;gap:10px"><span style="color:var(--rd);font-weight:800">✕</span><span class="tx-sec" style="font-size:13px">No holds through economic releases</span></li>'
                     +'<li style="display:flex;gap:10px"><span style="color:var(--rd);font-weight:800">✕</span><span class="tx-sec" style="font-size:13px">Daily loss cap: $400 then stop</span></li>'
+                    +'<li style="display:flex;gap:10px"><span style="color:var(--yl);font-weight:800">→</span><span class="tx-sec" style="font-size:13px">AX-50K: keep single day under $362 until cleared</span></li>'
                 +'</ul>'
             +'</div></div>'
         +'</div>'
