@@ -759,7 +759,7 @@ accounts:[
  pnl:[null,-150,-800,143,-425,191,129,195,262,-38,-284,272,277],
  n:'Payout eligible. $739 profit. +$277 today. Building to $2k P&L — then pull $1k. MLL locks permanently after first payout. 100% split on first $10k.',
  tgt:{l:'$2k Buffer',v:2000,g:1261,d:13}},
-{k:'ts_676',s:'TS-676',f:'Topstep Express',ty:'ts',bal:611.96,pft:611.96,mll:-1388.04,mm:2000,db:1999.00,wd:7,wr:5,sp:1,cap:5000,el:true,rk:'safe',
+{k:'ts_676',s:'TS-676',f:'Topstep Express',ty:'ts',bal:611.96,pft:611.96,mll:-1388.04,mm:2000,db:2000.00,wd:7,wr:5,sp:1,cap:5000,el:true,rk:'safe',
  pnl:[null,-149,-796,143,-424,191,129,195,262,-38,101,381,227],
  n:'Payout eligible. $612 profit. +$227 today. New equity high — MLL moved to -$1,388. Building to $2k P&L — then pull $1k.',
  tgt:{l:'$2k Buffer',v:2000,g:1388,d:8}},
@@ -977,20 +977,22 @@ function showFleetView(){
         const a=eg[0];
         nmIcon='trophy';nmBg='var(--gn-bg)';nmColor='var(--gn)';nmLabel='Ready to pull';
         nmTitle=a.s+' — Payout eligible';
-        nmDesc='Growing to $1k before requesting. '+fp(a.pft)+' profit. 100% split.';
+        nmDesc='Building to $2k P&L target. '+fp(a.pft)+' profit. '+fm(Math.max(0,2000-(a.pft||0)))+' to go.';
         nmKey=a.k;
     }else{
         nmIcon='target';nmBg='var(--accent-bg)';nmColor='var(--accent)';nmLabel='Next goal';
         nmTitle='Build account balances';nmDesc='No accounts eligible yet.';nmKey='ts_204';
     }
 
-    // Build 5-day roadmap
+    // Build 5-day roadmap (dynamically generated)
+    const ts235=D.accounts.find(function(a){return a.k==='ts_235';});
+    const ts235Status=ts235&&ts235.pft>=0?'TS-235: ELIGIBLE — request payout':'TS-235: '+fm(Math.abs(ts235?ts235.pft:14))+' to breakeven';
     const roadmapDays=[
-        {d:'Mon 30',focus:'AX-EVAL: +'+fm(Math.ceil((ev?ev.gap:1446)/4)),note:'TS-676: chase 5th win'},
-        {d:'Tue 31',focus:'AX-EVAL: push pace',note:'All accounts normal'},
-        {d:'Wed 1',focus:'AX-EVAL: final push',note:'1 day left after this'},
-        {d:'Thu 2',focus:'AX-EVAL: DEADLINE',note:'Account deletes today'},
-        {d:'Fri 3',focus:'TS-204: grow to $1k',note:'Post-deadline reset'}
+        {d:'Mon 7',focus:'TS-204/676: build toward $2k',note:'Both eligible — let P&L compound'},
+        {d:'Tue 8',focus:ts235Status,note:'AX-50K: clear 30% rule ($95 needed)'},
+        {d:'Wed 9',focus:'Apex accounts: push to safety net',note:'AX-100K $1,443 gap · AX-50K $1,491 gap'},
+        {d:'Thu 10',focus:'TF-286: confirm balance + update',note:'$1,180 to $2k target'},
+        {d:'Fri 11',focus:'AX-50K: est. payout eligible',note:'First projected extraction date'}
     ];
     const roadmapHtml=roadmapDays.map(function(r){
         return '<div class="rm-day"><div class="rm-date">'+r.d+'</div><div class="rm-label">'+r.focus+'</div><div class="rm-note">'+r.note+'</div></div>';
@@ -1394,7 +1396,7 @@ function buildPrep(){
 /* ══════════════════════════════════
    ROADMAP — DATA ENGINE
 ══════════════════════════════════ */
-let calYear=2026,calMonth=2;
+let calYear=new Date().getFullYear(),calMonth=new Date().getMonth();
 
 function calcAvgDaily(pnl){
     const v=pnl.filter(function(x){return x!=null;}).slice(-5);
@@ -1408,7 +1410,7 @@ function addTradingDays(startDate,n){
 }
 
 function getProjections(){
-    const today=new Date(2026,2,31);
+    const today=new Date();
     return D.accounts.map(function(a){
         const avg=calcAvgDaily(a.pnl);
         let gap,target,label,color,maxPayout,mode,extraInfo;
@@ -1522,7 +1524,7 @@ function buildRoadmap(){
 function buildCalendar(year,month){
     calYear=year;calMonth=month;
     const MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
-    const today=new Date(2026,2,31);
+    const today=new Date();
     const firstDay=new Date(year,month,1).getDay();
     const daysInMonth=new Date(year,month+1,0).getDate();
 
