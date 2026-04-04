@@ -959,10 +959,28 @@ function showFleetView(){
         const pftColor=(a.pft||0)>=0?'var(--gn)':'var(--rd)';
         const barColor=a.el?'var(--gn)':a.dl?'var(--rd)':rc(a.rk);
         const statusLabel=a.el?'Eligible':a.dl?'Deadline':a.rk;
+        /* Progress bar toward $2k target (TS/TF) or safety net (Apex) */
+        var progPct=0,progColor='var(--gn)',progLabel='';
+        if(a.ty==='ts'||a.ty==='tf'){
+            progPct=Math.min(100,Math.max(0,(a.pft||0)/2000*100));
+            progColor=(a.pft||0)>=0?'var(--gn)':'var(--rd)';
+            progLabel=Math.round(progPct)+'% to $2k';
+        }else if(a.ty==='ax'&&a.sn){
+            var startBal=(a.bal||0)-(a.pft||0);
+            var snGap=a.sn-startBal;
+            var snProgress=snGap>0?((a.pft||0)/snGap*100):100;
+            progPct=Math.min(100,Math.max(0,snProgress));
+            progColor=progPct>=80?'var(--pp)':'var(--pp)';
+            progLabel=Math.round(progPct)+'% to safety net';
+        }
         return '<div class="hm-block" onclick="showAccountView(\''+a.k+'\')" style="border-top:3px solid '+barColor+'">'
             +'<div class="hm-name">'+a.s+'</div>'
             +'<div class="hm-pnl" style="color:'+pftColor+'">'+fp(a.pft||0)+'</div>'
             +'<div class="hm-sub">'+statusLabel+'</div>'
+            +'<div style="margin-top:6px;height:3px;background:var(--bg-tertiary);border-radius:9999px;overflow:hidden">'
+                +'<div style="height:100%;width:'+progPct.toFixed(1)+'%;background:'+progColor+';border-radius:9999px"></div>'
+            +'</div>'
+            +'<div style="font-size:9px;color:var(--tx-muted);margin-top:3px">'+progLabel+'</div>'
         +'</div>';
     }).join('');
 
@@ -985,17 +1003,93 @@ function showFleetView(){
     }
 
     // Build 5-day roadmap (dynamically generated)
-    const ts235=D.accounts.find(function(a){return a.k==='ts_235';});
-    const ts235Status=ts235&&ts235.pft>=0?'TS-235: ELIGIBLE — request payout':'TS-235: '+fm(Math.abs(ts235?ts235.pft:14))+' to breakeven';
-    const roadmapDays=[
-        {d:'Mon 7',focus:'TS-204/676: build toward $2k',note:'Both eligible — let P&L compound'},
-        {d:'Tue 8',focus:ts235Status,note:'AX-50K: clear 30% rule ($95 needed)'},
-        {d:'Wed 9',focus:'Apex accounts: push to safety net',note:'AX-100K $1,443 gap · AX-50K $1,491 gap'},
-        {d:'Thu 10',focus:'TF-286: confirm balance + update',note:'$1,180 to $2k target'},
-        {d:'Fri 11',focus:'AX-50K: est. payout eligible',note:'First projected extraction date'}
-    ];
+    var rmNow=new Date();
+    var rmDayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    var rmMonthNames=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+    /* Get next 5 trading days (Mon-Fri, skip weekends) */
+    var tradingDays5=[];
+    var rmCursor=new Date(rmNow);
+    while(tradingDays5.length<5){
+        rmCursor.setDate(rmCursor.getDate()+1);
+        var rmDow=rmCursor.getDay();
+        if(rmDow!==0&&rmDow!==6){
+            tradingDays5.push(new Date(rmCursor));
+        }
+    }
+
+    /* Check FOMC dates within the 5-day window */
+    var fomcMonthMap={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+    var fomcDatesInWindow={};
+    D.fomc.forEach(function(dateStr){
+        var pts=dateStr.split(' ');
+        var fDate=new Date(rmNow.getFullYear(),fomcMonthMap[pts[0]],parseInt(pts[1]));
+        tradingDays5.forEach(function(td,idx){
+            if(fDate.getFullYear()===td.getFullYear()&&fDate.getMonth()===td.getMonth()&&fDate.getDate()===td.getDate()){
+                fomcDatesInWindow[idx]=dateStr;
+            }
+        });
+    });
+
+    /* Sort accounts by priority for roadmap assignment */
+    var rmAccounts=D.accounts.slice().map(function(a){
+        var priority=100;
+        var focusText='';
+        var noteText='';
+        /* Risk alerts: 30% rule breach, low buffer */
+        if(a.cp&&a.pft>0&&a.bd>a.pft*a.cp){
+            priority=10;
+            var needed30=Math.ceil(a.bd/0.30-a.pft);
+            focusText=a.s+': clear 30% rule';
+            noteText=fm(needed30)+' more profit needed';
+        }else if(a.db!=null&&a.db<800){
+            priority=15;
+            focusText=a.s+': low buffer — protect';
+            noteText='Only '+fm(a.db)+' to MLL';
+        }else if(!a.el&&a.wd>=a.wr&&a.pft<0){
+            /* Near eligibility — needs positive balance */
+            priority=20;
+            focusText=a.s+': '+fm(Math.abs(a.pft))+' to breakeven';
+            noteText=a.wd+'/'+a.wr+' win days — one green = eligible';
+        }else if(a.el){
+            /* Eligible, building to $2k */
+            var gap2k=Math.max(0,2000-(a.pft||0));
+            priority=30+gap2k/1000;
+            focusText=a.s+': build toward $2k';
+            noteText='Eligible — '+fm(gap2k)+' to payout trigger';
+        }else if(a.ty==='ax'&&a.ds!=null){
+            /* Apex safety net */
+            priority=40+(a.ds/1000);
+            focusText=a.s+': push to safety net';
+            noteText=fm(a.ds)+' gap to '+fm(a.sn);
+        }else if(a.tgt){
+            priority=50+a.tgt.g/1000;
+            focusText=a.s+': '+fm(a.tgt.g)+' to '+a.tgt.l;
+            noteText='Building buffer';
+        }else{
+            focusText=a.s+': general building';
+            noteText='Continue steady trading';
+        }
+        return {k:a.k,s:a.s,ty:a.ty,priority:priority,focus:focusText,note:noteText};
+    }).sort(function(a,b){return a.priority-b.priority;});
+
+    /* Assign priorities to days — rotate through sorted accounts */
+    var roadmapDays=tradingDays5.map(function(td,idx){
+        var dayLabel=rmDayNames[td.getDay()]+' '+td.getDate();
+        var focusItem=rmAccounts[idx%rmAccounts.length];
+        var focus=focusItem.focus;
+        var note=focusItem.note;
+        /* Check if FOMC falls on this day */
+        if(fomcDatesInWindow[idx]){
+            focus='NO TRADE — FOMC '+fomcDatesInWindow[idx];
+            note='Hard rule: no entries within 2 hours of announcement';
+        }
+        return {d:dayLabel,focus:focus,note:note,fomc:!!fomcDatesInWindow[idx]};
+    });
+
     const roadmapHtml=roadmapDays.map(function(r){
-        return '<div class="rm-day"><div class="rm-date">'+r.d+'</div><div class="rm-label">'+r.focus+'</div><div class="rm-note">'+r.note+'</div></div>';
+        var fomcStyle=r.fomc?' style="border-color:var(--rd);background:var(--rd-bg)"':'';
+        return '<div class="rm-day"'+fomcStyle+'><div class="rm-date"'+(r.fomc?' style="color:var(--rd)"':'')+'>'+r.d+'</div><div class="rm-label"'+(r.fomc?' style="color:var(--rd)"':'')+'>'+r.focus+'</div><div class="rm-note">'+r.note+'</div></div>';
     }).join('');
 
     // Date / session info
@@ -1336,58 +1430,240 @@ function showPage(page){
    WEEK PREP
 ══════════════════════════════════ */
 function buildPrep(){
-    const tot=D.accounts.reduce((s,a)=>s+(a.pft||0),0);
-    const wk=D.log.slice(-5).reduce((s,d)=>s+d.p,0);
-    const wins=D.log.slice(-5).filter(d=>d.p>0).length;
-    const ev=D.accounts.find(a=>a.dl);
+    var tot=D.accounts.reduce(function(s,a){return s+(a.pft||0);},0);
+    var last5=D.log.slice(-5);
+    var wk=last5.reduce(function(s,d){return s+d.p;},0);
+    var wins=last5.filter(function(d){return d.p>0;}).length;
+    var totalDays=last5.length;
+
+    /* Best day from last 5 */
+    var bestDay=last5.reduce(function(best,d){
+        if(!best||d.p>best.p)return d;
+        return best;
+    },null);
+    var bestDayStr=bestDay?fp(bestDay.p):'--';
+    var bestDayDate=bestDay?bestDay.d:'--';
+
+    /* Compute week date range from last 5 log entries */
+    var weekStart=last5.length>0?last5[0].d:'--';
+    var weekEnd=last5.length>0?last5[last5.length-1].d:'--';
+
+    /* Dynamic Week Highlights */
+    var highlights=[];
+    /* Green streak detection */
+    var streak=0;
+    for(var si=D.log.length-1;si>=0;si--){
+        if(D.log[si].p>0)streak++;else break;
+    }
+    if(streak>=2){
+        var streakDays=D.log.slice(-streak).map(function(d){return d.d+' '+fp(d.p);}).join(' · ');
+        highlights.push({label:streak+'-day green streak',value:streakDays,color:'var(--gn)'});
+    }
+
+    D.accounts.forEach(function(a){
+        /* Eligibility milestone */
+        if(a.el){
+            highlights.push({label:a.s+' eligible',value:'Payout eligible — '+a.wd+'/'+a.wr+' win days',color:'var(--gn)'});
+        }
+        /* One win day away */
+        if(a.wd>=a.wr&&!a.el&&a.pft<0){
+            highlights.push({label:a.s+' milestone',value:'Hit '+a.wd+'/'+a.wr+' win days — needs positive balance for eligibility',color:'var(--gn)'});
+        }
+        /* Near breakeven */
+        if(!a.el&&a.pft<0&&a.pft>-100){
+            highlights.push({label:a.s+' near breakeven',value:'Balance '+fp(a.pft)+' — one green session from positive',color:'var(--yl)'});
+        }
+        /* New equity high (MLL moved up = trailing, check if MLL > -mm) */
+        if(a.ty==='ts'&&a.mll!=null&&a.mll>-a.mm){
+            highlights.push({label:a.s+' equity high',value:'MLL moved to '+fm(a.mll)+' (trailing up)',color:'var(--gn)'});
+        }
+        /* 30% rule warning for Apex */
+        if(a.cp&&a.pft>0&&a.bd>a.pft*a.cp){
+            var cpPct=(a.bd/a.pft*100).toFixed(1);
+            var needed=Math.ceil(a.bd/0.30-a.pft);
+            highlights.push({label:a.s+' 30% alert',value:'Consistency at '+cpPct+'% — '+fm(needed)+' more profit clears it',color:'var(--yl)'});
+        }
+        /* Low buffer warning */
+        if(a.db!=null&&a.db<800){
+            highlights.push({label:a.s+' buffer warning',value:'Only '+fm(a.db)+' to MLL — 1 contract limit',color:'var(--rd)'});
+        }
+    });
+    /* Momentum line */
+    var winPct=totalDays>0?Math.round(wins/totalDays*100):0;
+    highlights.push({label:'Momentum',value:(winPct>=60?'HOT':'BUILDING')+' — '+winPct+'% win rate'+(streak>=2?', '+streak+'-day green streak':''),color:winPct>=60?'var(--gn)':'var(--yl)'});
+
+    var highlightsHtml=highlights.map(function(h){
+        return '<div class="detail-row"><span class="detail-label">'+h.label+'</span><span class="detail-value" style="color:'+h.color+'">'+h.value+'</span></div>';
+    }).join('');
+
+    /* Dynamic Game Plan — sort accounts by priority */
+    var gamePlan=[];
+    /* Sort: risk alerts first, then closest to payout, then general */
+    var sorted=D.accounts.slice().sort(function(a,b){
+        /* Risk alerts first */
+        var aRisk=(a.rk==='high'?0:a.rk==='medium'?1:2);
+        var bRisk=(b.rk==='high'?0:b.rk==='medium'?1:2);
+        if(aRisk!==bRisk)return aRisk-bRisk;
+        /* Then closest to target */
+        var aGap=a.tgt?a.tgt.g:99999;
+        var bGap=b.tgt?b.tgt.g:99999;
+        return aGap-bGap;
+    });
+
+    /* Eligible accounts */
+    var eligibleAccts=sorted.filter(function(a){return a.el;});
+    if(eligibleAccts.length){
+        var eligNames=eligibleAccts.map(function(a){return a.s;}).join(' + ');
+        gamePlan.push({type:'alert-success',icon:'trophy',text:'<strong>'+eligNames+':</strong> Payout eligible. Building to $2k P&L — do not pull yet.'});
+    }
+    /* Accounts near eligibility */
+    sorted.forEach(function(a){
+        if(!a.el&&a.wd>=a.wr){
+            gamePlan.push({type:'alert-success',icon:'check-circle',text:'<strong>'+a.s+':</strong> '+a.wd+'/'+a.wr+' win days. Balance '+fp(a.pft)+'. One positive session = fully eligible.'});
+        }
+    });
+
+    var gamePlanAlerts=gamePlan.map(function(g){
+        return '<div class="alert '+g.type+'"><i data-lucide="'+g.icon+'"></i>'+g.text+'</div>';
+    }).join('');
+
+    var gamePlanRows=[];
+    sorted.forEach(function(a){
+        if(a.el)return; /* Already covered in alerts */
+        if(a.wd>=a.wr)return; /* Already covered */
+        var note='',color='var(--tx-secondary)';
+        if(a.cp&&a.pft>0&&a.bd>a.pft*a.cp){
+            var maxAllowed=Math.round(a.pft*a.cp);
+            note='30% rule at '+(a.bd/a.pft*100).toFixed(1)+'% — keep daily gains under '+fm(maxAllowed);
+            color='var(--yl)';
+        }else if(a.cp&&a.pft>0){
+            note='30% clear at '+(a.bd/a.pft*100).toFixed(1)+'%. '+fm(a.ds||0)+' to safety net. Normal size.';
+            color='var(--gn)';
+        }else if(a.tgt){
+            note=fm(a.tgt.g)+' to '+a.tgt.l+' target.';
+            color='var(--tx-secondary)';
+        }
+        if(note)gamePlanRows.push({label:a.s,value:note,color:color});
+    });
+    gamePlanRows.push({label:'All accounts',value:'Daily loss cap $400.',color:'var(--tx-secondary)'});
+
+    var gamePlanRowsHtml=gamePlanRows.map(function(r){
+        return '<div class="detail-row"><span class="detail-label">'+r.label+'</span><span class="detail-value" style="color:'+r.color+'">'+r.value+'</span></div>';
+    }).join('');
+
+    /* Dynamic Risk Rules */
+    var mustDo=[];
+    var riskRules=[];
+
+    sorted.forEach(function(a){
+        if(!a.el&&a.wd>=a.wr&&a.pft<0){
+            mustDo.push({color:'var(--gn)',text:a.s+': One green session → payout eligible'});
+        }
+        if(a.cp&&a.pft>0&&a.bd>a.pft*a.cp){
+            var needed=Math.ceil(a.bd/0.30-a.pft);
+            mustDo.push({color:'var(--yl)',text:a.s+': Clear 30% rule — need '+fm(needed)+' more profit'});
+        }
+        if(a.tgt&&a.tgt.g>0&&!a.el){
+            mustDo.push({color:'var(--gn)',text:a.s+': Push toward '+a.tgt.l+' (~'+fm(a.tgt.g)+' gap)'});
+        }
+        if(a.db!=null&&a.db<800){
+            riskRules.push({color:'var(--rd)',icon:'✕',text:a.s+': Buffer only '+fm(a.db)+' — 1 contract max'});
+        }
+        if(a.cp&&a.pft>0&&a.bd>a.pft*a.cp){
+            var maxDay=Math.round(a.pft*a.cp);
+            riskRules.push({color:'var(--yl)',icon:'→',text:a.s+': keep single day under '+fm(maxDay)+' until 30% cleared'});
+        }
+    });
+    riskRules.unshift({color:'var(--rd)',icon:'✕',text:'No holds through economic releases'});
+    riskRules.unshift({color:'var(--rd)',icon:'✕',text:'Daily loss cap: $400 then stop'});
+
+    var mustDoHtml=mustDo.map(function(m){
+        return '<li style="display:flex;gap:10px"><span style="color:'+m.color+';font-weight:800">→</span><span class="tx-sec" style="font-size:13px">'+m.text+'</span></li>';
+    }).join('');
+    var riskRulesHtml=riskRules.map(function(r){
+        return '<li style="display:flex;gap:10px"><span style="color:'+r.color+';font-weight:800">'+r.icon+'</span><span class="tx-sec" style="font-size:13px">'+r.text+'</span></li>';
+    }).join('');
+
+    /* FOMC proximity check */
+    var now=new Date();
+    var fomcWarning='';
+    var nextFomc=null;
+    var fomcCountdown=null;
+    D.fomc.forEach(function(dateStr){
+        var parts=dateStr.split(' ');
+        var monthMap={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+        var fomcDate=new Date(now.getFullYear(),monthMap[parts[0]],parseInt(parts[1]));
+        if(fomcDate<now)return;
+        /* Count trading days between now and FOMC */
+        var tradingDays=0;
+        var check=new Date(now);
+        while(check<fomcDate){
+            check.setDate(check.getDate()+1);
+            var dw=check.getDay();
+            if(dw!==0&&dw!==6)tradingDays++;
+        }
+        if(!nextFomc||(fomcDate<nextFomc.date)){
+            nextFomc={date:fomcDate,str:dateStr,days:tradingDays};
+        }
+    });
+    if(nextFomc&&nextFomc.days<=10){
+        fomcWarning='<div class="alert alert-danger" style="margin-bottom:16px"><i data-lucide="alert-triangle"></i><strong>FOMC WARNING:</strong> '+nextFomc.str+' is '+nextFomc.days+' trading days away. No entries within 2 hours of announcement.</div>';
+    }
+    var fomcCountdownHtml='';
+    if(nextFomc){
+        fomcCountdownHtml='<div style="margin-top:8px;font-size:13px;color:var(--tx-secondary)">Next FOMC: <strong style="color:var(--rd)">'+nextFomc.str+'</strong> ('+nextFomc.days+' trading days)</div>';
+    }
+
+    /* Update the prep subtitle dynamically */
+    var prepSubtitle=document.querySelector('#page-prep .tx-sec');
+    if(prepSubtitle){
+        prepSubtitle.textContent='Week of '+weekStart+' – '+weekEnd+'. '+D.accounts.length+' accounts active. '+wins+'/'+totalDays+' green days. Fleet building toward payout targets.';
+    }
+    var prepTitle=document.querySelector('#page-prep .h1');
+    if(prepTitle){
+        prepTitle.textContent='Week Prep Report';
+    }
 
     document.getElementById('prep-content').innerHTML=
-        '<h3 class="h3" style="margin-bottom:18px">📊 Week in Review: Mar 30 – Apr 1</h3>'
+        fomcWarning
+        +'<h3 class="h3" style="margin-bottom:18px">Week in Review: '+weekStart+' – '+weekEnd+'</h3>'
         +'<div class="grid grid-4" style="margin-bottom:24px">'
             +'<div class="prep-stat"><div class="tx-sm">Week P&L</div><div class="prep-stat-val" style="color:'+(wk>=0?'var(--gn)':'var(--rd)')+'">'+fp(wk)+'</div></div>'
-            +'<div class="prep-stat"><div class="tx-sm">Win Rate</div><div class="prep-stat-val" style="color:var(--gn)">'+wins+'/'+Math.min(D.log.slice(-5).length,5)+'</div></div>'
-            +'<div class="prep-stat"><div class="tx-sm">Best Day</div><div class="prep-stat-val" style="color:var(--gn)">+$2,109</div><div class="tx-sm">Mar 31</div></div>'
+            +'<div class="prep-stat"><div class="tx-sm">Win Rate</div><div class="prep-stat-val" style="color:'+(wins>=Math.ceil(totalDays/2)?'var(--gn)':'var(--rd)')+'">'+wins+'/'+totalDays+'</div></div>'
+            +'<div class="prep-stat"><div class="tx-sm">Best Day</div><div class="prep-stat-val" style="color:var(--gn)">'+bestDayStr+'</div><div class="tx-sm">'+bestDayDate+'</div></div>'
             +'<div class="prep-stat"><div class="tx-sm">Fleet Total</div><div class="prep-stat-val" style="color:'+(tot>=0?'var(--gn)':'var(--rd)')+'">'+fp(tot)+'</div></div>'
         +'</div>'
         +'<div class="card" style="margin-bottom:32px"><div class="card-body">'
-            +'<div class="detail-row"><span class="detail-label">3-day streak</span><span class="detail-value" style="color:var(--gn)">Mar 30 +$155 · Mar 31 +$2,109 · Apr 1 +$1,325</span></div>'
-            +'<div class="detail-row"><span class="detail-label">TS-235 milestone</span><span class="detail-value" style="color:var(--gn)">Hit 5/5 win days Apr 1 — one green day from payout eligible</span></div>'
-            +'<div class="detail-row"><span class="detail-label">TS-676</span><span class="detail-value" style="color:var(--gn)">New equity high — MLL moved from -$1,611 → -$1,388</span></div>'
-            +'<div class="detail-row"><span class="detail-label">AX-50K alert</span><span class="detail-value" style="color:var(--yl)">30% consistency at 32.6% — $95 more profit clears it</span></div>'
-            +'<div class="detail-row"><span class="detail-label">Momentum</span><span class="detail-value" style="color:var(--gn)">HOT — 80% win rate, 3-day green streak</span></div>'
+            +highlightsHtml
         +'</div></div>'
 
-        +'<h3 class="h3" style="margin-bottom:18px">📋 Week Game Plan (Apr 2–4)</h3>'
-        +'<div class="alert alert-success"><i data-lucide="trophy"></i><strong>TS-204 + TS-676:</strong> Both payout eligible. Building to $2k P&L — do not pull yet.</div>'
-        +'<div class="alert alert-success"><i data-lucide="check-circle"></i><strong>TS-235:</strong> 5/5 win days. Balance -$14. One positive session = fully eligible.</div>'
+        +'<h3 class="h3" style="margin-bottom:18px">Week Game Plan</h3>'
+        +gamePlanAlerts
         +'<div class="card" style="margin-bottom:32px"><div class="card-body">'
-            +'<div class="detail-row"><span class="detail-label">AX-50K</span><span class="detail-value" style="color:var(--yl)">30% rule at 32.6% — keep daily gains steady, clears automatically</span></div>'
-            +'<div class="detail-row"><span class="detail-label">AX-100K</span><span class="detail-value" style="color:var(--gn)">30% clear at 22.4%. $1,443 to safety net. Normal size.</span></div>'
-            +'<div class="detail-row"><span class="detail-label">TF-286</span><span class="detail-value">$1,180 to $2k target. Data missing Apr 1 — confirm balance.</span></div>'
-            +'<div class="detail-row"><span class="detail-label">All accounts</span><span class="detail-value">Daily loss cap $400. No FOMC until Apr 29.</span></div>'
+            +gamePlanRowsHtml
         +'</div></div>'
 
-        +'<h3 class="h3" style="margin-bottom:18px">🎯 Week Targets & Rules</h3>'
+        +'<h3 class="h3" style="margin-bottom:18px">Week Targets & Rules</h3>'
         +'<div class="grid grid-2">'
             +'<div class="card"><div class="card-body"><span class="eyebrow">Must Accomplish</span>'
                 +'<ul style="margin-top:12px;list-style:none;display:flex;flex-direction:column;gap:10px">'
-                    +'<li style="display:flex;gap:10px"><span style="color:var(--gn);font-weight:800">→</span><span class="tx-sec" style="font-size:13px">TS-235: One green session → payout eligible</span></li>'
-                    +'<li style="display:flex;gap:10px"><span style="color:var(--yl);font-weight:800">→</span><span class="tx-sec" style="font-size:13px">AX-50K: Clear 30% rule — need $95 more profit</span></li>'
-                    +'<li style="display:flex;gap:10px"><span style="color:var(--gn);font-weight:800">→</span><span class="tx-sec" style="font-size:13px">TS-676: Push toward $2k P&L (~$1,388 gap)</span></li>'
-                    +'<li style="display:flex;gap:10px"><span style="color:var(--gn);font-weight:800">→</span><span class="tx-sec" style="font-size:13px">Confirm TF-286 Apr 1 balance</span></li>'
+                    +mustDoHtml
                 +'</ul>'
             +'</div></div>'
             +'<div class="card"><div class="card-body"><span class="eyebrow">Risk Rules This Week</span>'
                 +'<ul style="margin-top:12px;list-style:none;display:flex;flex-direction:column;gap:10px">'
-                    +'<li style="display:flex;gap:10px"><span style="color:var(--rd);font-weight:800">✕</span><span class="tx-sec" style="font-size:13px">No holds through economic releases</span></li>'
-                    +'<li style="display:flex;gap:10px"><span style="color:var(--rd);font-weight:800">✕</span><span class="tx-sec" style="font-size:13px">Daily loss cap: $400 then stop</span></li>'
-                    +'<li style="display:flex;gap:10px"><span style="color:var(--yl);font-weight:800">→</span><span class="tx-sec" style="font-size:13px">AX-50K: keep single day under $362 until cleared</span></li>'
+                    +riskRulesHtml
                 +'</ul>'
             +'</div></div>'
         +'</div>'
         +'<div style="margin-top:32px"><span class="eyebrow">FOMC No-Trade Dates</span>'
+            +fomcCountdownHtml
             +'<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px">'
-                +D.fomc.map(d=>'<span class="tag" style="background:var(--rd-bg);color:var(--rd);font-size:11px;padding:6px 14px">'+d+'</span>').join('')
+                +D.fomc.map(function(d){
+                    var isSoon=false;
+                    if(nextFomc&&nextFomc.str===d&&nextFomc.days<=10)isSoon=true;
+                    return '<span class="tag" style="background:'+(isSoon?'var(--rd)':'var(--rd-bg)')+';color:'+(isSoon?'#fff':'var(--rd)')+';font-size:11px;padding:6px 14px">'+d+(isSoon?' ('+nextFomc.days+' days)':'')+'</span>';
+                }).join('')
             +'</div>'
         +'</div>';
     setTimeout(function(){lucide.createIcons();},60);
