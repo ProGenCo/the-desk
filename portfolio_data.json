@@ -413,19 +413,19 @@
     "note": "COLD. 1/5 green (20%). 3-day red streak. Capital preservation mode. MES only. Extend all projections 1.5x. Do not chase recovery."
   },
   "extraction_triggers": {
-    "topstep_1_204": { "trigger_balance": 0, "current_balance": 474.99, "pct_to_trigger": 100, "est_days": "GROWING", "note": "🏆 PAYOUT ELIGIBLE. $475 profit. Letting it ride to $1k+." },
-    "topstep_2_676": { "trigger_balance": 0, "current_balance": -96.69, "pct_to_trigger": 0, "est_days": "1-2 days", "note": "4/5 win days. $97 from breakeven. One $150+ day = payout eligible." },
-    "tradeify_286": { "trigger_profit": 3000, "current_profit": 409.75, "pct_to_trigger": 13.7, "est_days": 16, "note": "$2,590 to extraction trigger." },
-    "apex_50k_812": { "trigger_balance": 52600, "current_balance": 50987.86, "pct_to_trigger": 38.0, "est_days": 10, "note": "$1,612 to safety net." },
-    "apex_100k_811": { "trigger_balance": 103100, "current_balance": 100892.53, "pct_to_trigger": 28.8, "est_days": 13, "note": "$2,208 to safety net." }
+    "topstep_1_204": { "trigger_balance": 0, "current_balance": -28.99, "pct_to_trigger": 0, "est_days": "1-2 days", "note": "NOT eligible — balance -$29. Need positive balance. 8/5 win days banked." },
+    "topstep_2_676": { "trigger_balance": 0, "current_balance": -156.18, "pct_to_trigger": 0, "est_days": "2-3 days", "note": "NOT eligible — balance -$156. 7/5 win days banked. Needs recovery." },
+    "topstep_3_235": { "trigger_balance": 0, "current_balance": -781.83, "pct_to_trigger": 0, "est_days": "6+ days", "note": "NOT eligible — balance -$782. 5/5 win days banked. A++ only." },
+    "tradeify_286": { "trigger_profit": 3000, "current_profit": 506.45, "pct_to_trigger": 16.9, "est_days": 25, "note": "$2,494 to $3k extraction trigger. COLD mode — projections at 1.5x." },
+    "apex_50k_812": { "trigger_balance": 52600, "current_balance": 51213.47, "pct_to_trigger": 46.5, "est_days": 14, "note": "$1,387 to safety net. 30% rule barely CLEAR (29.8%). COLD mode." },
+    "apex_100k_811": { "trigger_balance": 103100, "current_balance": 101150.64, "pct_to_trigger": 37.1, "est_days": 19, "note": "$1,949 to safety net. 30% rule WARNING (32.2%). COLD mode." }
   },
   "payouts_taken": [],
   "projected_payouts": [
-    { "account": "topstep_1_204", "target_date": "2026-04-01", "amount": 500, "net": 500, "confidence": "high", "notes": "ELIGIBLE NOW. Growing to $1k for optimal pull. 100% split on first $10k." },
-    { "account": "topstep_2_676", "target_date": "2026-04-02", "amount": 125, "net": 125, "confidence": "high", "notes": "4/5 win days. $59 from green. One more $150+ day = eligible." },
-    { "account": "apex_50k_812", "target_date": "2026-04-06", "amount": 1500, "net": 1500, "confidence": "high", "notes": "$1,473 to safety net. At $250/day pace = 6 days." },
-    { "account": "apex_100k_811", "target_date": "2026-04-10", "amount": 2000, "net": 2000, "confidence": "medium", "notes": "$2,064 to safety net. Upgraded confidence." },
-    { "account": "tradeify_286", "target_date": "2026-04-12", "amount": 1350, "net": 1215, "confidence": "medium", "notes": "$2,441 to extraction trigger. Accelerating." }
+    { "account": "topstep_1_204", "target_date": "2026-04-14", "amount": 500, "net": 500, "confidence": "low", "notes": "Needs to recover to positive first, then build to $2k. COLD mode — earliest realistic window mid-April." },
+    { "account": "apex_50k_812", "target_date": "2026-04-28", "amount": 1500, "net": 1500, "confidence": "medium", "notes": "$1,387 to safety net. ~14 trading days at COLD pace. 30% rule at 29.8% — one big day re-trips it." },
+    { "account": "apex_100k_811", "target_date": "2026-05-05", "amount": 2000, "net": 2000, "confidence": "low", "notes": "$1,949 to safety net. ~19 trading days at COLD pace. 30% rule at 32.2% — must clear first." },
+    { "account": "tradeify_286", "target_date": "2026-05-12", "amount": 1350, "net": 1215, "confidence": "low", "notes": "$2,494 to $3k extraction trigger. ~25 trading days at COLD pace. Longest runway." }
   ],
   "danger_dates": [
     { "type": "FOMC", "dates": ["2026-04-29", "2026-05-06", "2026-06-17", "2026-07-29", "2026-09-16", "2026-10-28", "2026-12-16"], "rule": "DO NOT TRADE" },
