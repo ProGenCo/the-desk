@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-04-08",
+  "last_updated": "2026-04-09",
   "risk_preference": "balanced-aggressive",
   "daily_target": 150,
   "accounts": {
@@ -9,14 +9,14 @@
       "short_id": "204",
       "type": "topstep_express",
       "status": "funded",
-      "balance": -28.99,
+      "balance": -164.12,
       "starting_balance": 0,
-      "profit": -28.99,
+      "profit": -164.12,
       "mll": 2000,
       "mll_current": -1032.59,
       "mll_locked": false,
       "floor": -1032.59,
-      "dist_to_breach": 1003.60,
+      "dist_to_breach": 868.47,
       "consistency_rule": "NONE",
       "winning_days": 8,
       "winning_days_required": 5,
@@ -24,8 +24,8 @@
       "prior_payouts": 0,
       "payout_cap": 5000,
       "split": 1.0,
-      "risk_level": "safe",
-      "notes": "NOT payout eligible — balance -$29. 3rd straight red day. Buffer $1,004. All 3 TS accounts negative — wait for reversal."
+      "risk_level": "medium",
+      "notes": "NOT eligible. Balance -$164. 4th straight red. Buffer $868. Approaching $500 buffer warning zone."
     },
     "topstep_2_676": {
       "name": "Topstep Express #2",
@@ -33,14 +33,14 @@
       "short_id": "676",
       "type": "topstep_express",
       "status": "funded",
-      "balance": -156.18,
+      "balance": -291.31,
       "starting_balance": 0,
-      "profit": -156.18,
+      "profit": -291.31,
       "mll": 2000,
       "mll_current": -1388.04,
       "mll_locked": false,
       "floor": -1388.04,
-      "dist_to_breach": 1231.86,
+      "dist_to_breach": 1096.73,
       "consistency_rule": "NONE",
       "winning_days": 7,
       "winning_days_required": 5,
@@ -49,7 +49,7 @@
       "payout_cap": 5000,
       "split": 1.0,
       "risk_level": "safe",
-      "notes": "NOT payout eligible — balance -$156. Digging deeper. Buffer $1,232. Needs $156 recovery just to go green."
+      "notes": "NOT eligible. Balance -$291. Buffer $1,097. 4th straight red."
     },
     "topstep_3_235": {
       "name": "Topstep Express #3",
@@ -57,14 +57,14 @@
       "short_id": "235",
       "type": "topstep_express",
       "status": "funded",
-      "balance": -781.83,
+      "balance": -916.96,
       "starting_balance": 0,
-      "profit": -781.83,
+      "profit": -916.96,
       "mll": 2000,
       "mll_current": -2000,
       "mll_locked": false,
       "floor": -2000,
-      "dist_to_breach": 1218.17,
+      "dist_to_breach": 1083.04,
       "consistency_rule": "NONE",
       "winning_days": 5,
       "winning_days_required": 5,
@@ -72,8 +72,8 @@
       "prior_payouts": 0,
       "payout_cap": 5000,
       "split": 1.0,
-      "risk_level": "safe",
-      "notes": "5/5 WIN DAYS HIT. Balance -$782. Buffer $1,218. A++ setups only — do not trade for recovery."
+      "risk_level": "medium",
+      "notes": "Balance -$917. Buffer $1,083. Deprioritize — recovery would take 6+ solid green days."
     },
     "tradeify_286": {
       "name": "Tradeify 50k Flex",
@@ -81,9 +81,9 @@
       "short_id": "286",
       "type": "tradeify_flex",
       "status": "funded",
-      "balance": 50506.45,
+      "balance": 49933.15,
       "starting_balance": 50000,
-      "profit": 506.45,
+      "profit": -66.85,
       "mll": 2000,
       "floor": 48000,
       "buffer_threshold": 52100,
@@ -94,7 +94,7 @@
       "payout_cap": 3000,
       "split": 0.90,
       "risk_level": "safe",
-      "notes": "Profit $506. -$63 today. Win days 13/5. Buffer $2,506. $2,494 to $3k extraction trigger."
+      "notes": "PROFIT GONE. Balance below $50k. Profit -$67. -$573 today. Buffer $1,933. Must recover to positive before extraction is possible."
     },
     "apex_100k_811": {
       "name": "Apex Legacy 100k",
@@ -102,15 +102,15 @@
       "short_id": "811",
       "type": "apex_legacy_100k",
       "status": "funded",
-      "balance": 101150.64,
+      "balance": 100600.50,
       "starting_balance": 100000,
-      "profit": 1150.64,
+      "profit": 600.50,
       "equity_high": 101684.43,
       "mll": 3000,
       "safety_net": 103100,
       "floor": 98684.43,
-      "dist_dd": 2466.21,
-      "trading_days": 21,
+      "dist_dd": 1916.07,
+      "trading_days": 22,
       "trading_days_required": 8,
       "winning_days_50": 15,
       "winning_days_50_required": 5,
@@ -120,11 +120,11 @@
       "split": 1.0,
       "consistency_pct": 0.30,
       "consistency_best_day": 371,
-      "consistency_best_day_pct": 0.3224,
-      "consistency_status": "WARNING",
-      "consistency_note": "⚠️ Best day $371 = 32.2% of $1,151 profit. Over 30%. Need $1,237 total to clear. Gap: $86.",
-      "risk_level": "safe",
-      "notes": "Profit $1,151. -$30 today (small). Dist DD $2,466. $1,949 to safety net. ⚠️ 30% rule WARNING — need $86 more profit."
+      "consistency_best_day_pct": 0.6178,
+      "consistency_status": "CRITICAL",
+      "consistency_note": "🔴 Best day $371 = 61.8% of $601 profit. Severely over 30%. Need $1,237 total to clear. Gap: $636.",
+      "risk_level": "medium",
+      "notes": "Profit $601. -$550 today. Dist DD $1,916. $2,500 to safety net. 🔴 30% rule CRITICAL — 61.8%. Long road to clear."
     },
     "apex_50k_812": {
       "name": "Apex Legacy 50k",
@@ -132,15 +132,15 @@
       "short_id": "812",
       "type": "apex_legacy_50k",
       "status": "funded",
-      "balance": 51213.47,
+      "balance": 50665.83,
       "starting_balance": 50000,
-      "profit": 1213.47,
+      "profit": 665.83,
       "equity_high": 51756.16,
       "mll": 2500,
       "safety_net": 52600,
       "floor": 49256.01,
-      "dist_dd": 1957.46,
-      "trading_days": 21,
+      "dist_dd": 1409.82,
+      "trading_days": 22,
       "trading_days_required": 8,
       "winning_days_50": 15,
       "winning_days_50_required": 5,
@@ -150,11 +150,11 @@
       "split": 1.0,
       "consistency_pct": 0.30,
       "consistency_best_day": 361,
-      "consistency_best_day_pct": 0.2975,
-      "consistency_status": "CLEAR",
-      "consistency_note": "✅ Best day $361 = 29.8% of $1,213 profit. Under 30% — barely. CLEAR.",
-      "risk_level": "safe",
-      "notes": "Profit $1,213. -$26 today (small). Dist DD $1,957. Floor $49,256. $1,387 to safety net. 30% rule barely CLEAR at 29.8%."
+      "consistency_best_day_pct": 0.5421,
+      "consistency_status": "CRITICAL",
+      "consistency_note": "🔴 Best day $361 = 54.2% of $666 profit. Severely over 30%. Need $1,204 total to clear. Gap: $538.",
+      "risk_level": "medium",
+      "notes": "Profit $666. -$548 today. Dist DD $1,410. Floor $49,256. $1,934 to safety net. 🔴 30% rule CRITICAL — 54.2%."
     },
     "apex_eval_101": {
       "name": "Apex 50k Eval",
@@ -399,18 +399,31 @@
         "apex_50k_812": { "balance": 51213.47, "daily_pnl": -26.49 }
       },
       "notes": "3rd straight red day but smallest loss yet -$461. TS drag only -$342 (much smaller). TF/Apex barely moved. All 3 TS accounts now negative. Momentum COLD."
+    },
+    {
+      "date": "2026-04-09",
+      "totals": { "portfolio_balance": null, "daily_pnl": -2076.47 },
+      "accounts": {
+        "topstep_1_204": { "balance": -164.12, "daily_pnl": -135.13 },
+        "topstep_2_676": { "balance": -291.31, "daily_pnl": -135.13 },
+        "topstep_3_235": { "balance": -916.96, "daily_pnl": -135.13 },
+        "tradeify_286": { "balance": 49933.15, "daily_pnl": -573.30 },
+        "apex_100k_811": { "balance": 100600.50, "daily_pnl": -550.14 },
+        "apex_50k_812": { "balance": 50665.83, "daily_pnl": -547.64 }
+      },
+      "notes": "4th straight red. -$2,076 fleet. Worst day of the streak. TF-286 profit wiped — balance below $50k. Both Apex 30% rules blown to 60%+. All 6 accounts negative or deeply impaired."
     }
   ],
   "momentum": {
-    "last_5_days": [1325, -1532, 170, -1497, -461],
+    "last_5_days": [-1532, 170, -1497, -461, -2076],
     "green_days_last_5": 1,
     "total_days_last_5": 5,
     "win_rate_last_5": 0.20,
     "classification": "COLD",
-    "streak": 3,
+    "streak": 4,
     "streak_direction": "red",
-    "projection_multiplier": 0.60,
-    "note": "COLD. 1/5 green (20%). 3-day red streak. Capital preservation mode. MES only. Extend all projections 1.5x. Do not chase recovery."
+    "projection_multiplier": 0.50,
+    "note": "COLD. 1/5 green (20%). 4-day red streak. -$5,532 fleet drawdown over 4 days. Capital preservation mode. Consider sitting flat."
   },
   "extraction_triggers": {
     "topstep_1_204": { "trigger_balance": 0, "current_balance": -28.99, "pct_to_trigger": 0, "est_days": "1-2 days", "note": "NOT eligible — balance -$29. Need positive balance. 8/5 win days banked." },
