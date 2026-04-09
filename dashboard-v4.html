@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>The Desk</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest"></script>
@@ -508,6 +511,154 @@ a{color:inherit;text-decoration:none}
 .section-divider{height:1px;background:var(--border);margin:40px 0}
 
 /* ════════════════════════════════════
+   RISK ALERTS BAR
+════════════════════════════════════ */
+.risk-alerts{padding:0;overflow:hidden;transition:max-height 0.3s cubic-bezier(0.16,1,0.3,1)}
+.risk-alerts.empty{max-height:0}
+.risk-alert{
+    display:flex;align-items:center;gap:10px;
+    padding:10px 20px;font-size:12px;font-weight:700;
+    border-bottom:1px solid rgba(0,0,0,0.15);
+    font-family:'Inter',ui-monospace,monospace;
+}
+.risk-alert-critical{background:var(--rd-bg);color:var(--rd)}
+.risk-alert-warning{background:var(--yl-bg);color:var(--yl)}
+.risk-alert-info{background:var(--gn-bg);color:var(--gn)}
+.risk-alert i{width:14px;height:14px;flex-shrink:0}
+.risk-alert-text{flex:1}
+.risk-alert-val{font-weight:800;margin-left:auto;white-space:nowrap}
+
+/* ════════════════════════════════════
+   CONSISTENCY PROJECTOR
+════════════════════════════════════ */
+.consist-proj{
+    margin-top:16px;padding:14px 16px;border-radius:12px;
+    background:var(--bg-secondary);border:1px solid var(--border);
+}
+.consist-proj-title{font-size:11px;font-weight:800;color:var(--pp);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px}
+.consist-proj-row{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:4px 0;font-family:'Inter',ui-monospace,monospace;font-size:12px;
+}
+.consist-proj-scenario{color:var(--tx-secondary);font-weight:600}
+.consist-proj-result{font-weight:800}
+.consist-proj-ok{color:var(--gn)}
+.consist-proj-warn{color:var(--yl)}
+.consist-proj-bad{color:var(--rd)}
+
+/* ════════════════════════════════════
+   P&L INPUT MODAL
+════════════════════════════════════ */
+.pnl-modal-overlay{
+    position:fixed;inset:0;z-index:200;
+    background:rgba(0,0,0,0.6);
+    backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+    display:none;align-items:center;justify-content:center;
+    opacity:0;transition:opacity 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+.pnl-modal-overlay.open{display:flex;opacity:1}
+.pnl-modal{
+    width:420px;max-width:92vw;max-height:88vh;overflow-y:auto;
+    background:var(--bg-card);border:1px solid var(--border-strong);
+    border-radius:16px;padding:28px 28px 24px;
+    box-shadow:0 24px 56px rgba(0,0,0,0.6),0 8px 16px rgba(0,0,0,0.35);
+    transform:translateY(12px);transition:transform 0.3s cubic-bezier(0.16,1,0.3,1);
+}
+.pnl-modal-overlay.open .pnl-modal{transform:translateY(0)}
+.pnl-modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.pnl-modal-title{font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-weight:800;font-size:18px;letter-spacing:-0.4px}
+.pnl-modal-close{
+    width:28px;height:28px;border-radius:8px;
+    display:grid;place-items:center;
+    background:var(--bg-tertiary);border:1px solid var(--border);
+    color:var(--tx-muted);cursor:pointer;transition:all 0.2s;font-size:16px;
+}
+.pnl-modal-close:hover{color:var(--rd);border-color:var(--rd)}
+.pnl-date-row{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.pnl-date-input{
+    flex:1;padding:10px 14px;border-radius:10px;
+    background:var(--bg-tertiary);border:1px solid var(--border-strong);
+    color:var(--tx-primary);font-family:'Inter',ui-monospace,monospace;font-size:13px;font-weight:600;
+    outline:none;transition:border-color 0.2s;
+}
+.pnl-date-input:focus{border-color:var(--accent)}
+.pnl-date-label{font-size:12px;font-weight:700;color:var(--tx-muted);white-space:nowrap}
+.pnl-acct-list{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+.pnl-acct-row{
+    display:flex;align-items:center;gap:12px;
+    padding:10px 14px;border-radius:12px;
+    background:var(--bg-secondary);border:1px solid var(--border);
+}
+.pnl-acct-tag{font-family:'Inter',ui-monospace,monospace;font-size:12px;font-weight:800;min-width:60px;color:var(--tx-secondary)}
+.pnl-acct-firm{font-size:11px;color:var(--tx-muted);font-weight:600;flex:1}
+.pnl-acct-input{
+    width:110px;padding:8px 10px;border-radius:8px;text-align:right;
+    background:var(--bg-tertiary);border:1px solid var(--border-strong);
+    color:var(--tx-primary);font-family:'Inter',ui-monospace,monospace;font-size:14px;font-weight:700;
+    outline:none;transition:border-color 0.2s;
+}
+.pnl-acct-input:focus{border-color:var(--accent)}
+.pnl-acct-input::placeholder{color:var(--tx-light);font-weight:500}
+.pnl-fleet-total{
+    margin-bottom:12px;padding:10px 14px;border-radius:10px;
+    background:var(--bg-tertiary);border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:space-between;
+    font-family:'Inter',ui-monospace,monospace;font-size:13px;font-weight:800;
+}
+.pnl-fleet-label{color:var(--tx-muted);font-size:11px;font-weight:700}
+.pnl-actions{display:flex;gap:10px;margin-bottom:0}
+.pnl-btn{
+    flex:1;padding:12px;border-radius:10px;font-family:'Plus Jakarta Sans',system-ui,sans-serif;
+    font-size:13px;font-weight:800;cursor:pointer;transition:all 0.2s cubic-bezier(0.16,1,0.3,1);
+    border:1px solid var(--border-strong);
+}
+.pnl-btn-primary{background:var(--accent);color:#111;border-color:var(--accent)}
+.pnl-btn-primary:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.pnl-btn-secondary{background:var(--bg-tertiary);color:var(--tx-secondary)}
+.pnl-btn-secondary:hover{color:var(--tx-primary);border-color:var(--tx-muted)}
+.pnl-export-row{display:flex;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.pnl-btn-export{
+    flex:1;padding:10px;border-radius:10px;font-family:'Plus Jakarta Sans',system-ui,sans-serif;
+    font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s cubic-bezier(0.16,1,0.3,1);
+    border:1px dashed var(--accent);background:var(--accent-bg);color:var(--accent);
+    display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.pnl-btn-export:hover{background:var(--accent);color:#111;border-style:solid}
+.pnl-btn-export i{width:13px;height:13px}
+.pnl-history{margin-top:16px;padding-top:16px;border-top:1px solid var(--border)}
+.pnl-history-title{font-size:11px;font-weight:800;color:var(--tx-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px}
+.pnl-history-row{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:6px 0;border-bottom:1px solid var(--border);
+    font-family:'Inter',ui-monospace,monospace;font-size:12px;
+}
+.pnl-history-date{font-weight:700;color:var(--tx-secondary)}
+.pnl-history-val{font-weight:800}
+.pnl-preview{font-family:'Inter',ui-monospace,monospace;font-size:11px;font-weight:700;margin-top:4px;padding:4px 8px;border-radius:6px;display:none}
+.pnl-preview.show{display:block}
+.pnl-preview-ok{background:var(--gn-bg);color:var(--gn)}
+.pnl-preview-warn{background:var(--yl-bg);color:var(--yl)}
+.pnl-preview-danger{background:var(--rd-bg);color:var(--rd)}
+.pnl-toast{
+    position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);
+    padding:12px 24px;border-radius:12px;
+    background:var(--gn);color:#fff;font-family:'Plus Jakarta Sans',system-ui,sans-serif;
+    font-size:13px;font-weight:700;z-index:250;
+    box-shadow:0 8px 32px rgba(0,0,0,0.4);
+    transition:transform 0.35s cubic-bezier(0.16,1,0.3,1),opacity 0.35s;opacity:0;
+}
+.pnl-toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.pnl-log-btn{
+    padding:6px 14px;border-radius:8px;
+    font-size:12px;font-weight:700;color:#111;
+    background:var(--accent);border:none;cursor:pointer;
+    transition:all 0.2s cubic-bezier(0.16,1,0.3,1);font-family:'Manrope','Inter',system-ui,sans-serif;
+    display:flex;align-items:center;gap:6px;
+}
+.pnl-log-btn:hover{filter:brightness(1.15);transform:translateY(-1px)}
+.pnl-log-btn i{width:13px;height:13px}
+
+/* ════════════════════════════════════
    FULL-PAGE VIEWS (Playbook, Prep)
 ════════════════════════════════════ */
 .full-page{display:none;min-height:100vh;padding-top:var(--nav-h)}
@@ -626,6 +777,7 @@ a{color:inherit;text-decoration:none}
             <button class="nav-link" id="nl-prep" onclick="showPage('prep')">Week Prep</button>
         </div>
         <div class="nav-right">
+            <button class="pnl-log-btn" onclick="openPnlModal()"><i data-lucide="plus-circle"></i> Log P&L</button>
             <span class="nav-clock" id="clock">--:--:-- MST</span>
             <button class="nav-theme" onclick="toggleTheme()">
                 <i data-lucide="moon"></i>
@@ -656,6 +808,9 @@ a{color:inherit;text-decoration:none}
         <div class="sb-list" id="sb-list"></div>
     </aside>
     <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+    <!-- RISK ALERTS -->
+    <div class="risk-alerts" id="risk-alerts"></div>
 
     <!-- MAIN CONTENT -->
     <main class="main-content" id="main-content"></main>
@@ -749,47 +904,60 @@ a{color:inherit;text-decoration:none}
 </div>
 
 <!-- ════════════════════════════════════
+     P&L INPUT MODAL
+════════════════════════════════════ -->
+<div class="pnl-modal-overlay" id="pnl-overlay" onclick="closePnlModal(event)">
+    <div class="pnl-modal" onclick="event.stopPropagation()">
+        <div class="pnl-modal-header">
+            <span class="pnl-modal-title">Log Daily P&L</span>
+            <button class="pnl-modal-close" onclick="closePnlModal()">&times;</button>
+        </div>
+        <div class="pnl-date-row">
+            <span class="pnl-date-label">Date</span>
+            <input type="date" class="pnl-date-input" id="pnl-date">
+        </div>
+        <div class="pnl-acct-list" id="pnl-acct-list"></div>
+        <div class="pnl-fleet-total" id="pnl-fleet-preview">
+            <span class="pnl-fleet-label">Fleet Total</span>
+            <span id="pnl-fleet-val" style="color:var(--tx-muted)">$0</span>
+        </div>
+        <div class="pnl-actions">
+            <button class="pnl-btn pnl-btn-secondary" onclick="closePnlModal()">Cancel</button>
+            <button class="pnl-btn pnl-btn-primary" onclick="submitPnl()">Save &amp; Update</button>
+        </div>
+        <div class="pnl-export-row">
+            <button class="pnl-btn-export" onclick="copyTodayPnl()"><i data-lucide="copy"></i> Copy Today</button>
+            <button class="pnl-btn-export" onclick="copyAllPnl()"><i data-lucide="clipboard-list"></i> Copy All for Claude</button>
+        </div>
+        <div class="pnl-history" id="pnl-history"></div>
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+            <button class="pnl-btn pnl-btn-secondary" style="width:100%;font-size:11px;color:var(--rd);border-color:var(--border)" onclick="confirmReset()"><i data-lucide="refresh-ccw" style="width:12px;height:12px;vertical-align:-2px;margin-right:4px"></i> Reset to Base Data</button>
+        </div>
+    </div>
+</div>
+<div class="pnl-toast" id="pnl-toast"></div>
+
+<!-- ════════════════════════════════════
      SCRIPT
 ════════════════════════════════════ -->
 <script>
 /* ══ DATA ══ */
 const D={
 accounts:[
-{k:'ts_204',s:'TS-204',f:'Topstep Express',ty:'ts',bal:739.15,pft:739.15,mll:-1032.59,mm:2000,db:1771.74,wd:8,wr:5,sp:1,cap:5000,el:true,rk:'safe',
- pnl:[null,-150,-800,143,-425,191,129,195,262,-38,-284,272,277],
- n:'Payout eligible. $739 profit. +$277 today. Building to $2k P&L — then pull $1k. MLL locks permanently after first payout. 100% split on first $10k.',
- tgt:{l:'$2k Buffer',v:2000,g:1261,d:13}},
-{k:'ts_676',s:'TS-676',f:'Topstep Express',ty:'ts',bal:611.96,pft:611.96,mll:-1388.04,mm:2000,db:2000.00,wd:7,wr:5,sp:1,cap:5000,el:true,rk:'safe',
- pnl:[null,-149,-796,143,-424,191,129,195,262,-38,101,381,227],
- n:'Payout eligible. $612 profit. +$227 today. New equity high — MLL moved to -$1,388. Building to $2k P&L — then pull $1k.',
- tgt:{l:'$2k Buffer',v:2000,g:1388,d:8}},
-{k:'ts_235',s:'TS-235',f:'Topstep Express',ty:'ts',bal:-13.69,pft:-13.69,mll:-2000,mm:2000,db:1986.31,wd:5,wr:5,sp:1,cap:5000,el:false,rk:'medium',
- pnl:[null,-242,-798,146,-421,49,128,195,262,-38,100,379,226],
- n:'5/5 win days hit! +$226 today. Balance -$14 — nearly breakeven. NOT eligible yet (needs positive balance). One green day away from full payout eligibility.',
- tgt:{l:'$2k Buffer',v:2000,g:2014,d:11}},
-{k:'tf_286',s:'TF-286',f:'Tradeify',ty:'tf',bal:50819.70,pft:819.70,db:1486,wd:11,wr:5,sp:.9,cap:3000,el:false,rk:'medium',
- pnl:[null,-205,-836,118,-482,191,32,166,240,-149,65,345,null],
- n:'11 win days. Building to $2k P&L target — then pull $1k. +$345 green day. 4/1 data not reported.',
- tgt:{l:'$2k Buffer',v:2000,g:1180,d:9}},
-{k:'ax_100k',s:'AX-100K',f:'Apex Trader',ty:'ax',bal:101657.38,pft:1657.38,fl:100100,db:4657,sn:103100,ds:1442.62,sp:1,cp:.30,bd:371,el:false,rk:'safe',
- pnl:[null,-179,-802,139,-451,207,75,189,257,-144,88,371,305],
- n:'Buffer $4,657. $1,443 to safety net. 30% rule clear at 22.4% (max single day $497). Headroom $126/day. +$305 today.',
- tgt:{l:'Safety Net',v:103100,g:1443,d:9}},
-{k:'ax_50k',s:'AX-50K',f:'Apex Trader',ty:'ax',bal:51109.25,pft:1109.25,fl:47500,db:1776,sn:52600,ds:1490.75,sp:1,cp:.30,bd:361,el:false,rk:'safe',
- pnl:[null,-144,-806,142,-457,216,55,190,257,-139,86,361,290],
- n:'⚠️ 30% rule WARNING: best day $361 = 32.6% of $1,109 profit. Need $95 more to clear. DIST DD $1,776 (trailing floor moved up). $1,491 to safety net. +$290 today.',
- tgt:{l:'Safety Net',v:52600,g:1491,d:9}},
+{k:'ts_204',s:'TS-204',f:'Topstep Express',ty:'ts',bal:-28.99,pft:-28.99,mll:-1032.59,mm:2000,db:1003.6,wd:8,wr:5,sp:1,cap:5000,el:false,rk:'safe',pnl:[967,-150,-800,143,-425,191,129,195,262,-38,-284,272,277,0,-283,-371,-114],n:'NOT payout eligible — balance -$29. 3rd straight red day. Buffer $1,004. All 3 TS accounts negative — wait for reversal.',tgt:{l:'$2k Buffer',v:2000,g:2029,d:10}},
+{k:'ts_676',s:'TS-676',f:'Topstep Express',ty:'ts',bal:-156.18,pft:-156.18,mll:-1388.04,mm:2000,db:1231.86,wd:7,wr:5,sp:1,cap:5000,el:false,rk:'safe',pnl:[389,-149,-796,143,-424,191,129,195,262,-38,null,381,227,0,-283,-371,-114],n:'NOT payout eligible — balance -$156. Digging deeper. Buffer $1,232. Needs $156 recovery just to go green.',tgt:{l:'$2k Buffer',v:2000,g:2156,d:10}},
+{k:'ts_235',s:'TS-235',f:'Topstep Express',ty:'ts',bal:-781.83,pft:-781.83,mll:-2000,mm:2000,db:1218.17,wd:5,wr:5,sp:1,cap:5000,el:false,rk:'safe',pnl:[null,-242,-798,146,-421,49,128,195,262,-38,null,379,226,0,-283,-371,-114],n:'5/5 WIN DAYS HIT. Balance -$782. Buffer $1,218. A++ setups only — do not trade for recovery.',tgt:{l:'$2k Buffer',v:2000,g:2782,d:14}},
+{k:'tf_286',s:'TF-286',f:'Tradeify',ty:'tf',bal:50506.45,pft:506.45,db:2506,wd:13,wr:5,sp:0.9,cap:3000,el:true,rk:'safe',pnl:[0,-205,-836,118,-482,191,32,166,240,-149,null,345,null,-515,726,-157,-63],n:'Profit $506. -$63 today. Win days 13/5. Buffer $2,506. $2,494 to $3k extraction trigger.',tgt:{l:'$2k Buffer',v:2000,g:1494,d:6}},
+{k:'ax_100k',s:'AX-100K',f:'Apex Trader',ty:'ax',bal:101150.64,pft:1150.64,fl:98684.43,db:2466.21,sn:103100,ds:1949.36,sp:1,cp:0.3,bd:371,el:false,rk:'safe',pnl:[1600,-179,-802,139,-451,207,75,189,257,-144,null,371,305,-504,144,-116,-30],n:'Profit $1,151. -$30 today (small). Dist DD $2,466. $1,949 to safety net. ⚠️ 30% rule WARNING — need $86 more profit.',tgt:{l:'Safety Net',v:103100,g:1949,d:9}},
+{k:'ax_50k',s:'AX-50K',f:'Apex Trader',ty:'ax',bal:51213.47,pft:1213.47,fl:49256.01,db:1957.46,sn:52600,ds:1386.53,sp:1,cp:0.3,bd:361,el:false,rk:'safe',pnl:[1673,-144,-806,142,-457,216,55,190,257,-139,null,361,290,-513,149,-110,-26],n:'Profit $1,213. -$26 today (small). Dist DD $1,957. Floor $49,256. $1,387 to safety net. 30% rule barely CLEAR at 29.8%.',tgt:{l:'Safety Net',v:52600,g:1387,d:7}},
 ],
 shelved:[
-{k:'ax_eval',s:'AX-EVAL',f:'Apex Trader',ty:'ev',bal:51553.97,pft:1553.97,
- date:'2026-03-30',
- reason:'Went heavy trying to close $1,446 gap before Apr 2 deadline. Account blown.',
- lesson:'Do not force the timeline. If the math requires oversizing, the math is wrong.',
- pnl:[null,-176,-802,138,-446,281,77,410,259,-143]},
+{k:'ax_eval',s:'AX-EVAL',f:'Apex Trader',ty:'ev',bal:51553.97,pft:1553.97,date:'2026-03-30',reason:'Blew account going heavy trying to hit funding target before Apr 2 deadline',lesson:'Do not force the timeline. If the math requires oversizing, the math is wrong.',pnl:[null,-176,-802,138,-446,281,77,410,259,-143]},
 ],
-log:[{d:'3/17',p:-1244},{d:'3/18',p:-5640,t:'FOMC'},{d:'3/19',p:970},{d:'3/20',p:-3106},{d:'3/23',p:1326},{d:'3/24',p:626},{d:'3/25',p:1540},{d:'3/26',p:1808},{d:'3/27',p:-687},{d:'3/30',p:155},{d:'3/31',p:2109},{d:'4/1',p:1325}],
-mo:{wr:.80,g:4,tot:5,st:3,sd:'green',cl:'HOT'},
-fomc:['Apr 29','May 6','Jun 17','Jul 29','Sep 16','Oct 28','Dec 16']
+log:[{d:'3/17',p:-1244},{d:'3/18',p:-5640,t:'FOMC'},{d:'3/19',p:970},{d:'3/20',p:-3106},{d:'3/23',p:1326},{d:'3/24',p:626},{d:'3/25',p:1540},{d:'3/26',p:1808},{d:'3/27',p:-687},{d:'3/30',p:155},{d:'3/31',p:2109},{d:'4/1',p:1325},{d:'4/2',p:-1532},{d:'4/6',p:170},{d:'4/7',p:-1497},{d:'4/8',p:-461}],
+mo:{wr:0.2,g:1,tot:5,st:3,sd:'red',cl:'COLD'},
+fomc:['Apr 29','May 6','Jun 17','Jul 29','Sep 16','Oct 28','Dec 16'],
+holidays:[{d:'2026-01-01',n:'New Year\'s Day',t:'close'},{d:'2026-01-19',n:'MLK Jr. Day',t:'early'},{d:'2026-02-16',n:'Presidents\' Day',t:'early'},{d:'2026-04-03',n:'Good Friday',t:'close'},{d:'2026-05-25',n:'Memorial Day',t:'early'},{d:'2026-06-19',n:'Juneteenth',t:'early'},{d:'2026-07-03',n:'Independence Day (obs.)',t:'early'},{d:'2026-09-07',n:'Labor Day',t:'early'},{d:'2026-11-26',n:'Thanksgiving',t:'close'},{d:'2026-11-27',n:'Black Friday',t:'early'},{d:'2026-12-25',n:'Christmas Day',t:'close'}]
 };
 
 /* ══ FORMATTERS ══ */
@@ -1007,15 +1175,26 @@ function showFleetView(){
     var rmDayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
     var rmMonthNames=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-    /* Get next 5 trading days (Mon-Fri, skip weekends) */
+    /* Build holiday lookup: 'YYYY-MM-DD' -> holiday object */
+    var holidayMap={};
+    (D.holidays||[]).forEach(function(h){holidayMap[h.d]=h;});
+
+    function isoDate(dt){
+        return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');
+    }
+
+    /* Get next 5 trading days (Mon-Fri, skip weekends AND full-close holidays) */
     var tradingDays5=[];
     var rmCursor=new Date(rmNow);
     while(tradingDays5.length<5){
         rmCursor.setDate(rmCursor.getDate()+1);
         var rmDow=rmCursor.getDay();
-        if(rmDow!==0&&rmDow!==6){
-            tradingDays5.push(new Date(rmCursor));
-        }
+        var iso=isoDate(rmCursor);
+        var hol=holidayMap[iso];
+        /* Skip weekends and full market closures */
+        if(rmDow===0||rmDow===6)continue;
+        if(hol&&hol.t==='close')continue;
+        tradingDays5.push(new Date(rmCursor));
     }
 
     /* Check FOMC dates within the 5-day window */
@@ -1029,6 +1208,13 @@ function showFleetView(){
                 fomcDatesInWindow[idx]=dateStr;
             }
         });
+    });
+
+    /* Check holidays within the 5-day window */
+    var holidaysInWindow={};
+    tradingDays5.forEach(function(td,idx){
+        var iso=isoDate(td);
+        if(holidayMap[iso])holidaysInWindow[idx]=holidayMap[iso];
     });
 
     /* Sort accounts by priority for roadmap assignment */
@@ -1079,17 +1265,35 @@ function showFleetView(){
         var focusItem=rmAccounts[idx%rmAccounts.length];
         var focus=focusItem.focus;
         var note=focusItem.note;
-        /* Check if FOMC falls on this day */
+        var isHoliday=false;
+        /* Check FOMC first (highest priority) */
         if(fomcDatesInWindow[idx]){
             focus='NO TRADE — FOMC '+fomcDatesInWindow[idx];
             note='Hard rule: no entries within 2 hours of announcement';
+            isHoliday=true;
+        /* Then early-close holidays */
+        }else if(holidaysInWindow[idx]){
+            var hol=holidaysInWindow[idx];
+            focus='Early Close — '+hol.n;
+            note='CME halts around noon CT. Reduce size, finish early.';
+            isHoliday=true;
         }
-        return {d:dayLabel,focus:focus,note:note,fomc:!!fomcDatesInWindow[idx]};
+        return {d:dayLabel,focus:focus,note:note,fomc:isHoliday,htype:holidaysInWindow[idx]?holidaysInWindow[idx].t:null};
     });
 
     const roadmapHtml=roadmapDays.map(function(r){
-        var fomcStyle=r.fomc?' style="border-color:var(--rd);background:var(--rd-bg)"':'';
-        return '<div class="rm-day"'+fomcStyle+'><div class="rm-date"'+(r.fomc?' style="color:var(--rd)"':'')+'>'+r.d+'</div><div class="rm-label"'+(r.fomc?' style="color:var(--rd)"':'')+'>'+r.focus+'</div><div class="rm-note">'+r.note+'</div></div>';
+        var isFomc=r.fomc&&!r.htype;
+        var isEarly=r.htype==='early';
+        var borderColor=isFomc?'var(--rd)':isEarly?'var(--yl)':'';
+        var bgColor=isFomc?'var(--rd-bg)':isEarly?'var(--yl-bg)':'';
+        var textColor=isFomc?'var(--rd)':isEarly?'var(--yl)':'';
+        var dayStyle=(borderColor)?(' style="border-color:'+borderColor+';background:'+bgColor+'"'):'';
+        var labelStyle=(textColor)?(' style="color:'+textColor+'"'):'';
+        return '<div class="rm-day"'+dayStyle+'>'
+            +'<div class="rm-date"'+labelStyle+'>'+r.d+'</div>'
+            +'<div class="rm-label"'+labelStyle+'>'+r.focus+'</div>'
+            +'<div class="rm-note">'+r.note+'</div>'
+            +'</div>';
     }).join('');
 
     // Date / session info
@@ -1180,6 +1384,7 @@ function showFleetView(){
             +'<div class="roadmap-grid fade-up">'+roadmapHtml+'</div>'
         +'</div></div>';
 
+    buildRiskAlerts();
     setTimeout(()=>{
         document.querySelectorAll('.fade-up').forEach(el=>observer.observe(el));
         lucide.createIcons();
@@ -1198,7 +1403,7 @@ function showShelvedView(key){
     document.getElementById('app-shell').style.display='';
     closeSidebar();
 
-    const dt=['Mar 16','Mar 17','Mar 18','Mar 19','Mar 20','Mar 23','Mar 24','Mar 25','Mar 26','Mar 27','Mar 30','Mar 31','Apr 1'];
+    const dt=['Pre','Mar 17','Mar 18','Mar 19','Mar 20','Mar 23','Mar 24','Mar 25','Mar 26','Mar 27','Mar 30','Mar 31','Apr 1','Apr 2','Apr 6','Apr 7','Apr 8'];
     let h='';
 
     h+='<div class="alert" style="background:var(--bg-tertiary);color:var(--tx-muted);border:1px solid var(--border)"><i data-lucide="archive"></i>This account was shelved on '+a.date+'</div>';
@@ -1336,6 +1541,7 @@ function showAccountView(key){
             +'<div class="detail-row"><span class="detail-label">Headroom</span><span class="detail-value" style="color:'+(ok?'var(--gn)':'var(--rd)')+'">'+( ok?fm(ma-a.bd):'Over by '+fm(a.bd-ma))+'</span></div>'
             +'<div class="detail-row"><span class="detail-label">Payout Status</span><span class="detail-value" style="color:'+(ok?'var(--gn)':'var(--rd)')+'">'+( ok?'CLEAR':'BLOCKED')+'</span></div>'
         +'</div></div>';
+        h+=buildConsistencyProjector(a.k);
     }
 
     /* Payout Simulator (if eligible) */
@@ -1386,7 +1592,7 @@ function showAccountView(key){
     }
 
     /* P&L History */
-    const dt=['Mar 16','Mar 17','Mar 18','Mar 19','Mar 20','Mar 23','Mar 24','Mar 25','Mar 26','Mar 27','Mar 30','Mar 31','Apr 1'];
+    const dt=['Pre','Mar 17','Mar 18','Mar 19','Mar 20','Mar 23','Mar 24','Mar 25','Mar 26','Mar 27','Mar 30','Mar 31','Apr 1','Apr 2','Apr 6','Apr 7','Apr 8'];
     h+='<div class="card" style="margin-bottom:20px"><div class="card-body">'
         +'<span class="eyebrow">P&L History</span>'
         +'<h3 class="h3" style="margin-bottom:14px">Daily performance</h3>'
@@ -1918,6 +2124,355 @@ function buildCalendar(year,month){
 }
 
 /* ══════════════════════════════════
+   RISK ALERTS ENGINE
+══════════════════════════════════ */
+function buildRiskAlerts(){
+    var alerts=[];
+    var avgLoss=0;
+    if(D.log.length>=3){
+        var recent=D.log.slice(-5);
+        var losses=recent.filter(function(d){return d.p<0;});
+        avgLoss=losses.length?losses.reduce(function(s,d){return s+d.p;},0)/losses.length:0;
+    }
+    D.accounts.forEach(function(a){
+        if(a.db!=null&&a.db<500){
+            alerts.push({level:'critical',icon:'alert-triangle',text:a.s+' buffer critically low — '+fm(a.db)+' to breach',val:'DANGER'});
+        }else if(a.db!=null&&a.db<800){
+            var daysLeft=avgLoss<0?Math.floor(a.db/Math.abs(avgLoss)):99;
+            alerts.push({level:'warning',icon:'alert-circle',text:a.s+' buffer thinning — '+fm(a.db)+' remaining',val:daysLeft<10?'~'+daysLeft+' days':'Watch'});
+        }else if(a.db!=null&&a.db<1200&&D.mo.sd==='red'){
+            alerts.push({level:'warning',icon:'trending-down',text:a.s+' buffer '+fm(a.db)+' on red momentum',val:'Monitor'});
+        }
+        if(a.cp&&a.pft>0&&a.bd>a.pft*a.cp){
+            var pctNow=Math.round(a.bd/a.pft*100);
+            var gap=Math.ceil(a.bd/0.30)-Math.round(a.pft);
+            alerts.push({level:pctNow>50?'critical':'warning',icon:'pie-chart',text:a.s+' 30% rule: best day '+fm(a.bd)+' = '+pctNow+'% of '+fm(a.pft),val:fm(gap)+' to clear'});
+        }
+        if(a.wd>=a.wr&&a.pft<0&&(a.ty==='ts'||a.ty==='tf')){
+            alerts.push({level:'warning',icon:'minus-circle',text:a.s+' has '+a.wd+'/'+a.wr+' win days but balance is negative',val:fm(Math.abs(a.pft))+' to $0'});
+        }
+    });
+    /* FOMC proximity */
+    var fomcMonthMap={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+    var today=new Date();
+    D.fomc.forEach(function(dateStr){
+        var pts=dateStr.split(' ');
+        var fDate=new Date(today.getFullYear(),fomcMonthMap[pts[0]],parseInt(pts[1]));
+        var diffDays=Math.ceil((fDate-today)/(1000*60*60*24));
+        if(diffDays>=0&&diffDays<=3){
+            alerts.push({level:'critical',icon:'zap',text:'FOMC in '+diffDays+' day'+(diffDays!==1?'s':'')+' ('+dateStr+') — NO TRADING',val:'HARD RULE'});
+        }else if(diffDays>3&&diffDays<=7){
+            alerts.push({level:'info',icon:'calendar',text:'FOMC on '+dateStr+' — '+diffDays+' days out',val:'Plan ahead'});
+        }
+    });
+    /* Holiday proximity */
+    (D.holidays||[]).forEach(function(h){
+        var hDate=new Date(h.d);
+        var diffDays=Math.ceil((hDate-today)/(1000*60*60*24));
+        if(diffDays===0){
+            if(h.t==='close')alerts.push({level:'critical',icon:'moon',text:'Market CLOSED today — '+h.n,val:'No trading'});
+            else if(h.t==='early')alerts.push({level:'warning',icon:'clock',text:'Early close today — '+h.n+'. CME halts ~noon CT',val:'Finish early'});
+        }else if(diffDays===1){
+            if(h.t==='close')alerts.push({level:'warning',icon:'moon',text:'Market closed tomorrow — '+h.n,val:'Plan ahead'});
+            else if(h.t==='early')alerts.push({level:'info',icon:'clock',text:'Early close tomorrow — '+h.n,val:'Noon CT halt'});
+        }else if(diffDays>1&&diffDays<=3&&h.t==='close'){
+            alerts.push({level:'info',icon:'calendar',text:h.n+' in '+diffDays+' days — market closed',val:'Plan ahead'});
+        }
+    });
+    var el=document.getElementById('risk-alerts');
+    if(!alerts.length){el.innerHTML='';el.classList.add('empty');return;}
+    el.classList.remove('empty');
+    var order={critical:0,warning:1,info:2};
+    alerts.sort(function(a,b){return(order[a.level]||9)-(order[b.level]||9);});
+    el.innerHTML=alerts.map(function(a){
+        return '<div class="risk-alert risk-alert-'+a.level+'">'
+            +'<i data-lucide="'+a.icon+'"></i>'
+            +'<span class="risk-alert-text">'+a.text+'</span>'
+            +'<span class="risk-alert-val">'+a.val+'</span>'
+            +'</div>';
+    }).join('');
+    setTimeout(function(){lucide.createIcons();},60);
+}
+
+/* ══════════════════════════════════
+   CONSISTENCY PROJECTOR
+══════════════════════════════════ */
+function buildConsistencyProjector(acctKey){
+    var a=D.accounts.find(function(x){return x.k===acctKey;});
+    if(!a||!a.cp||!a.pft||a.pft<=0)return'';
+    var scenarios=[50,100,150,200,250,300,400,500];
+    var currentPct=a.bd/a.pft*100;
+    var html='<div class="consist-proj">'
+        +'<div class="consist-proj-title">30% Consistency Projector — '+a.s+'</div>'
+        +'<div class="consist-proj-row" style="border-bottom:1px solid var(--border);padding-bottom:6px;margin-bottom:4px">'
+            +'<span class="consist-proj-scenario" style="font-weight:800">Current</span>'
+            +'<span class="consist-proj-result '+(currentPct<=30?'consist-proj-ok':currentPct<=40?'consist-proj-warn':'consist-proj-bad')+'">'
+            +currentPct.toFixed(1)+'% (best day '+fm(a.bd)+')</span>'
+        +'</div>';
+    scenarios.forEach(function(gain){
+        var newPft=a.pft+gain;
+        var newBd=Math.max(a.bd,gain);
+        var usePct=newBd/newPft*100;
+        var cls=usePct<=30?'consist-proj-ok':usePct<=35?'consist-proj-warn':'consist-proj-bad';
+        html+='<div class="consist-proj-row">'
+            +'<span class="consist-proj-scenario">+'+fm(gain)+' day</span>'
+            +'<span class="consist-proj-result '+cls+'">'+usePct.toFixed(1)+'% — '+(usePct<=30?'CLEAR':'OVER')+'</span>'
+            +'</div>';
+    });
+    if(currentPct>30){
+        var clearAt=Math.ceil(a.bd/0.30)-Math.round(a.pft);
+        html+='<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:11px;font-weight:700;color:var(--pp)">'
+            +'Need '+fm(clearAt)+' more profit (keeping trades under '+fm(a.bd)+') to clear 30%</div>';
+    }
+    return html+'</div>';
+}
+
+/* ══════════════════════════════════
+   P&L VALIDATION (live preview)
+══════════════════════════════════ */
+function attachPnlValidation(){
+    D.accounts.forEach(function(a){
+        var inp=document.getElementById('pnl-'+a.k);
+        if(!inp)return;
+        inp.addEventListener('input',function(){
+            updatePnlPreview(a,inp);
+            updateFleetPreview();
+        });
+    });
+}
+function updatePnlPreview(a,inp){
+    var val=parseFloat(inp.value);
+    var previewId='pnl-prev-'+a.k;
+    var preview=document.getElementById(previewId);
+    if(!preview){
+        preview=document.createElement('div');
+        preview.id=previewId;
+        preview.className='pnl-preview';
+        inp.parentNode.appendChild(preview);
+    }
+    if(isNaN(val)||val===0){preview.classList.remove('show');return;}
+    var newBal=a.bal+val;
+    var newPft=a.pft+val;
+    var parts=[];
+    parts.push('Bal: '+fm(newBal));
+    var newDb;
+    if(a.ty==='ts'){newDb=newBal-a.mll;}
+    else if(a.ty==='ax'&&a.fl!=null){newDb=newBal-a.fl;}
+    else{newDb=(a.db||0)+val;}
+    if(a.ty==='ts'&&newBal<=a.mll){
+        preview.className='pnl-preview show pnl-preview-danger';
+        preview.textContent='MLL BREACH — account lost';return;
+    }
+    if(newDb<500){preview.className='pnl-preview show pnl-preview-danger';parts.push('Buffer: '+fm(newDb)+' DANGER');}
+    else if(newDb<800){preview.className='pnl-preview show pnl-preview-warn';parts.push('Buffer: '+fm(newDb)+' caution');}
+    else{preview.className='pnl-preview show pnl-preview-ok';parts.push('Buffer: '+fm(newDb));}
+    if(a.cp&&newPft>0){
+        var newBd=Math.max(a.bd||0,Math.abs(val));
+        var pct30=newBd/newPft*100;
+        if(pct30>30)parts.push('30%: '+pct30.toFixed(1)+'%');
+    }
+    preview.textContent=parts.join(' · ');
+}
+function updateFleetPreview(){
+    var total=0,hasAny=false;
+    D.accounts.forEach(function(a){
+        var inp=document.getElementById('pnl-'+a.k);
+        var val=inp?parseFloat(inp.value):NaN;
+        if(!isNaN(val)){total+=val;hasAny=true;}
+    });
+    var el=document.getElementById('pnl-fleet-val');
+    if(!hasAny){el.textContent='$0';el.style.color='var(--tx-muted)';return;}
+    el.textContent=(total>=0?'+$':'-$')+Math.abs(Math.round(total)).toLocaleString();
+    el.style.color=total>=0?'var(--gn)':'var(--rd)';
+}
+
+/* ══════════════════════════════════
+   P&L INPUT PANEL
+══════════════════════════════════ */
+function openPnlModal(){
+    var overlay=document.getElementById('pnl-overlay');
+    var dateInput=document.getElementById('pnl-date');
+    var list=document.getElementById('pnl-acct-list');
+    var now=new Date();
+    var yyyy=now.getFullYear();
+    var mm=String(now.getMonth()+1).padStart(2,'0');
+    var dd=String(now.getDate()).padStart(2,'0');
+    dateInput.value=yyyy+'-'+mm+'-'+dd;
+    var html='';
+    D.accounts.forEach(function(a){
+        var typeLabel=a.ty==='ts'?'Topstep':a.ty==='tf'?'Tradeify':a.ty==='ax'?'Apex':'Other';
+        html+='<div class="pnl-acct-row">'
+            +'<span class="pnl-acct-tag">'+a.s+'</span>'
+            +'<span class="pnl-acct-firm">'+typeLabel+'</span>'
+            +'<input type="number" step="0.01" class="pnl-acct-input" id="pnl-'+a.k+'" placeholder="$0.00">'
+            +'</div>';
+    });
+    list.innerHTML=html;
+    var savedKey='pnl_'+yyyy+mm+dd;
+    var savedData=localStorage.getItem(savedKey);
+    if(savedData){
+        try{
+            var parsed=JSON.parse(savedData);
+            D.accounts.forEach(function(a){
+                if(parsed[a.k]!=null){var inp=document.getElementById('pnl-'+a.k);if(inp)inp.value=parsed[a.k];}
+            });
+        }catch(e){}
+    }
+    overlay.classList.add('open');
+    buildPnlHistory();
+    setTimeout(function(){
+        lucide.createIcons();
+        attachPnlValidation();
+        var firstInput=list.querySelector('.pnl-acct-input');
+        if(firstInput)firstInput.focus();
+    },100);
+}
+function closePnlModal(e){
+    if(e&&e.target&&!e.target.classList.contains('pnl-modal-overlay'))return;
+    document.getElementById('pnl-overlay').classList.remove('open');
+}
+function showPnlToast(msg){
+    var toast=document.getElementById('pnl-toast');
+    toast.textContent=msg;
+    toast.classList.add('show');
+    setTimeout(function(){toast.classList.remove('show');},2800);
+}
+function submitPnl(){
+    var dateInput=document.getElementById('pnl-date');
+    var dateVal=dateInput.value;
+    if(!dateVal){showPnlToast('Pick a date first');return;}
+    var parts=dateVal.split('-');
+    var month=parseInt(parts[1],10);
+    var day=parseInt(parts[2],10);
+    var dateLabel=month+'/'+day;
+    var entries={};var fleetTotal=0;var hasAny=false;
+    D.accounts.forEach(function(a){
+        var inp=document.getElementById('pnl-'+a.k);
+        var val=inp?parseFloat(inp.value):NaN;
+        if(!isNaN(val)){entries[a.k]=val;fleetTotal+=val;hasAny=true;}
+    });
+    if(!hasAny){showPnlToast('Enter at least one account P&L');return;}
+    var savedKey='pnl_'+parts[0]+parts[1].padStart(2,'0')+parts[2].padStart(2,'0');
+    localStorage.setItem(savedKey,JSON.stringify(entries));
+    D.accounts.forEach(function(a){
+        if(entries[a.k]!=null){
+            var pnl=entries[a.k];
+            a.pft+=pnl;a.bal+=pnl;a.pnl.push(pnl);
+            if(a.ty==='ts'){
+                if(pnl>0)a.mll=Math.max(a.mll,-(2000-a.pft));
+                a.db=a.bal-a.mll;
+                if(pnl>0)a.wd+=1;
+                if(a.wd>=a.wr&&a.bal>0)a.el=true;
+                a.tgt.g=Math.max(0,a.tgt.v-a.pft);
+            }else if(a.ty==='tf'){
+                if(pnl>0)a.wd+=1;
+                a.tgt.g=Math.max(0,a.tgt.v-a.pft);
+            }else if(a.ty==='ax'){
+                a.db=a.bal-a.fl;a.ds=a.sn-a.bal;
+                if(pnl>0&&pnl>a.bd)a.bd=pnl;
+                a.tgt.g=Math.max(0,a.sn-a.bal);
+            }
+            if(a.db<500)a.rk='high';else if(a.db<1000)a.rk='medium';else a.rk='safe';
+        }
+    });
+    var existingIdx=-1;
+    D.log.forEach(function(entry,i){if(entry.d===dateLabel)existingIdx=i;});
+    if(existingIdx>=0){D.log[existingIdx].p=fleetTotal;}else{D.log.push({d:dateLabel,p:fleetTotal});}
+    var last5=D.log.slice(-5);
+    var wins=last5.filter(function(d){return d.p>0;}).length;
+    D.mo.wr=wins/last5.length;D.mo.tot=last5.length;D.mo.g=wins;
+    var streak=0;var sDir='';
+    for(var i=D.log.length-1;i>=0;i--){
+        if(i===D.log.length-1){sDir=D.log[i].p>=0?'green':'red';}
+        if((sDir==='green'&&D.log[i].p>=0)||(sDir==='red'&&D.log[i].p<0)){streak++;}else break;
+    }
+    D.mo.st=streak;D.mo.sd=sDir;D.mo.cl=streak>=3?'HOT':streak>=2?'WARM':'COLD';
+    localStorage.setItem('desk_data_override',JSON.stringify({
+        accounts:D.accounts.map(function(a){return{k:a.k,bal:a.bal,pft:a.pft,mll:a.mll,db:a.db,wd:a.wd,el:a.el,rk:a.rk,ds:a.ds,bd:a.bd,pnl:a.pnl,tgt:a.tgt,sn:a.sn};}),
+        log:D.log,mo:D.mo,lastUpdate:dateVal
+    }));
+    closePnlModal();buildSidebar();showFleetView();
+    showPnlToast('Saved '+dateLabel+' — Fleet '+(fleetTotal>=0?'+$':'-$')+Math.abs(Math.round(fleetTotal)).toLocaleString());
+}
+function loadSavedPnl(){
+    var raw=localStorage.getItem('desk_data_override');
+    if(!raw)return;
+    try{
+        var saved=JSON.parse(raw);
+        if(saved.accounts){
+            saved.accounts.forEach(function(s){
+                var acct=D.accounts.find(function(a){return a.k===s.k;});
+                if(!acct)return;
+                acct.bal=s.bal;acct.pft=s.pft;acct.db=s.db;acct.wd=s.wd;acct.el=s.el;acct.rk=s.rk;
+                if(s.mll!=null)acct.mll=s.mll;if(s.ds!=null)acct.ds=s.ds;if(s.bd!=null)acct.bd=s.bd;
+                if(s.pnl)acct.pnl=s.pnl;if(s.tgt)acct.tgt=s.tgt;if(s.sn!=null)acct.sn=s.sn;
+            });
+        }
+        if(saved.log)D.log=saved.log;if(saved.mo)D.mo=saved.mo;
+    }catch(e){}
+}
+function resetPnlData(){localStorage.removeItem('desk_data_override');location.reload();}
+function confirmReset(){if(confirm('Reset to base data? This clears all locally saved P&L and reloads the hardcoded numbers.')){resetPnlData();}}
+function getAllSavedPnl(){
+    var entries=[];
+    for(var i=0;i<localStorage.length;i++){
+        var key=localStorage.key(i);
+        if(key&&key.indexOf('pnl_')===0&&key!=='pnl_history'){
+            try{
+                var data=JSON.parse(localStorage.getItem(key));
+                var dateStr=key.replace('pnl_','');
+                var y=dateStr.substring(0,4);var m=parseInt(dateStr.substring(4,6),10);var d=parseInt(dateStr.substring(6,8),10);
+                entries.push({date:m+'/'+d,sort:dateStr,accounts:data});
+            }catch(e){}
+        }
+    }
+    entries.sort(function(a,b){return a.sort>b.sort?1:-1;});
+    return entries;
+}
+function formatPnlLine(entry){
+    var parts=[];var fleet=0;
+    D.accounts.forEach(function(a){
+        if(entry.accounts[a.k]!=null){var v=entry.accounts[a.k];parts.push(a.s+'='+(v>=0?'+':'')+v.toFixed(2));fleet+=v;}
+    });
+    return entry.date+': '+parts.join(' / ')+' | Fleet: '+(fleet>=0?'+':'')+fleet.toFixed(2);
+}
+function copyTodayPnl(){
+    var dateInput=document.getElementById('pnl-date');var dateVal=dateInput.value;
+    if(!dateVal){showPnlToast('Pick a date first');return;}
+    var parts=dateVal.split('-');
+    var savedKey='pnl_'+parts[0]+parts[1].padStart(2,'0')+parts[2].padStart(2,'0');
+    var raw=localStorage.getItem(savedKey);
+    if(!raw){
+        var entries={};var hasAny=false;
+        D.accounts.forEach(function(a){var inp=document.getElementById('pnl-'+a.k);var val=inp?parseFloat(inp.value):NaN;if(!isNaN(val)){entries[a.k]=val;hasAny=true;}});
+        if(!hasAny){showPnlToast('No data to copy');return;}
+        raw=JSON.stringify(entries);
+    }
+    var data=JSON.parse(raw);var m=parseInt(parts[1],10);var d=parseInt(parts[2],10);
+    var line=formatPnlLine({date:m+'/'+d,accounts:data});
+    navigator.clipboard.writeText(line).then(function(){showPnlToast('Copied to clipboard');});
+}
+function copyAllPnl(){
+    var entries=getAllSavedPnl();
+    if(!entries.length){showPnlToast('No saved P&L data yet');return;}
+    var lines=entries.map(function(e){return formatPnlLine(e);});
+    var header='P&L Log ('+entries.length+' days)\n'+'—'.repeat(40)+'\n';
+    navigator.clipboard.writeText(header+lines.join('\n')).then(function(){showPnlToast('Copied '+entries.length+' days to clipboard');});
+}
+function buildPnlHistory(){
+    var entries=getAllSavedPnl().slice(-7).reverse();
+    var el=document.getElementById('pnl-history');
+    if(!entries.length){el.innerHTML='';return;}
+    var html='<div class="pnl-history-title">Recent Entries</div>';
+    entries.forEach(function(e){
+        var fleet=0;D.accounts.forEach(function(a){if(e.accounts[a.k]!=null)fleet+=e.accounts[a.k];});
+        var color=fleet>=0?'var(--gn)':'var(--rd)';var sign=fleet>=0?'+$':'-$';
+        html+='<div class="pnl-history-row"><span class="pnl-history-date">'+e.date+'</span><span class="pnl-history-val" style="color:'+color+'">'+sign+Math.abs(Math.round(fleet)).toLocaleString()+'</span></div>';
+    });
+    el.innerHTML=html;
+}
+
+/* ══════════════════════════════════
    HELPERS
 ══════════════════════════════════ */
 function setNavActive(id){
@@ -1972,6 +2527,7 @@ overlayEl.addEventListener('mouseenter',function(){
 });
 
 /* ══ INIT ══ */
+loadSavedPnl();
 buildSidebar();
 showFleetView();
 </script>
