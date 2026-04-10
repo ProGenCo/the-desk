@@ -81,11 +81,12 @@
       "short_id": "286",
       "type": "tradeify_flex",
       "status": "funded",
-      "balance": 49933.15,
+      "balance": 49371.60,
       "starting_balance": 50000,
-      "profit": -66.85,
+      "profit": -628.40,
       "mll": 2000,
-      "floor": 48000,
+      "floor": 49333.45,
+      "equity_high": 51333.45,
       "buffer_threshold": 52100,
       "winning_days": 13,
       "winning_days_required": 5,
@@ -93,8 +94,8 @@
       "prior_payouts": 0,
       "payout_cap": 3000,
       "split": 0.90,
-      "risk_level": "safe",
-      "notes": "PROFIT GONE. Balance below $50k. Profit -$67. -$573 today. Buffer $1,933. Must recover to positive before extraction is possible."
+      "risk_level": "critical",
+      "notes": "🔴 CRITICAL. Balance $49,372. Estimated floor $49,333 (trailing from $51,333 high). ~$38 buffer. DO NOT TRADE until floor confirmed on Tradeify platform."
     },
     "apex_100k_811": {
       "name": "Apex Legacy 100k",
