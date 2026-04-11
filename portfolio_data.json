@@ -80,7 +80,8 @@
       "id": "FTDFYSLX50540736286",
       "short_id": "286",
       "type": "tradeify_flex",
-      "status": "funded",
+      "status": "breached",
+      "breached_date": "2026-04-10",
       "balance": 48756.05,
       "starting_balance": 50000,
       "profit": -1243.95,
@@ -94,8 +95,8 @@
       "prior_payouts": 0,
       "payout_cap": 3000,
       "split": 0.90,
-      "risk_level": "critical",
-      "notes": "🔴 CRITICAL. Balance $48,756. Est. floor $48,726 (trailing from ~$50,726 high). ~$30 buffer. Account survived 4/9 — floor estimate revised. ONE MORE BAD TRADE = BREACH."
+      "risk_level": "na",
+      "notes": "BREACHED 4/10. Trailing drawdown floor hit. 5-day red streak erased all profit. Account closed."
     },
     "apex_100k_811": {
       "name": "Apex Legacy 100k",

@@ -85,7 +85,7 @@ def build_pnl_arrays(data):
     # Pre-day is log[0]; trading days are log[1:]
     pre = log[0]
     for json_key, acct in accounts.items():
-        if acct.get("status") == "shelved":
+        if acct.get("status") in ("shelved", "breached"):
             # Build shelved PNL too
             pnl = []
             starting = infer_starting_balance(acct)
@@ -263,7 +263,7 @@ def build_data_block(data):
     # ── accounts ──
     lines.append("accounts:[")
     active_keys = [k for k, v in accounts.items()
-                   if v.get("status") != "shelved" and k in ACCOUNT_MAP]
+                   if v.get("status") not in ("shelved", "breached") and k in ACCOUNT_MAP]
     for i, json_key in enumerate(active_keys):
         acct = accounts[json_key]
         line = build_account_line(json_key, acct, pnl_arrays.get(json_key, []))
@@ -273,7 +273,7 @@ def build_data_block(data):
 
     # ── shelved ──
     lines.append("shelved:[")
-    shelved_keys = [k for k, v in accounts.items() if v.get("status") == "shelved"]
+    shelved_keys = [k for k, v in accounts.items() if v.get("status") in ("shelved", "breached")]
     for i, json_key in enumerate(shelved_keys):
         acct = accounts[json_key]
         line = build_shelved_line(json_key, acct, pnl_arrays.get(json_key, []))
@@ -369,9 +369,9 @@ def main():
     print(f"\n[1] Reading {JSON_PATH}")
     data = load_json()
     print(f"    Last updated: {data.get('last_updated')}")
-    active = [k for k, v in data["accounts"].items() if v.get("status") != "shelved"]
-    shelved = [k for k, v in data["accounts"].items() if v.get("status") == "shelved"]
-    print(f"    Accounts: {len(active)} active, {len(shelved)} shelved")
+    active = [k for k, v in data["accounts"].items() if v.get("status") not in ("shelved", "breached")]
+    shelved = [k for k, v in data["accounts"].items() if v.get("status") in ("shelved", "breached")]
+    print(f"    Accounts: {len(active)} active, {len(shelved)} shelved/breached")
     print(f"    Log entries: {len(data['daily_log']) - 1} trading days")
 
     # ── Build new data block ──
