@@ -57,6 +57,116 @@ def load_json():
         return json.load(f)
 
 
+def derive_computed_fields(data):
+    """Auto-compute derived fields from raw inputs.
+
+    After a user updates 'balance' (and 'equity_high' if a new high was hit),
+    this function recalculates:
+      - profit = balance - starting_balance
+      - Topstep: dist_to_breach = balance - floor
+      - Apex:    dist_dd = balance - floor
+                 dist_to_safety_net = safety_net - balance
+                 consistency_best_day_pct = best_day / profit
+                 consistency_status / consistency_note
+      - risk_level (critical / high / medium / safe) based on buffer
+    Mutates data["accounts"] in-place.
+    Returns True if any field changed.
+    """
+    changed = False
+    for key, acct in data["accounts"].items():
+        status = acct.get("status", "funded")
+        if status in ("shelved", "breached"):
+            continue
+
+        ty = (acct.get("type") or "").lower()
+        bal = acct.get("balance", 0) or 0
+        sb = acct.get("starting_balance", 0) or 0
+
+        # ── profit ──────────────────────────────────────────────────
+        new_profit = round(bal - sb, 2)
+        if acct.get("profit") != new_profit:
+            acct["profit"] = new_profit
+            changed = True
+
+        # ── Topstep / Tradeify (trailing MLL) ───────────────────────
+        if "topstep" in ty or "tradeify" in ty:
+            floor = acct.get("floor") or acct.get("mll_current")
+            if floor is not None:
+                new_db = round(bal - floor, 2)
+                if acct.get("dist_to_breach") != new_db:
+                    acct["dist_to_breach"] = new_db
+                    changed = True
+                # Topstep MLL trailing: update mll_current if balance hit new high
+                mll_size = acct.get("mll", 2000)
+                mll_floor = acct.get("mll_current", -mll_size)
+                if bal > 0:
+                    # trailing floor = max(old floor, balance - mll_size)
+                    new_mll = round(max(mll_floor, bal - mll_size), 2)
+                    if new_mll != mll_floor:
+                        acct["mll_current"] = new_mll
+                        acct["floor"] = new_mll
+                        acct["dist_to_breach"] = round(bal - new_mll, 2)
+                        changed = True
+                # risk_level from buffer
+                db = acct.get("dist_to_breach", 9999)
+                new_rk = ("critical" if db < 200 else
+                          "high"     if db < 700 else
+                          "medium"   if db < 1500 else "safe")
+                if acct.get("risk_level") != new_rk:
+                    acct["risk_level"] = new_rk
+                    changed = True
+
+        # ── Apex ────────────────────────────────────────────────────
+        elif "apex" in ty and "eval" not in ty:
+            floor = acct.get("floor")
+            if floor is not None:
+                new_dd = round(bal - floor, 2)
+                if acct.get("dist_dd") != new_dd:
+                    acct["dist_dd"] = new_dd
+                    changed = True
+            sn = acct.get("safety_net")
+            if sn is not None:
+                new_ds = round(sn - bal, 2)
+                if acct.get("dist_to_safety_net") != new_ds:
+                    # dist_to_safety_net not a stored field normally — skip
+                    pass
+            # equity_high
+            eh = acct.get("equity_high", bal)
+            if bal > (eh or 0):
+                acct["equity_high"] = round(bal, 2)
+                changed = True
+            # 30% consistency fields
+            profit = acct.get("profit", 0) or 0
+            best_day = acct.get("consistency_best_day", 0) or 0
+            if profit > 0 and best_day > 0:
+                new_pct = round(best_day / profit, 4)
+                if acct.get("consistency_best_day_pct") != new_pct:
+                    acct["consistency_best_day_pct"] = new_pct
+                    changed = True
+                # consistency_note
+                gap = max(0, round(best_day / 0.30 - profit, 0))
+                status_str = "CRITICAL" if best_day > profit * 0.30 else "CLEAR"
+                note = (f"🔴 Best day ${best_day:.0f} = {new_pct*100:.1f}% of ${profit:.0f} profit. "
+                        f"Need ${best_day/0.30:.0f} to clear. Gap: ${gap:.0f}."
+                        if best_day > profit * 0.30
+                        else f"✅ Best day ${best_day:.0f} = {new_pct*100:.1f}% of ${profit:.0f} profit. CLEAR.")
+                if acct.get("consistency_note") != note:
+                    acct["consistency_note"] = note
+                    acct["consistency_status"] = status_str
+                    changed = True
+            # risk_level from dist_dd
+            # Apex DD thresholds: tighter because Apex losses run larger per day
+            dd = acct.get("dist_dd", 9999)
+            new_rk = ("critical" if dd < 400 else
+                      "high"     if dd < 1200 else
+                      "medium"   if dd < 2000 else "safe")
+            if acct.get("risk_level") != new_rk:
+                acct["risk_level"] = new_rk
+                changed = True
+
+    return changed
+
+
 def infer_starting_balance(acct):
     """Get starting_balance, inferring from account type/name if missing."""
     sb = acct.get("starting_balance")
@@ -373,6 +483,16 @@ def main():
     shelved = [k for k, v in data["accounts"].items() if v.get("status") in ("shelved", "breached")]
     print(f"    Accounts: {len(active)} active, {len(shelved)} shelved/breached")
     print(f"    Log entries: {len(data['daily_log']) - 1} trading days")
+
+    # ── Derive computed fields ──
+    print(f"\n[1b] Deriving computed fields (profit, buffers, risk levels, 30% rule)...")
+    had_changes = derive_computed_fields(data)
+    if had_changes:
+        with open(JSON_PATH, "w") as f:
+            json.dump(data, f, indent=2)
+        print(f"     ✓ Derived fields written back to JSON")
+    else:
+        print(f"     ✓ All derived fields already current")
 
     # ── Build new data block ──
     print(f"\n[2] Building data block...")

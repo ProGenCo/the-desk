@@ -25,7 +25,7 @@
       "payout_cap": 5000,
       "split": 1.0,
       "risk_level": "critical",
-      "notes": "🚨 BUFFER $130 — BREACH IMMINENT. STOP TRADING. -$300 today. Balance -$902. Floor -$1,033. ONE bad scalp = gone."
+      "notes": "\ud83d\udea8 BUFFER $130 \u2014 BREACH IMMINENT. STOP TRADING. -$300 today. Balance -$902. Floor -$1,033. ONE bad scalp = gone."
     },
     "topstep_2_676": {
       "name": "Topstep Express #2",
@@ -49,7 +49,7 @@
       "payout_cap": 5000,
       "split": 1.0,
       "risk_level": "high",
-      "notes": "-$154 today. Balance -$702. Buffer $686. Deep in the hole — needs 5+ green days to go positive."
+      "notes": "-$154 today. Balance -$702. Buffer $686. Deep in the hole \u2014 needs 5+ green days to go positive."
     },
     "topstep_3_235": {
       "name": "Topstep Express #3",
@@ -86,15 +86,15 @@
       "starting_balance": 50000,
       "profit": -1243.95,
       "mll": 2000,
-      "floor": 48725.80,
-      "equity_high": 50725.80,
+      "floor": 48725.8,
+      "equity_high": 50725.8,
       "buffer_threshold": 52100,
       "winning_days": 13,
       "winning_days_required": 5,
       "payout_path": "flex",
       "prior_payouts": 0,
       "payout_cap": 3000,
-      "split": 0.90,
+      "split": 0.9,
       "risk_level": "na",
       "notes": "BREACHED 4/10. Trailing drawdown floor hit. 5-day red streak erased all profit. Account closed."
     },
@@ -117,16 +117,22 @@
       "winning_days_50": 18,
       "winning_days_50_required": 5,
       "prior_payouts": 0,
-      "payout_step_caps": [2000, 2500, 3000, 3000, 3500],
+      "payout_step_caps": [
+        2000,
+        2500,
+        3000,
+        3000,
+        3500
+      ],
       "current_cap": 2000,
       "split": 1.0,
-      "consistency_pct": 0.30,
+      "consistency_pct": 0.3,
       "consistency_best_day": 371,
-      "consistency_best_day_pct": 1.4720,
+      "consistency_best_day_pct": 1.4719,
       "consistency_status": "CRITICAL",
-      "consistency_note": "🔴 Best day $371 = 147.2% of $252 profit. Need $1,237 to clear. Gap: $985.",
-      "risk_level": "safe",
-      "notes": "Profit $252. -$316 today. Dist DD $1,568. $2,848 to safety net. 🔴 30% rule gap $985 — widening fast."
+      "consistency_note": "\ud83d\udd34 Best day $371 = 147.2% of $252 profit. Need $1237 to clear. Gap: $985.",
+      "risk_level": "medium",
+      "notes": "Profit $252. -$316 today. Dist DD $1,568. $2,848 to safety net. \ud83d\udd34 30% rule gap $985 \u2014 widening fast."
     },
     "apex_50k_812": {
       "name": "Apex Legacy 50k",
@@ -147,16 +153,22 @@
       "winning_days_50": 18,
       "winning_days_50_required": 5,
       "prior_payouts": 0,
-      "payout_step_caps": [1500, 1750, 2000, 2500, 2750],
+      "payout_step_caps": [
+        1500,
+        1750,
+        2000,
+        2500,
+        2750
+      ],
       "current_cap": 1500,
       "split": 1.0,
-      "consistency_pct": 0.30,
+      "consistency_pct": 0.3,
       "consistency_best_day": 361,
-      "consistency_best_day_pct": 1.1374,
+      "consistency_best_day_pct": 1.1372,
       "consistency_status": "CRITICAL",
-      "consistency_note": "🔴 Best day $361 = 113.7% of $317 profit. Need $1,204 to clear. Gap: $886.",
+      "consistency_note": "\ud83d\udd34 Best day $361 = 113.7% of $317 profit. Need $1203 to clear. Gap: $886.",
       "risk_level": "high",
-      "notes": "Profit $317. -$314 today. Dist DD $1,061. Floor $49,256. $2,283 to safety net. 🔴 30% rule gap $886. DD tightening."
+      "notes": "Profit $317. -$314 today. Dist DD $1,061. Floor $49,256. $2,283 to safety net. \ud83d\udd34 30% rule gap $886. DD tightening."
     },
     "apex_eval_101": {
       "name": "Apex 50k Eval",
@@ -171,365 +183,1008 @@
       "target": 53000,
       "gap": 1446.03,
       "risk_level": "na",
-      "notes": "SHELVED — Went heavy Mar 30 trying to close the $1,446 gap. Account blown. Lesson: don't force the timeline."
+      "notes": "SHELVED \u2014 Went heavy Mar 30 trying to close the $1,446 gap. Account blown. Lesson: don't force the timeline."
     }
   },
   "daily_log": [
     {
       "date": "2026-03-16",
-      "totals": { "portfolio_balance": 310829.18, "daily_pnl": null },
+      "totals": {
+        "portfolio_balance": 310829.18,
+        "daily_pnl": null
+      },
       "accounts": {
-        "topstep_1_204": { "balance": 967.41, "daily_pnl": null },
-        "topstep_2_676": { "balance": 389.48, "daily_pnl": null },
-        "tradeify_286": { "balance": 50000, "daily_pnl": null },
-        "apex_100k_811": { "balance": 101600.49, "daily_pnl": null },
-        "apex_50k_812": { "balance": 51673.32, "daily_pnl": null }
+        "topstep_1_204": {
+          "balance": 967.41,
+          "daily_pnl": null
+        },
+        "topstep_2_676": {
+          "balance": 389.48,
+          "daily_pnl": null
+        },
+        "tradeify_286": {
+          "balance": 50000,
+          "daily_pnl": null
+        },
+        "apex_100k_811": {
+          "balance": 101600.49,
+          "daily_pnl": null
+        },
+        "apex_50k_812": {
+          "balance": 51673.32,
+          "daily_pnl": null
+        }
       }
     },
     {
       "date": "2026-03-17",
-      "totals": { "portfolio_balance": 306876.74, "daily_pnl": -1244.36 },
+      "totals": {
+        "portfolio_balance": 306876.74,
+        "daily_pnl": -1244.36
+      },
       "accounts": {
-        "topstep_1_204": { "balance": 817.38, "daily_pnl": -150.03 },
-        "topstep_2_676": { "balance": 240.70, "daily_pnl": -148.78 },
-        "topstep_3_235": { "balance": -241.89, "daily_pnl": -241.89 },
-        "tradeify_286": { "balance": 51128.25, "daily_pnl": -205.20 },
-        "apex_100k_811": { "balance": 101421.83, "daily_pnl": -178.66 },
-        "apex_50k_812": { "balance": 51529.66, "daily_pnl": -143.66 },
-        "apex_eval_101": { "balance": 51780.71, "daily_pnl": -176.16 }
+        "topstep_1_204": {
+          "balance": 817.38,
+          "daily_pnl": -150.03
+        },
+        "topstep_2_676": {
+          "balance": 240.7,
+          "daily_pnl": -148.78
+        },
+        "topstep_3_235": {
+          "balance": -241.89,
+          "daily_pnl": -241.89
+        },
+        "tradeify_286": {
+          "balance": 51128.25,
+          "daily_pnl": -205.2
+        },
+        "apex_100k_811": {
+          "balance": 101421.83,
+          "daily_pnl": -178.66
+        },
+        "apex_50k_812": {
+          "balance": 51529.66,
+          "daily_pnl": -143.66
+        },
+        "apex_eval_101": {
+          "balance": 51780.71,
+          "daily_pnl": -176.16
+        }
       }
     },
     {
       "date": "2026-03-18",
-      "totals": { "portfolio_balance": 251036.27, "daily_pnl": -5640.37 },
-      "accounts": {
-        "topstep_1_204": { "balance": 17.22, "daily_pnl": -800.16 },
-        "topstep_2_676": { "balance": -555.71, "daily_pnl": -796.41 },
-        "topstep_3_235": { "balance": -1039.55, "daily_pnl": -797.66 },
-        "tradeify_286": { "balance": 50292.40, "daily_pnl": -835.85 },
-        "apex_100k_811": { "balance": 100619.65, "daily_pnl": -802.18 },
-        "apex_50k_812": { "balance": 50723.73, "daily_pnl": -805.93 },
-        "apex_eval_101": { "balance": 50978.53, "daily_pnl": -802.18 }
+      "totals": {
+        "portfolio_balance": 251036.27,
+        "daily_pnl": -5640.37
       },
-      "notes": "FOMC + contract rollover — worst day in portfolio. DO NOT TRADE during FOMC or rollover."
+      "accounts": {
+        "topstep_1_204": {
+          "balance": 17.22,
+          "daily_pnl": -800.16
+        },
+        "topstep_2_676": {
+          "balance": -555.71,
+          "daily_pnl": -796.41
+        },
+        "topstep_3_235": {
+          "balance": -1039.55,
+          "daily_pnl": -797.66
+        },
+        "tradeify_286": {
+          "balance": 50292.4,
+          "daily_pnl": -835.85
+        },
+        "apex_100k_811": {
+          "balance": 100619.65,
+          "daily_pnl": -802.18
+        },
+        "apex_50k_812": {
+          "balance": 50723.73,
+          "daily_pnl": -805.93
+        },
+        "apex_eval_101": {
+          "balance": 50978.53,
+          "daily_pnl": -802.18
+        }
+      },
+      "notes": "FOMC + contract rollover \u2014 worst day in portfolio. DO NOT TRADE during FOMC or rollover."
     },
     {
       "date": "2026-03-19",
-      "totals": { "portfolio_balance": 251896.45, "daily_pnl": 970.18 },
-      "accounts": {
-        "topstep_1_204": { "balance": 160.71, "daily_pnl": 143.49 },
-        "topstep_2_676": { "balance": -412.22, "daily_pnl": 143.49 },
-        "topstep_3_235": { "balance": -893.56, "daily_pnl": 145.99 },
-        "tradeify_286": { "balance": 50410.55, "daily_pnl": 118.15 },
-        "apex_100k_811": { "balance": 100758.92, "daily_pnl": 139.27 },
-        "apex_50k_812": { "balance": 50865.50, "daily_pnl": 141.77 },
-        "apex_eval_101": { "balance": 51116.55, "daily_pnl": 138.02 }
+      "totals": {
+        "portfolio_balance": 251896.45,
+        "daily_pnl": 970.18
       },
-      "notes": "Green bounce — all accounts positive. Tradeify +$118 did NOT count as winning day (<$150)."
+      "accounts": {
+        "topstep_1_204": {
+          "balance": 160.71,
+          "daily_pnl": 143.49
+        },
+        "topstep_2_676": {
+          "balance": -412.22,
+          "daily_pnl": 143.49
+        },
+        "topstep_3_235": {
+          "balance": -893.56,
+          "daily_pnl": 145.99
+        },
+        "tradeify_286": {
+          "balance": 50410.55,
+          "daily_pnl": 118.15
+        },
+        "apex_100k_811": {
+          "balance": 100758.92,
+          "daily_pnl": 139.27
+        },
+        "apex_50k_812": {
+          "balance": 50865.5,
+          "daily_pnl": 141.77
+        },
+        "apex_eval_101": {
+          "balance": 51116.55,
+          "daily_pnl": 138.02
+        }
+      },
+      "notes": "Green bounce \u2014 all accounts positive. Tradeify +$118 did NOT count as winning day (<$150)."
     },
     {
       "date": "2026-03-20",
-      "totals": { "portfolio_balance": 249399.98, "daily_pnl": -3106.37 },
-      "accounts": {
-        "topstep_1_204": { "balance": -264.40, "daily_pnl": -425.11 },
-        "topstep_2_676": { "balance": -836.08, "daily_pnl": -423.86 },
-        "topstep_3_235": { "balance": -1314.92, "daily_pnl": -421.36 },
-        "tradeify_286": { "balance": 49928.95, "daily_pnl": -481.60 },
-        "apex_100k_811": { "balance": 100307.89, "daily_pnl": -451.03 },
-        "apex_50k_812": { "balance": 50408.22, "daily_pnl": -457.28 },
-        "apex_eval_101": { "balance": 50670.42, "daily_pnl": -446.13 }
+      "totals": {
+        "portfolio_balance": 249399.98,
+        "daily_pnl": -3106.37
       },
-      "notes": "Fleet-wide red day. -$3,106 total. Topstep #3 at $75 from breach — STOP TRADING. Apex 100k $208 above floor — MES ONLY."
+      "accounts": {
+        "topstep_1_204": {
+          "balance": -264.4,
+          "daily_pnl": -425.11
+        },
+        "topstep_2_676": {
+          "balance": -836.08,
+          "daily_pnl": -423.86
+        },
+        "topstep_3_235": {
+          "balance": -1314.92,
+          "daily_pnl": -421.36
+        },
+        "tradeify_286": {
+          "balance": 49928.95,
+          "daily_pnl": -481.6
+        },
+        "apex_100k_811": {
+          "balance": 100307.89,
+          "daily_pnl": -451.03
+        },
+        "apex_50k_812": {
+          "balance": 50408.22,
+          "daily_pnl": -457.28
+        },
+        "apex_eval_101": {
+          "balance": 50670.42,
+          "daily_pnl": -446.13
+        }
+      },
+      "notes": "Fleet-wide red day. -$3,106 total. Topstep #3 at $75 from breach \u2014 STOP TRADING. Apex 100k $208 above floor \u2014 MES ONLY."
     },
     {
       "date": "2026-03-23",
-      "totals": { "portfolio_balance": 250725.86, "daily_pnl": 1325.88 },
-      "accounts": {
-        "topstep_1_204": { "balance": -73.46, "daily_pnl": 190.94 },
-        "topstep_2_676": { "balance": -645.14, "daily_pnl": 190.94 },
-        "topstep_3_235": { "balance": -1265.79, "daily_pnl": 49.13 },
-        "tradeify_286": { "balance": 50120.35, "daily_pnl": 191.40 },
-        "apex_100k_811": { "balance": 100514.76, "daily_pnl": 206.87 },
-        "apex_50k_812": { "balance": 50623.84, "daily_pnl": 215.62 },
-        "apex_eval_101": { "balance": 50951.50, "daily_pnl": 281.08 }
+      "totals": {
+        "portfolio_balance": 250725.86,
+        "daily_pnl": 1325.88
       },
-      "notes": "ALL GREEN. +$1,326 fleet-wide. TS-204 now 4/5 win days — ONE MORE. Tradeify back above water. Momentum shifting."
+      "accounts": {
+        "topstep_1_204": {
+          "balance": -73.46,
+          "daily_pnl": 190.94
+        },
+        "topstep_2_676": {
+          "balance": -645.14,
+          "daily_pnl": 190.94
+        },
+        "topstep_3_235": {
+          "balance": -1265.79,
+          "daily_pnl": 49.13
+        },
+        "tradeify_286": {
+          "balance": 50120.35,
+          "daily_pnl": 191.4
+        },
+        "apex_100k_811": {
+          "balance": 100514.76,
+          "daily_pnl": 206.87
+        },
+        "apex_50k_812": {
+          "balance": 50623.84,
+          "daily_pnl": 215.62
+        },
+        "apex_eval_101": {
+          "balance": 50951.5,
+          "daily_pnl": 281.08
+        }
+      },
+      "notes": "ALL GREEN. +$1,326 fleet-wide. TS-204 now 4/5 win days \u2014 ONE MORE. Tradeify back above water. Momentum shifting."
     },
     {
       "date": "2026-03-24",
-      "totals": { "portfolio_balance": 250851.71, "daily_pnl": 625.65 },
-      "accounts": {
-        "topstep_1_204": { "balance": 55.74, "daily_pnl": 129.20 },
-        "topstep_2_676": { "balance": -515.94, "daily_pnl": 129.20 },
-        "topstep_3_235": { "balance": -1137.84, "daily_pnl": 127.95 },
-        "tradeify_286": { "balance": 50152.35, "daily_pnl": 32.00 },
-        "apex_100k_811": { "balance": 100590.11, "daily_pnl": 75.35 },
-        "apex_50k_812": { "balance": 50679.19, "daily_pnl": 55.35 },
-        "apex_eval_101": { "balance": 51028.10, "daily_pnl": 76.60 }
+      "totals": {
+        "portfolio_balance": 250851.71,
+        "daily_pnl": 625.65
       },
-      "notes": "ALL GREEN x2. +$626 fleet. TS-204 +$129 just missed $150 win day threshold — still 4/5. Smaller gains but consistency building."
+      "accounts": {
+        "topstep_1_204": {
+          "balance": 55.74,
+          "daily_pnl": 129.2
+        },
+        "topstep_2_676": {
+          "balance": -515.94,
+          "daily_pnl": 129.2
+        },
+        "topstep_3_235": {
+          "balance": -1137.84,
+          "daily_pnl": 127.95
+        },
+        "tradeify_286": {
+          "balance": 50152.35,
+          "daily_pnl": 32.0
+        },
+        "apex_100k_811": {
+          "balance": 100590.11,
+          "daily_pnl": 75.35
+        },
+        "apex_50k_812": {
+          "balance": 50679.19,
+          "daily_pnl": 55.35
+        },
+        "apex_eval_101": {
+          "balance": 51028.1,
+          "daily_pnl": 76.6
+        }
+      },
+      "notes": "ALL GREEN x2. +$626 fleet. TS-204 +$129 just missed $150 win day threshold \u2014 still 4/5. Smaller gains but consistency building."
     },
     {
       "date": "2026-03-25",
-      "totals": { "portfolio_balance": 252391.85, "daily_pnl": 1540.14 },
-      "accounts": {
-        "topstep_1_204": { "balance": 250.66, "daily_pnl": 194.92 },
-        "topstep_2_676": { "balance": -321.02, "daily_pnl": 194.92 },
-        "topstep_3_235": { "balance": -942.92, "daily_pnl": 194.92 },
-        "tradeify_286": { "balance": 50318.80, "daily_pnl": 166.45 },
-        "apex_100k_811": { "balance": 100779.02, "daily_pnl": 188.91 },
-        "apex_50k_812": { "balance": 50869.35, "daily_pnl": 190.16 },
-        "apex_eval_101": { "balance": 51437.96, "daily_pnl": 409.86 }
+      "totals": {
+        "portfolio_balance": 252391.85,
+        "daily_pnl": 1540.14
       },
-      "notes": "🏆 ALL GREEN x3. +$1,540 fleet. TS-204 HIT 5/5 WIN DAYS — PAYOUT ELIGIBLE. Best day since FOMC. AX-EVAL +$410 monster."
+      "accounts": {
+        "topstep_1_204": {
+          "balance": 250.66,
+          "daily_pnl": 194.92
+        },
+        "topstep_2_676": {
+          "balance": -321.02,
+          "daily_pnl": 194.92
+        },
+        "topstep_3_235": {
+          "balance": -942.92,
+          "daily_pnl": 194.92
+        },
+        "tradeify_286": {
+          "balance": 50318.8,
+          "daily_pnl": 166.45
+        },
+        "apex_100k_811": {
+          "balance": 100779.02,
+          "daily_pnl": 188.91
+        },
+        "apex_50k_812": {
+          "balance": 50869.35,
+          "daily_pnl": 190.16
+        },
+        "apex_eval_101": {
+          "balance": 51437.96,
+          "daily_pnl": 409.86
+        }
+      },
+      "notes": "\ud83c\udfc6 ALL GREEN x3. +$1,540 fleet. TS-204 HIT 5/5 WIN DAYS \u2014 PAYOUT ELIGIBLE. Best day since FOMC. AX-EVAL +$410 monster."
     },
     {
       "date": "2026-03-26",
-      "totals": { "portfolio_balance": 254890.67, "daily_pnl": 1808.22 },
-      "accounts": {
-        "topstep_1_204": { "balance": 512.62, "daily_pnl": 261.96 },
-        "topstep_2_676": { "balance": -59.06, "daily_pnl": 261.96 },
-        "topstep_3_235": { "balance": -680.96, "daily_pnl": 261.96 },
-        "tradeify_286": { "balance": 50558.90, "daily_pnl": 240.10 },
-        "apex_100k_811": { "balance": 101036.35, "daily_pnl": 257.33 },
-        "apex_50k_812": { "balance": 51126.68, "daily_pnl": 257.33 },
-        "apex_eval_101": { "balance": 51696.54, "daily_pnl": 258.58 }
+      "totals": {
+        "portfolio_balance": 254890.67,
+        "daily_pnl": 1808.22
       },
-      "notes": "ALL GREEN x4! +$1,808 — BEST DAY EVER. TS-676 about to go green (-$59). TS-204 doubled. AX-EVAL on pace for funding."
+      "accounts": {
+        "topstep_1_204": {
+          "balance": 512.62,
+          "daily_pnl": 261.96
+        },
+        "topstep_2_676": {
+          "balance": -59.06,
+          "daily_pnl": 261.96
+        },
+        "topstep_3_235": {
+          "balance": -680.96,
+          "daily_pnl": 261.96
+        },
+        "tradeify_286": {
+          "balance": 50558.9,
+          "daily_pnl": 240.1
+        },
+        "apex_100k_811": {
+          "balance": 101036.35,
+          "daily_pnl": 257.33
+        },
+        "apex_50k_812": {
+          "balance": 51126.68,
+          "daily_pnl": 257.33
+        },
+        "apex_eval_101": {
+          "balance": 51696.54,
+          "daily_pnl": 258.58
+        }
+      },
+      "notes": "ALL GREEN x4! +$1,808 \u2014 BEST DAY EVER. TS-676 about to go green (-$59). TS-204 doubled. AX-EVAL on pace for funding."
     },
     {
       "date": "2026-03-27",
-      "totals": { "portfolio_balance": 253203.42, "daily_pnl": -687.25 },
+      "totals": {
+        "portfolio_balance": 253203.42,
+        "daily_pnl": -687.25
+      },
       "accounts": {
-        "topstep_1_204": { "balance": 474.99, "daily_pnl": -37.63 },
-        "topstep_2_676": { "balance": -96.69, "daily_pnl": -37.63 },
-        "topstep_3_235": { "balance": -718.59, "daily_pnl": -37.63 },
-        "tradeify_286": { "balance": 50409.75, "daily_pnl": -149.15 },
-        "apex_100k_811": { "balance": 100892.53, "daily_pnl": -143.82 },
-        "apex_50k_812": { "balance": 50987.86, "daily_pnl": -138.82 },
-        "apex_eval_101": { "balance": 51553.97, "daily_pnl": -142.57 }
+        "topstep_1_204": {
+          "balance": 474.99,
+          "daily_pnl": -37.63
+        },
+        "topstep_2_676": {
+          "balance": -96.69,
+          "daily_pnl": -37.63
+        },
+        "topstep_3_235": {
+          "balance": -718.59,
+          "daily_pnl": -37.63
+        },
+        "tradeify_286": {
+          "balance": 50409.75,
+          "daily_pnl": -149.15
+        },
+        "apex_100k_811": {
+          "balance": 100892.53,
+          "daily_pnl": -143.82
+        },
+        "apex_50k_812": {
+          "balance": 50987.86,
+          "daily_pnl": -138.82
+        },
+        "apex_eval_101": {
+          "balance": 51553.97,
+          "daily_pnl": -142.57
+        }
       },
       "notes": "Streak snaps at 4. -$687 fleet. Technical issues. Topstep only -$38 each (copy trade). Manageable loss after +$5,300 in 4 days."
     },
     {
       "date": "2026-03-30",
-      "totals": { "portfolio_balance": null, "daily_pnl": 155 },
+      "totals": {
+        "portfolio_balance": null,
+        "daily_pnl": 155
+      },
       "accounts": {
-        "topstep_1_204": { "balance": 190.53, "daily_pnl": -284.27 },
-        "topstep_2_676": { "balance": 3.83, "daily_pnl": null },
-        "topstep_3_235": { "balance": -380.57, "daily_pnl": null },
-        "tradeify_286": { "balance": null, "daily_pnl": null },
-        "apex_100k_811": { "balance": null, "daily_pnl": null },
-        "apex_50k_812": { "balance": null, "daily_pnl": null }
+        "topstep_1_204": {
+          "balance": 190.53,
+          "daily_pnl": -284.27
+        },
+        "topstep_2_676": {
+          "balance": 3.83,
+          "daily_pnl": null
+        },
+        "topstep_3_235": {
+          "balance": -380.57,
+          "daily_pnl": null
+        },
+        "tradeify_286": {
+          "balance": null,
+          "daily_pnl": null
+        },
+        "apex_100k_811": {
+          "balance": null,
+          "daily_pnl": null
+        },
+        "apex_50k_812": {
+          "balance": null,
+          "daily_pnl": null
+        }
       },
       "notes": "TS-204 red day -$284. Fleet small green +$155. Apex eval blown same day."
     },
     {
       "date": "2026-03-31",
-      "totals": { "portfolio_balance": null, "daily_pnl": 2109 },
+      "totals": {
+        "portfolio_balance": null,
+        "daily_pnl": 2109
+      },
       "accounts": {
-        "topstep_1_204": { "balance": 462.53, "daily_pnl": 272 },
-        "topstep_2_676": { "balance": 384.83, "daily_pnl": 381 },
-        "topstep_3_235": { "balance": -239.57, "daily_pnl": 379 },
-        "tradeify_286": { "balance": 50819.70, "daily_pnl": 345 },
-        "apex_100k_811": { "balance": 101351.99, "daily_pnl": 371 },
-        "apex_50k_812": { "balance": 51434.82, "daily_pnl": 361 }
+        "topstep_1_204": {
+          "balance": 462.53,
+          "daily_pnl": 272
+        },
+        "topstep_2_676": {
+          "balance": 384.83,
+          "daily_pnl": 381
+        },
+        "topstep_3_235": {
+          "balance": -239.57,
+          "daily_pnl": 379
+        },
+        "tradeify_286": {
+          "balance": 50819.7,
+          "daily_pnl": 345
+        },
+        "apex_100k_811": {
+          "balance": 101351.99,
+          "daily_pnl": 371
+        },
+        "apex_50k_812": {
+          "balance": 51434.82,
+          "daily_pnl": 361
+        }
       },
       "notes": "MONSTER DAY. All 6 green. +$2,109 fleet. Best post-FOMC recovery session."
     },
     {
       "date": "2026-04-01",
-      "totals": { "portfolio_balance": null, "daily_pnl": 1325 },
-      "accounts": {
-        "topstep_1_204": { "balance": 739.15, "daily_pnl": 276.62 },
-        "topstep_2_676": { "balance": 611.96, "daily_pnl": 227.13 },
-        "topstep_3_235": { "balance": -13.69, "daily_pnl": 225.88 },
-        "tradeify_286": { "balance": null, "daily_pnl": null },
-        "apex_100k_811": { "balance": 101657.38, "daily_pnl": 305.39 },
-        "apex_50k_812": { "balance": 51109.25, "daily_pnl": 289.55 }
+      "totals": {
+        "portfolio_balance": null,
+        "daily_pnl": 1325
       },
-      "notes": "Green sweep. TS-235 hits 5/5 win days — balance -$14 (nearly breakeven). TS-676 new equity high — MLL moves. AX-50K 30% rule tight at 32.6% — clears with one more session. TF-286 not reported."
+      "accounts": {
+        "topstep_1_204": {
+          "balance": 739.15,
+          "daily_pnl": 276.62
+        },
+        "topstep_2_676": {
+          "balance": 611.96,
+          "daily_pnl": 227.13
+        },
+        "topstep_3_235": {
+          "balance": -13.69,
+          "daily_pnl": 225.88
+        },
+        "tradeify_286": {
+          "balance": null,
+          "daily_pnl": null
+        },
+        "apex_100k_811": {
+          "balance": 101657.38,
+          "daily_pnl": 305.39
+        },
+        "apex_50k_812": {
+          "balance": 51109.25,
+          "daily_pnl": 289.55
+        }
+      },
+      "notes": "Green sweep. TS-235 hits 5/5 win days \u2014 balance -$14 (nearly breakeven). TS-676 new equity high \u2014 MLL moves. AX-50K 30% rule tight at 32.6% \u2014 clears with one more session. TF-286 not reported."
     },
     {
       "date": "2026-04-02",
-      "totals": { "portfolio_balance": null, "daily_pnl": -1531.60 },
-      "accounts": {
-        "topstep_1_204": { "balance": 739.15, "daily_pnl": 0 },
-        "topstep_2_676": { "balance": 611.96, "daily_pnl": 0 },
-        "topstep_3_235": { "balance": -13.69, "daily_pnl": 0 },
-        "tradeify_286": { "balance": 50594.50, "daily_pnl": -514.75 },
-        "apex_100k_811": { "balance": 101153.33, "daily_pnl": -504.05 },
-        "apex_50k_812": { "balance": 51201.16, "daily_pnl": -512.80 }
+      "totals": {
+        "portfolio_balance": null,
+        "daily_pnl": -1531.6
       },
-      "notes": "Topstep platform froze/glitched — TS-204/676/235 losses voided by Topstep ($0 net). TF-286 and Apex real losses stand. Corrected fleet total -$1,532."
+      "accounts": {
+        "topstep_1_204": {
+          "balance": 739.15,
+          "daily_pnl": 0
+        },
+        "topstep_2_676": {
+          "balance": 611.96,
+          "daily_pnl": 0
+        },
+        "topstep_3_235": {
+          "balance": -13.69,
+          "daily_pnl": 0
+        },
+        "tradeify_286": {
+          "balance": 50594.5,
+          "daily_pnl": -514.75
+        },
+        "apex_100k_811": {
+          "balance": 101153.33,
+          "daily_pnl": -504.05
+        },
+        "apex_50k_812": {
+          "balance": 51201.16,
+          "daily_pnl": -512.8
+        }
+      },
+      "notes": "Topstep platform froze/glitched \u2014 TS-204/676/235 losses voided by Topstep ($0 net). TF-286 and Apex real losses stand. Corrected fleet total -$1,532."
     },
     {
       "date": "2026-04-06",
-      "totals": { "portfolio_balance": null, "daily_pnl": 169.82 },
+      "totals": {
+        "portfolio_balance": null,
+        "daily_pnl": 169.82
+      },
       "accounts": {
-        "topstep_1_204": { "balance": 456.13, "daily_pnl": -283.02 },
-        "topstep_2_676": { "balance": 328.94, "daily_pnl": -283.02 },
-        "topstep_3_235": { "balance": -296.71, "daily_pnl": -283.02 },
-        "tradeify_286": { "balance": 50725.80, "daily_pnl": 725.80 },
-        "apex_100k_811": { "balance": 101297.37, "daily_pnl": 144.04 },
-        "apex_50k_812": { "balance": 51350.20, "daily_pnl": 149.04 }
+        "topstep_1_204": {
+          "balance": 456.13,
+          "daily_pnl": -283.02
+        },
+        "topstep_2_676": {
+          "balance": 328.94,
+          "daily_pnl": -283.02
+        },
+        "topstep_3_235": {
+          "balance": -296.71,
+          "daily_pnl": -283.02
+        },
+        "tradeify_286": {
+          "balance": 50725.8,
+          "daily_pnl": 725.8
+        },
+        "apex_100k_811": {
+          "balance": 101297.37,
+          "daily_pnl": 144.04
+        },
+        "apex_50k_812": {
+          "balance": 51350.2,
+          "daily_pnl": 149.04
+        }
       },
       "notes": "Barely green fleet +$170. TS copy-trade drag -$849. TF-286 carried the day +$726 (confirmed total profit). Apex both green, 30% consistency rule CLEARED on both accounts."
     },
     {
       "date": "2026-04-07",
-      "totals": { "portfolio_balance": null, "daily_pnl": -1496.85 },
-      "accounts": {
-        "topstep_1_204": { "balance": 84.94, "daily_pnl": -371.19 },
-        "topstep_2_676": { "balance": -42.25, "daily_pnl": -371.19 },
-        "topstep_3_235": { "balance": -667.90, "daily_pnl": -371.19 },
-        "tradeify_286": { "balance": 50569.25, "daily_pnl": -156.55 },
-        "apex_100k_811": { "balance": 101180.88, "daily_pnl": -116.49 },
-        "apex_50k_812": { "balance": 51239.96, "daily_pnl": -110.24 }
+      "totals": {
+        "portfolio_balance": null,
+        "daily_pnl": -1496.85
       },
-      "notes": "2nd straight red day. -$1,497 fleet. TS copy-trade drag again -$1,114. TF/Apex held well — small losses. AX-100K 30% rule re-tripped. TS-676 flipped negative again."
+      "accounts": {
+        "topstep_1_204": {
+          "balance": 84.94,
+          "daily_pnl": -371.19
+        },
+        "topstep_2_676": {
+          "balance": -42.25,
+          "daily_pnl": -371.19
+        },
+        "topstep_3_235": {
+          "balance": -667.9,
+          "daily_pnl": -371.19
+        },
+        "tradeify_286": {
+          "balance": 50569.25,
+          "daily_pnl": -156.55
+        },
+        "apex_100k_811": {
+          "balance": 101180.88,
+          "daily_pnl": -116.49
+        },
+        "apex_50k_812": {
+          "balance": 51239.96,
+          "daily_pnl": -110.24
+        }
+      },
+      "notes": "2nd straight red day. -$1,497 fleet. TS copy-trade drag again -$1,114. TF/Apex held well \u2014 small losses. AX-100K 30% rule re-tripped. TS-676 flipped negative again."
     },
     {
       "date": "2026-04-08",
-      "totals": { "portfolio_balance": null, "daily_pnl": -461.32 },
+      "totals": {
+        "portfolio_balance": null,
+        "daily_pnl": -461.32
+      },
       "accounts": {
-        "topstep_1_204": { "balance": -28.99, "daily_pnl": -113.93 },
-        "topstep_2_676": { "balance": -156.18, "daily_pnl": -113.93 },
-        "topstep_3_235": { "balance": -781.83, "daily_pnl": -113.93 },
-        "tradeify_286": { "balance": 50506.45, "daily_pnl": -62.80 },
-        "apex_100k_811": { "balance": 101150.64, "daily_pnl": -30.24 },
-        "apex_50k_812": { "balance": 51213.47, "daily_pnl": -26.49 }
+        "topstep_1_204": {
+          "balance": -28.99,
+          "daily_pnl": -113.93
+        },
+        "topstep_2_676": {
+          "balance": -156.18,
+          "daily_pnl": -113.93
+        },
+        "topstep_3_235": {
+          "balance": -781.83,
+          "daily_pnl": -113.93
+        },
+        "tradeify_286": {
+          "balance": 50506.45,
+          "daily_pnl": -62.8
+        },
+        "apex_100k_811": {
+          "balance": 101150.64,
+          "daily_pnl": -30.24
+        },
+        "apex_50k_812": {
+          "balance": 51213.47,
+          "daily_pnl": -26.49
+        }
       },
       "notes": "3rd straight red day but smallest loss yet -$461. TS drag only -$342 (much smaller). TF/Apex barely moved. All 3 TS accounts now negative. Momentum COLD."
     },
     {
       "date": "2026-04-09",
-      "totals": { "portfolio_balance": null, "daily_pnl": -2076.47 },
-      "accounts": {
-        "topstep_1_204": { "balance": -164.12, "daily_pnl": -135.13 },
-        "topstep_2_676": { "balance": -291.31, "daily_pnl": -135.13 },
-        "topstep_3_235": { "balance": -916.96, "daily_pnl": -135.13 },
-        "tradeify_286": { "balance": 49933.15, "daily_pnl": -573.30 },
-        "apex_100k_811": { "balance": 100600.50, "daily_pnl": -550.14 },
-        "apex_50k_812": { "balance": 50665.83, "daily_pnl": -547.64 }
+      "totals": {
+        "portfolio_balance": null,
+        "daily_pnl": -2076.47
       },
-      "notes": "4th straight red. -$2,076 fleet. Worst day of the streak. TF-286 profit wiped — balance below $50k. Both Apex 30% rules blown to 60%+. All 6 accounts negative or deeply impaired."
+      "accounts": {
+        "topstep_1_204": {
+          "balance": -164.12,
+          "daily_pnl": -135.13
+        },
+        "topstep_2_676": {
+          "balance": -291.31,
+          "daily_pnl": -135.13
+        },
+        "topstep_3_235": {
+          "balance": -916.96,
+          "daily_pnl": -135.13
+        },
+        "tradeify_286": {
+          "balance": 49933.15,
+          "daily_pnl": -573.3
+        },
+        "apex_100k_811": {
+          "balance": 100600.5,
+          "daily_pnl": -550.14
+        },
+        "apex_50k_812": {
+          "balance": 50665.83,
+          "daily_pnl": -547.64
+        }
+      },
+      "notes": "4th straight red. -$2,076 fleet. Worst day of the streak. TF-286 profit wiped \u2014 balance below $50k. Both Apex 30% rules blown to 60%+. All 6 accounts negative or deeply impaired."
     },
     {
       "date": "2026-04-10",
-      "totals": { "portfolio_balance": null, "daily_pnl": -2075.06 },
-      "accounts": {
-        "topstep_1_204": { "balance": -494.15, "daily_pnl": -330.03 },
-        "topstep_2_676": { "balance": -621.34, "daily_pnl": -330.03 },
-        "topstep_3_235": { "balance": -1246.99, "daily_pnl": -330.03 },
-        "tradeify_286": { "balance": 48756.05, "daily_pnl": -615.55 },
-        "apex_100k_811": { "balance": 100365.79, "daily_pnl": -234.71 },
-        "apex_50k_812": { "balance": 50431.12, "daily_pnl": -234.71 }
+      "totals": {
+        "portfolio_balance": null,
+        "daily_pnl": -2075.06
       },
-      "notes": "5th straight red. -$2,075 fleet. TS-204 buffer at $538. TF-286 est. ~$30 from breach. AX-100K 30% rule at 101% — best day exceeds total profit. Worst week since account inception."
+      "accounts": {
+        "topstep_1_204": {
+          "balance": -494.15,
+          "daily_pnl": -330.03
+        },
+        "topstep_2_676": {
+          "balance": -621.34,
+          "daily_pnl": -330.03
+        },
+        "topstep_3_235": {
+          "balance": -1246.99,
+          "daily_pnl": -330.03
+        },
+        "tradeify_286": {
+          "balance": 48756.05,
+          "daily_pnl": -615.55
+        },
+        "apex_100k_811": {
+          "balance": 100365.79,
+          "daily_pnl": -234.71
+        },
+        "apex_50k_812": {
+          "balance": 50431.12,
+          "daily_pnl": -234.71
+        }
+      },
+      "notes": "5th straight red. -$2,075 fleet. TS-204 buffer at $538. TF-286 est. ~$30 from breach. AX-100K 30% rule at 101% \u2014 best day exceeds total profit. Worst week since account inception."
     },
     {
       "date": "2026-04-13",
-      "totals": { "portfolio_balance": null, "daily_pnl": 609.72 },
-      "accounts": {
-        "topstep_1_204": { "balance": -376.04, "daily_pnl": 118.11 },
-        "topstep_2_676": { "balance": -501.98, "daily_pnl": 119.36 },
-        "topstep_3_235": { "balance": -1128.88, "daily_pnl": 118.11 },
-        "apex_100k_811": { "balance": 100490.36, "daily_pnl": 124.57 },
-        "apex_50k_812": { "balance": 50560.69, "daily_pnl": 129.57 }
+      "totals": {
+        "portfolio_balance": null,
+        "daily_pnl": 609.72
       },
-      "notes": "STREAK BROKEN. First green day in 6. +$610 fleet. All 5 accounts green. Small but counts. Monday effect — 3/3 Mondays green."
+      "accounts": {
+        "topstep_1_204": {
+          "balance": -376.04,
+          "daily_pnl": 118.11
+        },
+        "topstep_2_676": {
+          "balance": -501.98,
+          "daily_pnl": 119.36
+        },
+        "topstep_3_235": {
+          "balance": -1128.88,
+          "daily_pnl": 118.11
+        },
+        "apex_100k_811": {
+          "balance": 100490.36,
+          "daily_pnl": 124.57
+        },
+        "apex_50k_812": {
+          "balance": 50560.69,
+          "daily_pnl": 129.57
+        }
+      },
+      "notes": "STREAK BROKEN. First green day in 6. +$610 fleet. All 5 accounts green. Small but counts. Monday effect \u2014 3/3 Mondays green."
     },
     {
       "date": "2026-04-14",
-      "totals": { "portfolio_balance": null, "daily_pnl": 740.82 },
-      "accounts": {
-        "topstep_1_204": { "balance": -225.61, "daily_pnl": 150.43 },
-        "topstep_2_676": { "balance": -351.55, "daily_pnl": 150.43 },
-        "topstep_3_235": { "balance": -978.45, "daily_pnl": 150.43 },
-        "apex_100k_811": { "balance": 100635.75, "daily_pnl": 145.39 },
-        "apex_50k_812": { "balance": 50704.83, "daily_pnl": 144.14 }
+      "totals": {
+        "portfolio_balance": null,
+        "daily_pnl": 740.82
       },
-      "notes": "2nd straight green. +$741 fleet. All 5 green. TS accounts climbing out. Apex 30% rule gaps closing — AX-50K gap now $499, AX-100K $601."
+      "accounts": {
+        "topstep_1_204": {
+          "balance": -225.61,
+          "daily_pnl": 150.43
+        },
+        "topstep_2_676": {
+          "balance": -351.55,
+          "daily_pnl": 150.43
+        },
+        "topstep_3_235": {
+          "balance": -978.45,
+          "daily_pnl": 150.43
+        },
+        "apex_100k_811": {
+          "balance": 100635.75,
+          "daily_pnl": 145.39
+        },
+        "apex_50k_812": {
+          "balance": 50704.83,
+          "daily_pnl": 144.14
+        }
+      },
+      "notes": "2nd straight green. +$741 fleet. All 5 green. TS accounts climbing out. Apex 30% rule gaps closing \u2014 AX-50K gap now $499, AX-100K $601."
     },
     {
       "date": "2026-04-15",
-      "totals": { "portfolio_balance": null, "daily_pnl": 272.04 },
+      "totals": {
+        "portfolio_balance": null,
+        "daily_pnl": 272.04
+      },
       "accounts": {
-        "topstep_1_204": { "balance": -315.41, "daily_pnl": -89.80 },
-        "topstep_2_676": { "balance": -261.75, "daily_pnl": 89.80 },
-        "topstep_3_235": { "balance": -888.65, "daily_pnl": 89.80 },
-        "apex_100k_811": { "balance": 100730.59, "daily_pnl": 94.84 },
-        "apex_50k_812": { "balance": 50792.23, "daily_pnl": 87.40 }
+        "topstep_1_204": {
+          "balance": -315.41,
+          "daily_pnl": -89.8
+        },
+        "topstep_2_676": {
+          "balance": -261.75,
+          "daily_pnl": 89.8
+        },
+        "topstep_3_235": {
+          "balance": -888.65,
+          "daily_pnl": 89.8
+        },
+        "apex_100k_811": {
+          "balance": 100730.59,
+          "daily_pnl": 94.84
+        },
+        "apex_50k_812": {
+          "balance": 50792.23,
+          "daily_pnl": 87.4
+        }
       },
       "notes": "3rd straight green fleet. +$272. TS-204 diverged from copy trade (-$90 vs +$90 for 676/235). Apex grinding up. AX-50K 30% gap down to $412."
     },
     {
       "date": "2026-04-16",
-      "totals": { "portfolio_balance": null, "daily_pnl": -1182.39 },
-      "accounts": {
-        "topstep_1_204": { "balance": -601.82, "daily_pnl": -286.41 },
-        "topstep_2_676": { "balance": -548.16, "daily_pnl": -286.41 },
-        "topstep_3_235": { "balance": -1175.11, "daily_pnl": -286.46 },
-        "apex_100k_811": { "balance": 100568.41, "daily_pnl": -162.18 },
-        "apex_50k_812": { "balance": 50631.30, "daily_pnl": -160.93 }
+      "totals": {
+        "portfolio_balance": null,
+        "daily_pnl": -1182.39
       },
-      "notes": "Fleet -$1,182. Red Thursday. TS copy-trade drag -$859. Apex held but both red. TS-204 buffer $431 — near critical. 3-day green streak snapped."
+      "accounts": {
+        "topstep_1_204": {
+          "balance": -601.82,
+          "daily_pnl": -286.41
+        },
+        "topstep_2_676": {
+          "balance": -548.16,
+          "daily_pnl": -286.41
+        },
+        "topstep_3_235": {
+          "balance": -1175.11,
+          "daily_pnl": -286.46
+        },
+        "apex_100k_811": {
+          "balance": 100568.41,
+          "daily_pnl": -162.18
+        },
+        "apex_50k_812": {
+          "balance": 50631.3,
+          "daily_pnl": -160.93
+        }
+      },
+      "notes": "Fleet -$1,182. Red Thursday. TS copy-trade drag -$859. Apex held but both red. TS-204 buffer $431 \u2014 near critical. 3-day green streak snapped."
     },
     {
       "date": "2026-04-17",
-      "totals": { "portfolio_balance": null, "daily_pnl": -1238.95 },
-      "accounts": {
-        "topstep_1_204": { "balance": -902.23, "daily_pnl": -300.41 },
-        "topstep_2_676": { "balance": -702.32, "daily_pnl": -154.16 },
-        "topstep_3_235": { "balance": -1329.27, "daily_pnl": -154.16 },
-        "apex_100k_811": { "balance": 100252.05, "daily_pnl": -316.36 },
-        "apex_50k_812": { "balance": 50317.44, "daily_pnl": -313.86 }
+      "totals": {
+        "portfolio_balance": null,
+        "daily_pnl": -1238.95
       },
-      "notes": "Fleet -$1,239. 2nd straight red. TS-204 buffer $130 — BREACH IMMINENT. TS-204 diverged worse (-$300 vs -$154 copy). Both Apex hit hard. DO NOT TRADE TS-204."
+      "accounts": {
+        "topstep_1_204": {
+          "balance": -902.23,
+          "daily_pnl": -300.41
+        },
+        "topstep_2_676": {
+          "balance": -702.32,
+          "daily_pnl": -154.16
+        },
+        "topstep_3_235": {
+          "balance": -1329.27,
+          "daily_pnl": -154.16
+        },
+        "apex_100k_811": {
+          "balance": 100252.05,
+          "daily_pnl": -316.36
+        },
+        "apex_50k_812": {
+          "balance": 50317.44,
+          "daily_pnl": -313.86
+        }
+      },
+      "notes": "Fleet -$1,239. 2nd straight red. TS-204 buffer $130 \u2014 BREACH IMMINENT. TS-204 diverged worse (-$300 vs -$154 copy). Both Apex hit hard. DO NOT TRADE TS-204."
     }
   ],
   "momentum": {
-    "last_5_days": [610, 741, 272, -1182, -1239],
+    "last_5_days": [
+      610,
+      741,
+      272,
+      -1182,
+      -1239
+    ],
     "green_days_last_5": 3,
     "total_days_last_5": 5,
-    "win_rate_last_5": 0.60,
+    "win_rate_last_5": 0.6,
     "classification": "STEADY",
     "streak": 2,
     "streak_direction": "red",
     "projection_multiplier": 1.0,
-    "note": "STEADY (3/5) but 2-day red streak closing in. Numbers held 60% but losing momentum. Monday is critical — green or classification drops to FADING."
+    "note": "STEADY (3/5) but 2-day red streak closing in. Numbers held 60% but losing momentum. Monday is critical \u2014 green or classification drops to FADING."
   },
   "extraction_triggers": {
-    "topstep_1_204": { "trigger_balance": 0, "current_balance": -28.99, "pct_to_trigger": 0, "est_days": "1-2 days", "note": "NOT eligible — balance -$29. Need positive balance. 8/5 win days banked." },
-    "topstep_2_676": { "trigger_balance": 0, "current_balance": -156.18, "pct_to_trigger": 0, "est_days": "2-3 days", "note": "NOT eligible — balance -$156. 7/5 win days banked. Needs recovery." },
-    "topstep_3_235": { "trigger_balance": 0, "current_balance": -781.83, "pct_to_trigger": 0, "est_days": "6+ days", "note": "NOT eligible — balance -$782. 5/5 win days banked. A++ only." },
-    "tradeify_286": { "trigger_profit": 3000, "current_profit": 506.45, "pct_to_trigger": 16.9, "est_days": 25, "note": "$2,494 to $3k extraction trigger. COLD mode — projections at 1.5x." },
-    "apex_50k_812": { "trigger_balance": 52600, "current_balance": 51213.47, "pct_to_trigger": 46.5, "est_days": 14, "note": "$1,387 to safety net. 30% rule barely CLEAR (29.8%). COLD mode." },
-    "apex_100k_811": { "trigger_balance": 103100, "current_balance": 101150.64, "pct_to_trigger": 37.1, "est_days": 19, "note": "$1,949 to safety net. 30% rule WARNING (32.2%). COLD mode." }
+    "topstep_1_204": {
+      "trigger_balance": 0,
+      "current_balance": -28.99,
+      "pct_to_trigger": 0,
+      "est_days": "1-2 days",
+      "note": "NOT eligible \u2014 balance -$29. Need positive balance. 8/5 win days banked."
+    },
+    "topstep_2_676": {
+      "trigger_balance": 0,
+      "current_balance": -156.18,
+      "pct_to_trigger": 0,
+      "est_days": "2-3 days",
+      "note": "NOT eligible \u2014 balance -$156. 7/5 win days banked. Needs recovery."
+    },
+    "topstep_3_235": {
+      "trigger_balance": 0,
+      "current_balance": -781.83,
+      "pct_to_trigger": 0,
+      "est_days": "6+ days",
+      "note": "NOT eligible \u2014 balance -$782. 5/5 win days banked. A++ only."
+    },
+    "tradeify_286": {
+      "trigger_profit": 3000,
+      "current_profit": 506.45,
+      "pct_to_trigger": 16.9,
+      "est_days": 25,
+      "note": "$2,494 to $3k extraction trigger. COLD mode \u2014 projections at 1.5x."
+    },
+    "apex_50k_812": {
+      "trigger_balance": 52600,
+      "current_balance": 51213.47,
+      "pct_to_trigger": 46.5,
+      "est_days": 14,
+      "note": "$1,387 to safety net. 30% rule barely CLEAR (29.8%). COLD mode."
+    },
+    "apex_100k_811": {
+      "trigger_balance": 103100,
+      "current_balance": 101150.64,
+      "pct_to_trigger": 37.1,
+      "est_days": 19,
+      "note": "$1,949 to safety net. 30% rule WARNING (32.2%). COLD mode."
+    }
   },
   "payouts_taken": [],
   "projected_payouts": [
-    { "account": "topstep_1_204", "target_date": "2026-04-14", "amount": 500, "net": 500, "confidence": "low", "notes": "Needs to recover to positive first, then build to $2k. COLD mode — earliest realistic window mid-April." },
-    { "account": "apex_50k_812", "target_date": "2026-04-28", "amount": 1500, "net": 1500, "confidence": "medium", "notes": "$1,387 to safety net. ~14 trading days at COLD pace. 30% rule at 29.8% — one big day re-trips it." },
-    { "account": "apex_100k_811", "target_date": "2026-05-05", "amount": 2000, "net": 2000, "confidence": "low", "notes": "$1,949 to safety net. ~19 trading days at COLD pace. 30% rule at 32.2% — must clear first." },
-    { "account": "tradeify_286", "target_date": "2026-05-12", "amount": 1350, "net": 1215, "confidence": "low", "notes": "$2,494 to $3k extraction trigger. ~25 trading days at COLD pace. Longest runway." }
+    {
+      "account": "topstep_1_204",
+      "target_date": "2026-04-14",
+      "amount": 500,
+      "net": 500,
+      "confidence": "low",
+      "notes": "Needs to recover to positive first, then build to $2k. COLD mode \u2014 earliest realistic window mid-April."
+    },
+    {
+      "account": "apex_50k_812",
+      "target_date": "2026-04-28",
+      "amount": 1500,
+      "net": 1500,
+      "confidence": "medium",
+      "notes": "$1,387 to safety net. ~14 trading days at COLD pace. 30% rule at 29.8% \u2014 one big day re-trips it."
+    },
+    {
+      "account": "apex_100k_811",
+      "target_date": "2026-05-05",
+      "amount": 2000,
+      "net": 2000,
+      "confidence": "low",
+      "notes": "$1,949 to safety net. ~19 trading days at COLD pace. 30% rule at 32.2% \u2014 must clear first."
+    },
+    {
+      "account": "tradeify_286",
+      "target_date": "2026-05-12",
+      "amount": 1350,
+      "net": 1215,
+      "confidence": "low",
+      "notes": "$2,494 to $3k extraction trigger. ~25 trading days at COLD pace. Longest runway."
+    }
   ],
   "danger_dates": [
-    { "type": "FOMC", "dates": ["2026-04-29", "2026-05-06", "2026-06-17", "2026-07-29", "2026-09-16", "2026-10-28", "2026-12-16"], "rule": "DO NOT TRADE" },
-    { "type": "Contract Rollover", "note": "Quarterly: Jun/Sep/Dec rollover weeks — check CME calendar", "rule": "DO NOT TRADE or reduce size" }
+    {
+      "type": "FOMC",
+      "dates": [
+        "2026-04-29",
+        "2026-05-06",
+        "2026-06-17",
+        "2026-07-29",
+        "2026-09-16",
+        "2026-10-28",
+        "2026-12-16"
+      ],
+      "rule": "DO NOT TRADE"
+    },
+    {
+      "type": "Contract Rollover",
+      "note": "Quarterly: Jun/Sep/Dec rollover weeks \u2014 check CME calendar",
+      "rule": "DO NOT TRADE or reduce size"
+    }
   ],
   "cme_holidays": [
-    { "date": "2026-01-01", "name": "New Year's Day",             "type": "close" },
-    { "date": "2026-01-19", "name": "MLK Jr. Day",                "type": "early" },
-    { "date": "2026-02-16", "name": "Presidents' Day",            "type": "early" },
-    { "date": "2026-04-03", "name": "Good Friday",                "type": "close" },
-    { "date": "2026-05-25", "name": "Memorial Day",               "type": "early" },
-    { "date": "2026-06-19", "name": "Juneteenth",                 "type": "early" },
-    { "date": "2026-07-03", "name": "Independence Day (obs.)",    "type": "early" },
-    { "date": "2026-09-07", "name": "Labor Day",                  "type": "early" },
-    { "date": "2026-11-26", "name": "Thanksgiving",               "type": "close" },
-    { "date": "2026-11-27", "name": "Black Friday",               "type": "early" },
-    { "date": "2026-12-25", "name": "Christmas Day",              "type": "close" }
+    {
+      "date": "2026-01-01",
+      "name": "New Year's Day",
+      "type": "close"
+    },
+    {
+      "date": "2026-01-19",
+      "name": "MLK Jr. Day",
+      "type": "early"
+    },
+    {
+      "date": "2026-02-16",
+      "name": "Presidents' Day",
+      "type": "early"
+    },
+    {
+      "date": "2026-04-03",
+      "name": "Good Friday",
+      "type": "close"
+    },
+    {
+      "date": "2026-05-25",
+      "name": "Memorial Day",
+      "type": "early"
+    },
+    {
+      "date": "2026-06-19",
+      "name": "Juneteenth",
+      "type": "early"
+    },
+    {
+      "date": "2026-07-03",
+      "name": "Independence Day (obs.)",
+      "type": "early"
+    },
+    {
+      "date": "2026-09-07",
+      "name": "Labor Day",
+      "type": "early"
+    },
+    {
+      "date": "2026-11-26",
+      "name": "Thanksgiving",
+      "type": "close"
+    },
+    {
+      "date": "2026-11-27",
+      "name": "Black Friday",
+      "type": "early"
+    },
+    {
+      "date": "2026-12-25",
+      "name": "Christmas Day",
+      "type": "close"
+    }
   ]
 }
