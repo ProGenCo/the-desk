@@ -869,8 +869,8 @@ a{color:inherit;text-decoration:none}
             <div class="rule-body">Target $2,000 total profit per account before requesting a payout. Then pull exactly $1,000. After the first payout, MLL locks permanently — your floor becomes static. The remaining $1,000 is your permanent buffer. From there, build another $1,000 above the locked floor for the next pull.</div>
         </div>
         <div class="rule-card payout">
-            <div class="rule-title"><span class="rule-badge" style="background:var(--gn-bg);color:var(--gn)">Tradeify</span>$2,000 P&L → Pull $1,000</div>
-            <div class="rule-body">TF-286 now follows the same $2k buffer strategy as Topstep. Build to $2,000 profit, pull $1,000, leave $1,000 as static buffer. 90/10 split means $1,000 pull = $900 net. Do not pull early — partial pulls kill momentum and expose the account.</div>
+            <div class="rule-title"><span class="rule-badge" style="background:var(--rd-bg);color:var(--rd)">Tradeify</span>TF-286 Breached Apr 10 — Rule Still Applies</div>
+            <div class="rule-body">TF-286 was breached April 10 after a 5-day red streak erased all profit and hit the trailing drawdown floor. Rule for any future Tradeify account: build to $2,000 profit before pulling, then pull $1,000 (90/10 split = $900 net). Leave $1,000 as permanent buffer. Do not pull early — partial pulls kill momentum.</div>
         </div>
         <div class="rule-card payout">
             <div class="rule-title"><span class="rule-badge" style="background:var(--gn-bg);color:var(--gn)">Post-Payout</span>Survival Mode After Pull</div>
@@ -879,12 +879,21 @@ a{color:inherit;text-decoration:none}
 
         <h3 class="h3" style="color:var(--yl);margin:36px 0 16px">🟡 Buffer Rules</h3>
         <div class="rule-card risk">
-            <div class="rule-title"><span class="rule-badge" style="background:var(--yl-bg);color:var(--yl)">Buffer</span>Never Trade Below $800 Buffer</div>
-            <div class="rule-body">Any Topstep account with less than $800 between balance and MLL = 1 contract only. Below $500 = no new positions. The MLL breach ends the account permanently.</div>
+            <div class="rule-title"><span class="rule-badge" style="background:var(--yl-bg);color:var(--yl)">Buffer</span>Topstep Buffer Tiers — Know Before You Trade</div>
+            <div class="rule-body">
+                <strong style="color:var(--rd)">CRITICAL (&lt;$200):</strong> DO NOT TRADE. Sit out until Monday recovery. One loss ends account.<br>
+                <strong style="color:var(--rd)">DANGER ($200–$500):</strong> 1 contract only. Hard stop at -$75 for the day. A++ setups only.<br>
+                <strong style="color:var(--yl)">CAUTION ($500–$800):</strong> 1 contract only. No revenge trades. Protect the account.<br>
+                <strong style="color:var(--gn)">SAFE ($800+):</strong> Normal size per conviction tier. Still respect daily loss cap.
+            </div>
         </div>
         <div class="rule-card risk">
-            <div class="rule-title"><span class="rule-badge" style="background:var(--yl-bg);color:var(--yl)">TS-235</span>Nearly Eligible — Stay Disciplined</div>
-            <div class="rule-body">TS-235 hit 5/5 win days on Apr 1. Balance -$14. One positive session = payout eligible. Floor is -$2,000 with $1,986 buffer — safe range now. No need to overswing. One clean green day closes this out.</div>
+            <div class="rule-title"><span class="rule-badge" style="background:var(--rd-bg);color:var(--rd)">TS-204</span>CRITICAL — $130 Buffer · DO NOT TRADE</div>
+            <div class="rule-body">As of Apr 17, TS-204 has only $130 between balance (-$902) and MLL (-$1,033). One bad scalp ends the account. Rule: sit out until buffer recovers above $300. If forced to trade: 1 contract max, hard stop at -$75 on the day. Do not try to recover this account in a single session.</div>
+        </div>
+        <div class="rule-card risk">
+            <div class="rule-title"><span class="rule-badge" style="background:var(--yl-bg);color:var(--yl)">TS-676 / TS-235</span>High Risk — Survival Mode</div>
+            <div class="rule-body">TS-676 has $686 buffer (balance -$702). TS-235 has $671 buffer (balance -$1,329). Both require A++ setups only. MLL is locked at -$2,000 for TS-235 — floor will not move lower regardless of balance. Goal: grind back to breakeven before thinking about payout. No overswinging to recover losses.</div>
         </div>
 
         <h3 class="h3" style="color:var(--pp);margin:36px 0 16px">🟣 Apex-Specific Rules</h3>
@@ -907,7 +916,7 @@ a{color:inherit;text-decoration:none}
         <button class="back-btn" onclick="showFleetView()"><i data-lucide="arrow-left"></i> Back to Fleet</button>
         <span class="eyebrow">Weekly Review</span>
         <h1 class="h1" style="margin-bottom:10px">Week Prep Report</h1>
-        <p class="tx-sec" style="margin-bottom:48px;max-width:560px">Week of Mar 30 – Apr 4. Fleet is HOT. 3-day green streak. Every account building toward $2k payout trigger.</p>
+        <p class="tx-sec" style="margin-bottom:48px;max-width:560px">Week of Apr 28. Fleet in SURVIVAL MODE — 2-day red streak, TS-204 CRITICAL at $130 buffer. FOMC Wednesday Apr 29 — DO NOT TRADE.</p>
         <div id="prep-content"></div>
     </div>
 </div>
@@ -920,7 +929,7 @@ a{color:inherit;text-decoration:none}
         <button class="back-btn" onclick="showFleetView()"><i data-lucide="arrow-left"></i> Back to Fleet</button>
         <span class="eyebrow">Strategy View</span>
         <h1 class="h1" style="margin-bottom:10px">Roadmap</h1>
-        <p class="tx-sec" style="margin-bottom:48px;max-width:640px">Build $2,000 P&L on each TS & Tradeify account → pull $1,000 → MLL locks permanently → $1,000 static buffer remains. Then grow the next $1,000. Apex targets the safety net balance for extraction.</p>
+        <p class="tx-sec" style="margin-bottom:48px;max-width:640px">Build $2,000 P&L on each active TS account → pull $1,000 → MLL locks permanently → $1,000 static buffer remains. Apex targets the safety net balance for extraction. TF-286 breached Apr 10 — removed from roadmap.</p>
         <div id="roadmap-content"></div>
     </div>
 </div>
