@@ -1057,6 +1057,135 @@ function buildDowAnalysis(){
 }
 
 /* ══════════════════════════════════
+   RECOVERY PROJECTIONS PANEL
+══════════════════════════════════ */
+function buildRecoveryPanel(){
+    /* Pre-compute projection data for all accounts */
+    var projections=D.accounts.map(function(a){
+        var hist=a.pnl.filter(function(v){return v!=null&&v!==0;}).slice(-10);
+        var reds=hist.filter(function(v){return v<0;});
+        var greens=hist.filter(function(v){return v>0;});
+        var avgRed=reds.length?Math.abs(reds.reduce(function(s,v){return s+v;},0)/reds.length):null;
+        var avgGreen=greens.length?greens.reduce(function(s,v){return s+v;},0)/greens.length:null;
+        var daysBreach=(avgRed&&a.db)?Math.ceil(a.db/avgRed):null;
+        var isTs=a.ty==='ts';
+        var goalLabel=isTs?'Breakeven':'Safety Net';
+        var goalGap=isTs?Math.abs(a.pft||0):(a.ds||0);
+        var daysGoal=(avgGreen&&goalGap>0)?Math.ceil(goalGap/avgGreen):null;
+        var verdict='',verdictColor='var(--tx-muted)';
+        if(daysBreach!=null&&daysGoal!=null){
+            if(daysBreach>daysGoal){verdict='✓ SURVIVE';verdictColor='var(--gn)';}
+            else if(daysBreach===daysGoal){verdict='⚡ RAZOR THIN';verdictColor='var(--yl)';}
+            else{verdict='⚠ BREACH FIRST';verdictColor='var(--rd)';}
+        }
+        return{a:a,avgRed:avgRed,avgGreen:avgGreen,reds:reds,greens:greens,
+               daysBreach:daysBreach,daysGoal:daysGoal,
+               goalLabel:goalLabel,goalGap:goalGap,
+               verdict:verdict,verdictColor:verdictColor};
+    });
+
+    var atRiskCount=projections.filter(function(p){
+        return p.daysBreach!=null&&p.daysGoal!=null&&p.daysBreach<=p.daysGoal;
+    }).length;
+
+    var cards=projections.map(function(proj){
+        var a=proj.a;
+        var avgRed=proj.avgRed,avgGreen=proj.avgGreen;
+        var daysBreach=proj.daysBreach,daysGoal=proj.daysGoal;
+        var goalLabel=proj.goalLabel,goalGap=proj.goalGap;
+        var verdict=proj.verdict,verdictColor=proj.verdictColor;
+
+        /* Bar scale: shorter bar = event arrives sooner */
+        var maxD=Math.max(daysBreach||0,daysGoal||0,20);
+        var bPct=daysBreach?Math.min(100,Math.round(daysBreach/maxD*100)):0;
+        var gPct=daysGoal?Math.min(100,Math.round(daysGoal/maxD*100)):0;
+
+        /* Breach color: red if ≤3d, yellow if ≤7d, green otherwise */
+        var breachClr=daysBreach!=null&&daysBreach<=3?'var(--rd)':daysBreach!=null&&daysBreach<=7?'var(--yl)':'var(--gn)';
+        var goalClr=(daysGoal!=null&&daysBreach!=null&&daysGoal<daysBreach)?'var(--gn)':'var(--tx-secondary)';
+        var breachTxt=daysBreach!=null?(daysBreach<=1?'<2d':daysBreach+'d'):'—';
+        var goalTxt=daysGoal!=null?daysGoal+'d':'—';
+
+        return '<div style="background:var(--bg-card);border:1px solid '
+            +(a.rk==='critical'?'rgba(215,0,0,0.35)':'var(--border)')
+            +';border-radius:14px;padding:18px 20px">'
+            /* Header */
+            +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">'
+                +'<div style="display:flex;align-items:center;gap:10px">'
+                    +'<div style="font-family:var(--font-mono);font-weight:900;font-size:15px">'+a.s+'</div>'
+                    +'<div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:2px 7px;border-radius:5px;background:'+rs(a.rk)+';color:'+rc(a.rk)+'">'+a.rk.toUpperCase()+'</div>'
+                +'</div>'
+                +'<div style="font-size:10px;font-weight:900;letter-spacing:0.4px;color:'+verdictColor+'">'+verdict+'</div>'
+            +'</div>'
+            /* 4-stat grid */
+            +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px">'
+                /* Avg red day */
+                +'<div style="background:var(--bg-secondary);border-radius:8px;padding:8px 10px">'
+                    +'<div style="font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--tx-muted);margin-bottom:3px">Avg Red</div>'
+                    +'<div style="font-family:var(--font-mono);font-size:15px;font-weight:900;color:var(--rd)">'+(avgRed?'-$'+Math.round(avgRed):'—')+'</div>'
+                    +'<div style="font-size:9px;color:var(--tx-muted);margin-top:1px">'+proj.reds.length+' sessions</div>'
+                +'</div>'
+                /* Days to breach */
+                +'<div style="background:var(--rd-bg);border:1px solid rgba(215,0,0,0.18);border-radius:8px;padding:8px 10px">'
+                    +'<div style="font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--tx-muted);margin-bottom:3px">→ Breach</div>'
+                    +'<div style="font-family:var(--font-mono);font-size:22px;font-weight:900;color:'+breachClr+'">'+breachTxt+'</div>'
+                    +'<div style="font-size:9px;color:var(--tx-muted);margin-top:1px">'+fm(a.db)+' left</div>'
+                +'</div>'
+                /* Avg green day */
+                +'<div style="background:var(--bg-secondary);border-radius:8px;padding:8px 10px">'
+                    +'<div style="font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--tx-muted);margin-bottom:3px">Avg Green</div>'
+                    +'<div style="font-family:var(--font-mono);font-size:15px;font-weight:900;color:var(--gn)">'+(avgGreen?'+$'+Math.round(avgGreen):'—')+'</div>'
+                    +'<div style="font-size:9px;color:var(--tx-muted);margin-top:1px">'+proj.greens.length+' sessions</div>'
+                +'</div>'
+                /* Days to goal */
+                +'<div style="background:var(--gn-bg);border:1px solid rgba(45,104,196,0.18);border-radius:8px;padding:8px 10px">'
+                    +'<div style="font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--tx-muted);margin-bottom:3px">→ '+goalLabel+'</div>'
+                    +'<div style="font-family:var(--font-mono);font-size:22px;font-weight:900;color:'+goalClr+'">'+goalTxt+'</div>'
+                    +'<div style="font-size:9px;color:var(--tx-muted);margin-top:1px">'+fm(goalGap)+' gap</div>'
+                +'</div>'
+            +'</div>'
+            /* Race bars — shorter bar = sooner arrival */
+            +'<div>'
+                +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">'
+                    +'<div style="font-size:8px;font-weight:700;text-transform:uppercase;color:var(--rd);width:52px;flex-shrink:0;text-align:right">BREACH</div>'
+                    +'<div style="flex:1;height:5px;background:var(--bg-tertiary);border-radius:9999px;overflow:hidden">'
+                        +'<div style="height:100%;width:'+bPct+'%;background:'+breachClr+';border-radius:9999px"></div>'
+                    +'</div>'
+                    +'<div style="font-size:9px;font-weight:900;color:'+breachClr+';width:28px;flex-shrink:0">'+breachTxt+'</div>'
+                +'</div>'
+                +'<div style="display:flex;align-items:center;gap:8px">'
+                    +'<div style="font-size:8px;font-weight:700;text-transform:uppercase;color:var(--gn);width:52px;flex-shrink:0;text-align:right">GOAL</div>'
+                    +'<div style="flex:1;height:5px;background:var(--bg-tertiary);border-radius:9999px;overflow:hidden">'
+                        +'<div style="height:100%;width:'+gPct+'%;background:var(--gn);border-radius:9999px"></div>'
+                    +'</div>'
+                    +'<div style="font-size:9px;font-weight:900;color:var(--gn);width:28px;flex-shrink:0">'+goalTxt+'</div>'
+                +'</div>'
+            +'</div>'
+        +'</div>';
+    }).join('');
+
+    var summaryBanner='';
+    if(atRiskCount>0){
+        summaryBanner='<div class="fade-up" style="background:var(--rd-bg);border:1px solid rgba(215,0,0,0.25);border-radius:12px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px">'
+            +'<i data-lucide="alert-triangle" style="width:16px;height:16px;color:var(--rd);flex-shrink:0"></i>'
+            +'<span style="font-size:13px;font-weight:700;color:var(--rd)">'+atRiskCount+' account'+(atRiskCount>1?'s':'')+' projected to breach before goal at current pace — reduce size or sit out</span>'
+        +'</div>';
+    }
+
+    return '<div style="padding:0 0 40px">'
+        +'<div class="container">'
+            +'<div class="fade-up" style="margin-bottom:16px">'
+                +'<span class="eyebrow">Risk Modeling</span>'
+                +'<h2 class="h2">Recovery Projections</h2>'
+                +'<p style="font-size:12px;color:var(--tx-muted);margin-top:4px">Pace-based · last 10 sessions per account · assumes current averages hold</p>'
+            +'</div>'
+            +summaryBanner
+            +'<div class="fade-up" style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">'+cards+'</div>'
+        +'</div>'
+    +'</div>';
+}
+
+/* ══════════════════════════════════
    SIDEBAR
 ══════════════════════════════════ */
 function buildSidebar(){
@@ -1256,6 +1385,27 @@ function showFleetView(){
         return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');
     }
 
+    /* FOMC countdown — find nearest upcoming FOMC, count trading days away */
+    var fomcMM={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+    var fomcNextLabel='',fomcTradeCount=0,fomcUrgency='safe';
+    var fomcNextDate=null;
+    D.fomc.forEach(function(ds){
+        var pts=ds.split(' ');
+        var fd=new Date(rmNow.getFullYear(),fomcMM[pts[0]],parseInt(pts[1]));
+        if(fd>=rmNow&&(!fomcNextDate||fd<fomcNextDate)){fomcNextDate=fd;fomcNextLabel=ds;}
+    });
+    if(fomcNextDate){
+        var fc=new Date(rmNow);
+        while(fc<fomcNextDate){
+            fc.setDate(fc.getDate()+1);
+            var fcdow=fc.getDay();var fciso=isoDate(fc);var fchol=holidayMap[fciso];
+            if(fcdow>=1&&fcdow<=5&&!(fchol&&fchol.t==='close'))fomcTradeCount++;
+        }
+        fomcUrgency=fomcTradeCount<=2?'critical':fomcTradeCount<=4?'high':'safe';
+    }
+    var fomcClr=fomcUrgency==='critical'?'var(--rd)':fomcUrgency==='high'?'var(--yl)':'var(--tx-muted)';
+    var fomcBgClr=fomcUrgency==='critical'?'var(--rd-bg)':fomcUrgency==='high'?'var(--yl-bg)':'var(--bg-secondary)';
+
     /* Get next 5 trading days (Mon-Fri, skip weekends AND full-close holidays) */
     var tradingDays5=[];
     var rmCursor=new Date(rmNow);
@@ -1407,6 +1557,13 @@ function showFleetView(){
                             +'<div class="hero-mini-label">Momentum</div>'
                             +'<div class="hero-mini-val" style="color:'+(m.cl==='STRONG'||m.sd==='green'?'var(--gn)':m.cl==='COLD'||m.st>=3?'var(--rd)':'var(--yl)')+'">'+m.cl+(m.st>1?' ('+m.st+(m.sd==='red'?' red':' green')+')':'')+'</div>'
                         +'</div>'
+                        +(fomcNextLabel
+                            ?'<div style="margin-top:6px;background:'+fomcBgClr+';border-radius:9px;padding:6px 10px">'
+                                +'<div style="font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:'+fomcClr+'">⚡ FOMC '+fomcNextLabel+'</div>'
+                                +'<div style="font-family:var(--font-mono);font-size:20px;font-weight:900;color:'+fomcClr+';line-height:1.1;margin-top:2px">'+(fomcTradeCount===0?'TODAY':fomcTradeCount+' trading day'+(fomcTradeCount!==1?'s':''))+'</div>'
+                                +'<div style="font-size:9px;font-weight:600;color:'+fomcClr+';opacity:0.75;margin-top:1px">DO NOT TRADE</div>'
+                            +'</div>'
+                            :'')
                         +'<div style="margin-top:4px"><span class="tx-sm">'+D.accounts.length+' accounts · '+(D.accounts.length-D.accounts.filter(a=>a.el).length)+' building</span></div>'
                     +'</div>'
                     // RIGHT — big P&L
@@ -1445,6 +1602,9 @@ function showFleetView(){
 
         // DOW ANALYSIS
         +buildDowAnalysis()
+
+        // RECOVERY PROJECTIONS
+        +buildRecoveryPanel()
 
         // NEXT MOVE
         +'<div class="next-move"><div class="container">'
