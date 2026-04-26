@@ -637,27 +637,70 @@ a{color:inherit;text-decoration:none}
 /* ════════════════════════════════════
    RISK ALERTS BAR
 ════════════════════════════════════ */
-.risk-alerts{padding:0;overflow:hidden;transition:max-height 0.3s cubic-bezier(0.16,1,0.3,1);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.risk-alerts{padding:0;overflow:hidden;transition:max-height 0.3s cubic-bezier(0.16,1,0.3,1)}
 .risk-alerts.empty{max-height:0}
+
+/* Compact summary chip — always visible, single row */
+.risk-alert-summary{
+    width:100%;
+    display:flex;align-items:center;gap:14px;
+    padding:10px 22px;
+    background:rgba(26,29,30,0.6);
+    backdrop-filter:blur(12px) saturate(140%);-webkit-backdrop-filter:blur(12px) saturate(140%);
+    border:none;
+    border-bottom:1px solid rgba(255,255,255,0.05);
+    font-family:var(--font-body);
+    cursor:pointer;
+    transition:background 0.2s;
+    position:relative;
+}
+[data-theme="light"] .risk-alert-summary{background:rgba(255,255,255,0.65)}
+.risk-alert-summary:hover{background:rgba(255,255,255,0.04)}
+.ras-pills{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ras-pill{
+    display:inline-flex;align-items:center;gap:5px;
+    padding:4px 10px;border-radius:9999px;
+    font-size:11px;font-weight:800;letter-spacing:0.2px;
+    font-family:var(--font-body);
+    border:1px solid transparent;
+}
+.ras-pill i{width:11px;height:11px;stroke-width:2.5}
+.ras-pill-critical{background:rgba(215,0,0,0.15);color:var(--rd);border-color:rgba(215,0,0,0.3)}
+.ras-pill-warning{background:rgba(180,83,9,0.15);color:var(--yl);border-color:rgba(180,83,9,0.3)}
+.ras-pill-info{background:rgba(45,104,196,0.15);color:var(--gn);border-color:rgba(45,104,196,0.3)}
+.ras-spacer{flex:1}
+.ras-toggle-text{font-size:11px;font-weight:700;color:var(--tx-muted);letter-spacing:0.3px;text-transform:uppercase}
+.ras-chevron{width:14px;height:14px;color:var(--tx-muted);transition:transform 0.25s var(--spring)}
+.risk-alert-summary.expanded .ras-chevron{transform:rotate(180deg)}
+
+/* Collapsible alert list */
+.risk-alert-list{
+    max-height:0;overflow:hidden;
+    transition:max-height 0.4s var(--smooth);
+}
+.risk-alert-list.expanded{max-height:600px}
+
 .risk-alert{
     display:flex;align-items:center;gap:11px;
-    padding:11px 22px;font-size:12px;font-weight:700;
+    padding:9px 22px;font-size:12px;font-weight:700;
     border-bottom:1px solid rgba(255,255,255,0.04);
-    font-family:'Inter',ui-monospace,monospace;
+    font-family:var(--font-body);
     transition:background 0.2s, padding-left 0.2s;
     position:relative;
 }
 .risk-alert::before{
     content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
-    background:currentColor;opacity:0.5;
+    background:currentColor;opacity:0.6;
 }
 .risk-alert:hover{padding-left:26px}
-.risk-alert-critical{background:linear-gradient(90deg, rgba(215,0,0,0.18) 0%, rgba(215,0,0,0.08) 100%);color:var(--rd)}
-.risk-alert-warning{background:linear-gradient(90deg, rgba(180,83,9,0.16) 0%, rgba(180,83,9,0.06) 100%);color:var(--yl)}
-.risk-alert-info{background:linear-gradient(90deg, rgba(45,104,196,0.14) 0%, rgba(45,104,196,0.05) 100%);color:var(--gn)}
+.risk-alert:last-child{border-bottom:none}
+.risk-alert-critical{background:linear-gradient(90deg, rgba(215,0,0,0.10) 0%, rgba(215,0,0,0.03) 100%);color:var(--rd)}
+.risk-alert-warning{background:linear-gradient(90deg, rgba(180,83,9,0.09) 0%, rgba(180,83,9,0.025) 100%);color:var(--yl)}
+.risk-alert-info{background:linear-gradient(90deg, rgba(45,104,196,0.08) 0%, rgba(45,104,196,0.02) 100%);color:var(--gn)}
 .risk-alert i{width:14px;height:14px;flex-shrink:0}
-.risk-alert-text{flex:1;letter-spacing:0.1px}
-.risk-alert-val{font-weight:900;margin-left:auto;white-space:nowrap;padding:2px 9px;border-radius:6px;background:rgba(255,255,255,0.06);font-size:11px}
+.risk-alert-acct{font-family:var(--font-mono);font-weight:900;font-size:11px;letter-spacing:0.3px;min-width:64px;flex-shrink:0}
+.risk-alert-text{flex:1;letter-spacing:0.1px;color:var(--tx-secondary);font-weight:600}
+.risk-alert-val{font-weight:900;margin-left:auto;white-space:nowrap;padding:2px 9px;border-radius:6px;background:rgba(255,255,255,0.06);font-size:11px;font-family:var(--font-mono)}
 
 /* ════════════════════════════════════
    CONSISTENCY PROJECTOR
@@ -2531,7 +2574,7 @@ function buildCalendar(year,month){
    RISK ALERTS ENGINE
 ══════════════════════════════════ */
 function buildRiskAlerts(){
-    /* ── Breach Banner ── */
+    /* ── Breach Banner — only critical accounts, ALWAYS visible ── */
     var breachBanner=document.getElementById('breach-banner');
     var criticals=D.accounts.filter(function(a){return a.rk==='critical';});
     if(criticals.length&&breachBanner){
@@ -2548,6 +2591,7 @@ function buildRiskAlerts(){
         breachBanner.style.display='none';
     }
 
+    /* ── Build deduplicated alerts: ONE per account max ── */
     var alerts=[];
     var avgLoss=0;
     if(D.log.length>=3){
@@ -2555,66 +2599,116 @@ function buildRiskAlerts(){
         var losses=recent.filter(function(d){return d.p<0;});
         avgLoss=losses.length?losses.reduce(function(s,d){return s+d.p;},0)/losses.length:0;
     }
+
     D.accounts.forEach(function(a){
-        if(a.db!=null&&a.db<200){
-            alerts.push({level:'critical',icon:'alert-triangle',text:'🚨 '+a.s+' BREACH IMMINENT — '+fm(a.db)+' buffer. DO NOT TRADE.',val:'STOP'});
-        }else if(a.db!=null&&a.db<500){
-            alerts.push({level:'critical',icon:'alert-triangle',text:a.s+' buffer critically low — '+fm(a.db)+' to breach',val:'DANGER'});
+        /* Skip accounts already shown in breach banner */
+        if(a.rk==='critical')return;
+
+        /* Pick single most severe condition per account */
+        var alert=null;
+
+        /* Buffer-based primary alert */
+        if(a.db!=null&&a.db<500){
+            alert={level:'critical',icon:'alert-triangle',acct:a.s,text:fm(a.db)+' to breach',val:'DANGER'};
         }else if(a.db!=null&&a.db<800){
             var daysLeft=avgLoss<0?Math.floor(a.db/Math.abs(avgLoss)):99;
-            alerts.push({level:'warning',icon:'alert-circle',text:a.s+' buffer thinning — '+fm(a.db)+' remaining',val:daysLeft<10?'~'+daysLeft+' days':'Watch'});
+            alert={level:'warning',icon:'alert-circle',acct:a.s,text:'Buffer thinning · '+fm(a.db),val:daysLeft<10?'~'+daysLeft+'d':'Watch'};
         }else if(a.db!=null&&a.db<1200&&D.mo.sd==='red'){
-            alerts.push({level:'warning',icon:'trending-down',text:a.s+' buffer '+fm(a.db)+' on red momentum',val:'Monitor'});
+            alert={level:'warning',icon:'trending-down',acct:a.s,text:'On red momentum · '+fm(a.db),val:'Monitor'};
         }
+
+        /* 30% rule overrides if more severe */
         if(a.cp&&a.pft>0&&a.bd>a.pft*a.cp){
             var pctNow=Math.round(a.bd/a.pft*100);
             var gap=Math.ceil(a.bd/0.30)-Math.round(a.pft);
-            alerts.push({level:pctNow>50?'critical':'warning',icon:'pie-chart',text:a.s+' 30% rule: best day '+fm(a.bd)+' = '+pctNow+'% of '+fm(a.pft),val:fm(gap)+' to clear'});
+            var lvl=pctNow>50?'critical':'warning';
+            if(!alert||(lvl==='critical'&&alert.level!=='critical')){
+                alert={level:lvl,icon:'pie-chart',acct:a.s,text:'30% rule · best day '+pctNow+'% of profit',val:fm(gap)+' to clear'};
+            }
         }
-        if(a.wd>=a.wr&&a.pft<0&&(a.ty==='ts'||a.ty==='tf')){
-            alerts.push({level:'warning',icon:'minus-circle',text:a.s+' has '+a.wd+'/'+a.wr+' win days but balance is negative',val:fm(Math.abs(a.pft))+' to $0'});
+
+        /* Win days banked but negative — show as info if no other alert */
+        if(!alert&&a.wd>=a.wr&&a.pft<0&&(a.ty==='ts'||a.ty==='tf')){
+            alert={level:'info',icon:'minus-circle',acct:a.s,text:a.wd+'/'+a.wr+' win days · need positive',val:fm(Math.abs(a.pft))+' to $0'};
         }
+
+        if(alert)alerts.push(alert);
     });
-    /* FOMC proximity */
-    var fomcMonthMap={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
-    var today=new Date();
-    D.fomc.forEach(function(dateStr){
-        var pts=dateStr.split(' ');
-        var fDate=new Date(today.getFullYear(),fomcMonthMap[pts[0]],parseInt(pts[1]));
-        var diffDays=Math.ceil((fDate-today)/(1000*60*60*24));
-        if(diffDays>=0&&diffDays<=3){
-            alerts.push({level:'critical',icon:'zap',text:'FOMC in '+diffDays+' day'+(diffDays!==1?'s':'')+' ('+dateStr+') — NO TRADING',val:'HARD RULE'});
-        }else if(diffDays>3&&diffDays<=7){
-            alerts.push({level:'info',icon:'calendar',text:'FOMC on '+dateStr+' — '+diffDays+' days out',val:'Plan ahead'});
-        }
+
+    /* ── FOMC proximity (deduped — only nearest one) ── */
+    var fomcMM={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+    var today=new Date();today.setHours(0,0,0,0);
+    var nearestFomc=null,nearestDays=999;
+    D.fomc.forEach(function(ds){
+        var pts=ds.split(' ');
+        var fd=new Date(today.getFullYear(),fomcMM[pts[0]],parseInt(pts[1]));
+        var dd=Math.ceil((fd-today)/(1000*60*60*24));
+        if(dd>=0&&dd<nearestDays){nearestDays=dd;nearestFomc=ds;}
     });
-    /* Holiday proximity */
+    if(nearestFomc&&nearestDays<=3){
+        alerts.unshift({level:'critical',icon:'zap',acct:'FOMC',text:nearestFomc+' · '+nearestDays+'d away',val:'NO TRADE'});
+    }else if(nearestFomc&&nearestDays<=7){
+        alerts.push({level:'info',icon:'calendar',acct:'FOMC',text:nearestFomc+' · '+nearestDays+'d out',val:'Plan'});
+    }
+
+    /* ── Holidays (only show today/tomorrow) ── */
     (D.holidays||[]).forEach(function(h){
-        var hDate=new Date(h.d);
-        var diffDays=Math.ceil((hDate-today)/(1000*60*60*24));
-        if(diffDays===0){
-            if(h.t==='close')alerts.push({level:'critical',icon:'moon',text:'Market CLOSED today — '+h.n,val:'No trading'});
-            else if(h.t==='early')alerts.push({level:'warning',icon:'clock',text:'Early close today — '+h.n+'. CME halts ~noon CT',val:'Finish early'});
-        }else if(diffDays===1){
-            if(h.t==='close')alerts.push({level:'warning',icon:'moon',text:'Market closed tomorrow — '+h.n,val:'Plan ahead'});
-            else if(h.t==='early')alerts.push({level:'info',icon:'clock',text:'Early close tomorrow — '+h.n,val:'Noon CT halt'});
-        }else if(diffDays>1&&diffDays<=3&&h.t==='close'){
-            alerts.push({level:'info',icon:'calendar',text:h.n+' in '+diffDays+' days — market closed',val:'Plan ahead'});
+        var hDate=new Date(h.d);hDate.setHours(0,0,0,0);
+        var dd=Math.ceil((hDate-today)/(1000*60*60*24));
+        if(dd===0){
+            if(h.t==='close')alerts.unshift({level:'critical',icon:'moon',acct:'CLOSED',text:h.n,val:'No trade'});
+            else if(h.t==='early')alerts.unshift({level:'warning',icon:'clock',acct:'EARLY',text:h.n+' · noon CT halt',val:'Finish early'});
+        }else if(dd===1&&h.t==='close'){
+            alerts.push({level:'warning',icon:'moon',acct:'TOMORROW',text:'Market closed · '+h.n,val:'Plan'});
         }
     });
+
+    /* ── Sort by severity ── */
+    var order={critical:0,warning:1,info:2};
+    alerts.sort(function(a,b){return(order[a.level]||9)-(order[b.level]||9);});
+
     var el=document.getElementById('risk-alerts');
     if(!alerts.length){el.innerHTML='';el.classList.add('empty');return;}
     el.classList.remove('empty');
-    var order={critical:0,warning:1,info:2};
-    alerts.sort(function(a,b){return(order[a.level]||9)-(order[b.level]||9);});
-    el.innerHTML=alerts.map(function(a){
+
+    /* ── Build compact summary chip + collapsed full list ── */
+    var counts={critical:0,warning:0,info:0};
+    alerts.forEach(function(a){counts[a.level]++;});
+
+    var chipParts=[];
+    if(counts.critical)chipParts.push('<span class="ras-pill ras-pill-critical"><i data-lucide="alert-triangle"></i>'+counts.critical+' Critical</span>');
+    if(counts.warning)chipParts.push('<span class="ras-pill ras-pill-warning"><i data-lucide="alert-circle"></i>'+counts.warning+' Warning</span>');
+    if(counts.info)chipParts.push('<span class="ras-pill ras-pill-info"><i data-lucide="info"></i>'+counts.info+' Info</span>');
+
+    var summaryChip='<button class="risk-alert-summary" onclick="toggleRiskAlerts()" id="ras-toggle">'
+        +'<span class="ras-pills">'+chipParts.join('')+'</span>'
+        +'<span class="ras-spacer"></span>'
+        +'<span class="ras-toggle-text">Show details</span>'
+        +'<i data-lucide="chevron-down" class="ras-chevron"></i>'
+    +'</button>';
+
+    var listHtml=alerts.map(function(a){
         return '<div class="risk-alert risk-alert-'+a.level+'">'
             +'<i data-lucide="'+a.icon+'"></i>'
+            +'<span class="risk-alert-acct">'+a.acct+'</span>'
             +'<span class="risk-alert-text">'+a.text+'</span>'
             +'<span class="risk-alert-val">'+a.val+'</span>'
             +'</div>';
     }).join('');
+
+    el.innerHTML=summaryChip+'<div class="risk-alert-list" id="ras-list">'+listHtml+'</div>';
     setTimeout(function(){lucide.createIcons();},60);
+}
+
+/* Toggle the expanded alert list */
+function toggleRiskAlerts(){
+    var list=document.getElementById('ras-list');
+    var toggle=document.getElementById('ras-toggle');
+    if(!list||!toggle)return;
+    var expanded=list.classList.toggle('expanded');
+    toggle.classList.toggle('expanded',expanded);
+    var txt=toggle.querySelector('.ras-toggle-text');
+    if(txt)txt.textContent=expanded?'Hide':'Show details';
 }
 
 /* ══════════════════════════════════
