@@ -52,6 +52,38 @@ def fmt_fomc(iso):
     return d.strftime("%b %-d")
 
 
+def validate_data_shape(data):
+    """Sanity-check the loaded JSON has the keys we depend on."""
+    required = ["accounts", "daily_log", "momentum"]
+    missing = [k for k in required if k not in data]
+    if missing:
+        raise ValueError(f"portfolio_data.json missing required keys: {missing}")
+    if not isinstance(data["accounts"], dict) or not data["accounts"]:
+        raise ValueError("portfolio_data.json: 'accounts' must be a non-empty dict")
+    return True
+
+
+def sanity_check_derived(data):
+    """After derive_computed_fields, run sanity checks. Returns list of warnings."""
+    warnings = []
+    for key, acct in data["accounts"].items():
+        if acct.get("status") in ("shelved", "breached"):
+            continue
+        bal = acct.get("balance")
+        floor = acct.get("floor") or acct.get("mll_current")
+        if bal is not None and floor is not None and bal < floor:
+            warnings.append(f"  ⚠ {key}: balance {bal} < floor {floor} — already breached?")
+        eh = acct.get("equity_high")
+        if eh is not None and bal is not None and eh < bal:
+            warnings.append(f"  ⚠ {key}: equity_high {eh} < balance {bal} — impossible (should auto-update)")
+        # 30% rule informational
+        if acct.get("consistency_pct") and acct.get("profit", 0) > 0:
+            bd = acct.get("consistency_best_day", 0) or 0
+            if bd > acct["profit"]:
+                warnings.append(f"  ℹ {key}: best_day ${bd} > profit ${acct['profit']} → 30%-rule blocked until profit catches up")
+    return warnings
+
+
 def load_json():
     with open(JSON_PATH) as f:
         return json.load(f)
@@ -478,6 +510,11 @@ def main():
     # ── Load ──
     print(f"\n[1] Reading {JSON_PATH}")
     data = load_json()
+    try:
+        validate_data_shape(data)
+    except ValueError as e:
+        print(f"    ✗ ABORT: {e}")
+        sys.exit(1)
     print(f"    Last updated: {data.get('last_updated')}")
     active = [k for k, v in data["accounts"].items() if v.get("status") not in ("shelved", "breached")]
     shelved = [k for k, v in data["accounts"].items() if v.get("status") in ("shelved", "breached")]
@@ -493,6 +530,13 @@ def main():
         print(f"     ✓ Derived fields written back to JSON")
     else:
         print(f"     ✓ All derived fields already current")
+
+    # ── Sanity warnings ──
+    sw = sanity_check_derived(data)
+    if sw:
+        print(f"\n[1c] Sanity warnings:")
+        for w in sw:
+            print(w)
 
     # ── Build new data block ──
     print(f"\n[2] Building data block...")

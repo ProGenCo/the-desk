@@ -81,9 +81,56 @@ def load_json():
         return json.load(f)
 
 
+def validate_data_shape(data):
+    """Sanity-check the loaded JSON has the keys we depend on. Fail loud, fail early."""
+    required_top = ["accounts", "daily_log", "momentum"]
+    missing = [k for k in required_top if k not in data]
+    if missing:
+        raise ValueError(f"portfolio_data.json missing required keys: {missing}")
+    if not isinstance(data["accounts"], dict) or not data["accounts"]:
+        raise ValueError("portfolio_data.json: 'accounts' must be a non-empty dict")
+    return True
+
+
+def backup_json():
+    """Copy portfolio_data.json to a timestamped .bak in the same dir.
+    Cheap insurance — restoring takes one mv."""
+    import shutil
+    from datetime import datetime as _dt
+    bak = JSON_PATH + "." + _dt.now().strftime("%Y%m%d-%H%M%S") + ".bak"
+    shutil.copy2(JSON_PATH, bak)
+    return bak
+
+
 def save_json(data):
     with open(JSON_PATH, "w") as f:
         json.dump(data, f, indent=2)
+
+
+def validate_pnl_magnitudes(pnl_map, threshold=1000):
+    """Return list of (label, pnl) for any |P&L| > threshold. Likely typos."""
+    suspicious = []
+    for json_key, pnl in pnl_map.items():
+        if pnl == "SKIP" or pnl is None:
+            continue
+        if abs(pnl) > threshold:
+            suspicious.append((ACCT_LABELS.get(json_key, json_key), pnl))
+    return suspicious
+
+
+def check_date_sanity(date_str, holidays=None):
+    """Warn if the date is a weekend or full-close holiday.
+    Returns (warning_string or None)."""
+    dt = datetime.strptime(date_str, "%Y-%m-%d")
+    if dt.weekday() == 5:
+        return "Saturday — markets closed."
+    if dt.weekday() == 6:
+        return "Sunday — markets closed."
+    if holidays:
+        for h in holidays:
+            if h.get("date") == date_str and h.get("type") == "close":
+                return f"{h.get('name', 'Holiday')} — full market closure."
+    return None
 
 
 def get_last_trading_date(data):
@@ -460,6 +507,11 @@ Examples:
 
     # ── Load data ──────────────────────────────────────────
     data = load_json()
+    try:
+        validate_data_shape(data)
+    except ValueError as e:
+        print(red(f"  ✗ Data file invalid: {e}"))
+        sys.exit(1)
     last_date = get_last_trading_date(data)
     print(f"  Last log entry: {dim(last_date)}")
 
@@ -480,6 +532,15 @@ Examples:
     print(f"  Logging for:    {bold(date_str)} ({dow})")
     if is_friday(date_str):
         print(yellow(f"  ⛔ WARNING: Friday — historically 0% win rate on your data."))
+
+    # Weekend / closed-holiday sanity check
+    sanity_warn = check_date_sanity(date_str, data.get("cme_holidays", []))
+    if sanity_warn:
+        print(red(f"  ⚠ {sanity_warn}"))
+        confirm = input(red("  Log P&L anyway? (y/N): ")).strip().lower()
+        if confirm != "y":
+            print("  Aborted.")
+            sys.exit(0)
 
     # Check duplicate
     existing_dates = [e["date"] for e in data["daily_log"][1:]]
@@ -530,6 +591,17 @@ Examples:
             buf = bal - floor if floor is not None else None
             pnl_map[json_key] = prompt_pnl(ACCT_LABELS[json_key], bal, floor, buf)
 
+    # ── Magnitude sanity ───────────────────────────────────
+    suspicious = validate_pnl_magnitudes(pnl_map, threshold=1000)
+    if suspicious:
+        print(yellow(f"\n  ⚠ Unusual magnitude(s) (likely typo?):"))
+        for label, pnl in suspicious:
+            print(yellow(f"     {label}: {fp(pnl)}"))
+        confirm = input(yellow("  These look right? (y/N): ")).strip().lower()
+        if confirm != "y":
+            print("  Aborted. Re-run with corrected values.")
+            sys.exit(0)
+
     # ── Fleet total preview ────────────────────────────────
     fleet_total = compute_fleet_total(pnl_map)
     print(f"\n  Fleet total: {fp(fleet_total)}")
@@ -555,8 +627,12 @@ Examples:
         print("  Aborted.")
         sys.exit(0)
 
+    # ── Backup before write ────────────────────────────────
+    bak_path = backup_json()
+    print(f"  {dim('Backup → ' + os.path.basename(bak_path))}")
+
     # ── Apply changes ──────────────────────────────────────
-    print(f"\n  Updating portfolio_data.json...")
+    print(f"  Updating portfolio_data.json...")
     new_balances, fleet_total, breach_warnings = apply_pnl(data, date_str, pnl_map)
     save_json(data)
     print(f"  {green('✓')} JSON updated")
