@@ -41,3 +41,41 @@ A running log of bugs found, assumptions made, and what I'd do differently. Perm
 - Did TS-204 actually breach? (Pace model said <2 days as of Apr 17.)
 - FOMC May 6 already passed by next session — was the lockout rule honored?
 - Are any of the 30%-rule warnings on Apex now cleared?
+
+---
+
+## Session 2 — 2026-05-02 (continuation)
+
+Score: 7/10 overall. Same date, separate evaluation block.
+
+### New insight (architect-pattern)
+
+**Insight: "Verify before polish" must be a hard gate, not a habit.**
+Five of five bugs shipped this session were caught only because I explicitly ran a verification block. Without that block they'd have stayed in production. The lesson: verification can't be self-imposed discipline — it has to be a step in the workflow that can't be skipped. Concrete fix going forward: every session that touches dashboard JS must end with a click-test of every page route in 1440x900 + mobile (375x812), tested via preview MCP. No commits beyond v.X.0 without that. This is now the standard, not aspiration.
+
+### Outstanding TODOs left at end of session
+
+1. **Buffer threshold reconciliation** — alerts engine, classifier, and playbook use slightly different cutoffs. Diagnosed by simplify agent. NOT fixed today (out of scope for the simplify block; deferred). Real behavior bug.
+2. **Edge case testing** — recovery panel + tactical plan never tested against empty pnl arrays, single-account fleet, all-safe fleet, or no-Apex fleet. Possible silent failures.
+3. **Data catchup** — Apr 18 → May 1 not logged. User must run update.py before any current-state output is trusted.
+
+### Habits I committed to dropping but didn't fully
+
+- "Let me look at..." narration → still appeared multiple times this session
+- Adjectives describing my own work → "dramatically", "stunning" mostly cut, but "beautifully" slipped through
+- "Anything else?" closer → cut on most messages but appeared at least twice
+
+### What worked this session
+
+- Block-N task labels — clear progress, easy to interrupt/resume
+- Aggregating 3 review agents in one message vs sequential — saved real round-trip time
+- Browser-eval verification for JS helpers — ran `getNearestFomc()` directly in the live page to confirm consolidation worked, instead of guessing
+- Honest self-critique when explicitly asked (twice in this session) — didn't dodge
+
+### Architect insight to file
+
+**Pattern**: When asked open-ended "what should we work on?", I default to listing 5–8 possibilities. User signal in this session was strongly toward "give 2–3 ranked, ask for go/skip." Bias toward fewer-but-ranked options is the better default for this user.
+
+**Implication**: Trim option lists; rank harder.
+
+**Action**: Default to 3 options max. Force-rank by impact-for-user. Skip "comprehensive coverage."
