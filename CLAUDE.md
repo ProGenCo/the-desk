@@ -156,3 +156,11 @@ node --input-type=module -e "import {readFileSync} from 'fs'; const h=readFileSy
 # Dry-run an update
 python3 update.py --date 2026-05-04 --ts204 -300 --ts676 -300 --ts235 -300 --ax100k -200 --ax50k -200 --dry-run
 ```
+
+## Git hooks (one-time install)
+
+```bash
+./hooks/install.sh
+```
+
+Installs a pre-commit hook that validates `portfolio_data.json` on every commit that touches it (JSON parses, required keys present, account statuses + log dates valid). Source lives in `hooks/`, symlinked into `.git/hooks/`. See `hooks/README.md`.
