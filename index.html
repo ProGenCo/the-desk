@@ -134,6 +134,26 @@ a{color:inherit;text-decoration:none}
 }
 .nav-right{display:flex;align-items:center;gap:10px;margin-left:16px}
 .nav-clock{font-family:var(--font-mono);font-size:11px;font-weight:600;color:var(--tx-muted);font-variant-numeric:tabular-nums;letter-spacing:0.3px}
+
+/* Mobile nav: shrink everything */
+@media(max-width:768px){
+    .nav-inner{padding:0 10px;gap:6px}
+    .nav-mark{width:26px;height:26px;font-size:13px}
+    .nav-title{font-size:16px}
+    .nav-title span{display:none}
+    .nav-link{padding:6px 8px;font-size:11px}
+    .nav-clock{display:none}
+    .nav-right{margin-left:4px;gap:4px}
+    .pnl-log-btn{padding:6px 10px;font-size:11px;gap:5px}
+    .nav-theme{padding:6px 9px!important;font-size:11px!important}
+    .nav-theme i{width:12px!important;height:12px!important}
+}
+@media(max-width:480px){
+    .nav-link[id="nl-prep"]{display:none}
+    .pnl-log-btn{padding:8px 10px}
+    .pnl-log-btn .btn-label,.nav-theme .btn-label{display:none}
+    .nav-theme{padding:8px 10px!important}
+}
 .nav-theme{
     display:flex;align-items:center;gap:6px;
     padding:6px 12px;border-radius:8px;
@@ -986,11 +1006,11 @@ a{color:inherit;text-decoration:none}
             <button class="nav-link" id="nl-prep" onclick="showPage('prep')">Week Prep</button>
         </div>
         <div class="nav-right">
-            <button class="pnl-log-btn" onclick="openPnlModal()"><i data-lucide="plus-circle"></i> Log P&L</button>
+            <button class="pnl-log-btn" onclick="openPnlModal()" aria-label="Log P&L"><i data-lucide="plus-circle"></i><span class="btn-label">Log P&L</span></button>
             <span class="nav-clock" id="clock">--:--:-- MST</span>
-            <button class="nav-theme" onclick="toggleTheme()">
+            <button class="nav-theme" onclick="toggleTheme()" aria-label="Toggle theme">
                 <i data-lucide="moon"></i>
-                <span id="theme-text">Dark</span>
+                <span id="theme-text" class="btn-label">Dark</span>
             </button>
         </div>
     </div>
@@ -1594,11 +1614,14 @@ function showFleetView(){
         if(fd>=rmNow&&(!fomcNextDate||fd<fomcNextDate)){fomcNextDate=fd;fomcNextLabel=ds;}
     });
     if(fomcNextDate){
-        var fc=new Date(rmNow);
+        /* Count trading days strictly BEFORE the FOMC date itself.
+           FOMC day is a no-trade day per hard rule, so it shouldn't count. */
+        var fc=new Date(rmNow.getFullYear(),rmNow.getMonth(),rmNow.getDate());
+        fc.setDate(fc.getDate()+1);
         while(fc<fomcNextDate){
-            fc.setDate(fc.getDate()+1);
             var fcdow=fc.getDay();var fciso=isoDate(fc);var fchol=holidayMap[fciso];
             if(fcdow>=1&&fcdow<=5&&!(fchol&&fchol.t==='close'))fomcTradeCount++;
+            fc.setDate(fc.getDate()+1);
         }
         fomcUrgency=fomcTradeCount<=2?'critical':fomcTradeCount<=4?'high':'safe';
     }
@@ -2247,13 +2270,14 @@ function buildPrep(){
         var monthMap={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
         var fomcDate=new Date(now.getFullYear(),monthMap[parts[0]],parseInt(parts[1]));
         if(fomcDate<now)return;
-        /* Count trading days between now and FOMC */
+        /* Count trading days strictly BEFORE FOMC (FOMC day excluded — hard no-trade rule) */
         var tradingDays=0;
-        var check=new Date(now);
+        var check=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+        check.setDate(check.getDate()+1);
         while(check<fomcDate){
-            check.setDate(check.getDate()+1);
             var dw=check.getDay();
             if(dw!==0&&dw!==6)tradingDays++;
+            check.setDate(check.getDate()+1);
         }
         if(!nextFomc||(fomcDate<nextFomc.date)){
             nextFomc={date:fomcDate,str:dateStr,days:tradingDays};
@@ -2277,8 +2301,93 @@ function buildPrep(){
         prepTitle.textContent='Week Prep Report';
     }
 
+    /* ─────────────────────────────────────────
+       TACTICAL WEEK PLAN — next 5 trading days
+       Per-account size guidance + per-day notes
+    ───────────────────────────────────────── */
+    var tplDayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    var tplMonthNames=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var tplHolidayMap={};(D.holidays||[]).forEach(function(h){tplHolidayMap[h.d]=h;});
+    function tplIso(dt){return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');}
+    function tplFomcCheck(dt){
+        var fmm={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+        for(var i=0;i<D.fomc.length;i++){
+            var p=D.fomc[i].split(' ');
+            var fd=new Date(dt.getFullYear(),fmm[p[0]],parseInt(p[1]));
+            if(fd.getFullYear()===dt.getFullYear()&&fd.getMonth()===dt.getMonth()&&fd.getDate()===dt.getDate())return D.fomc[i];
+        }
+        return null;
+    }
+    /* Normalize cursor to midnight to avoid time-component mismatches */
+    var tplToday=new Date();
+    var tplCursor=new Date(tplToday.getFullYear(),tplToday.getMonth(),tplToday.getDate());
+    var tplDays=[];
+    while(tplDays.length<5){
+        tplCursor.setDate(tplCursor.getDate()+1);
+        var dw=tplCursor.getDay();
+        if(dw===0||dw===6)continue;
+        var iso=tplIso(tplCursor);
+        var hol=tplHolidayMap[iso];
+        if(hol&&hol.t==='close')continue;
+        var fmc=tplFomcCheck(tplCursor);
+        tplDays.push({date:new Date(tplCursor),fomc:fmc,holiday:hol,fri:dw===5});
+    }
+
+    /* Per-account size guidance using current risk_level + ty */
+    function tplSize(a,day){
+        if(day.fomc)return{label:'NO TRADE',clr:'var(--rd)',bg:'rgba(215,0,0,0.15)'};
+        if(a.rk==='critical')return{label:'NO TRADE',clr:'var(--rd)',bg:'rgba(215,0,0,0.15)'};
+        if(day.holiday&&day.holiday.t==='early')return{label:'1c · EARLY',clr:'var(--yl)',bg:'rgba(180,83,9,0.12)'};
+        if(day.fri&&a.rk!=='safe')return{label:'SKIP',clr:'var(--rd)',bg:'rgba(215,0,0,0.10)'};
+        if(a.rk==='high')return{label:'1c MES',clr:'var(--yl)',bg:'rgba(180,83,9,0.10)'};
+        if(a.rk==='medium')return{label:'1c MES',clr:'var(--yl)',bg:'rgba(180,83,9,0.08)'};
+        if(a.cp&&a.pft>0&&a.bd>a.pft*a.cp)return{label:'1c · 30%cap',clr:'var(--yl)',bg:'rgba(180,83,9,0.10)'};
+        return{label:'2c MES',clr:'var(--gn)',bg:'rgba(45,104,196,0.10)'};
+    }
+
+    var tplHeader='<thead><tr>'
+        +'<th style="text-align:left;padding:10px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--tx-muted)">Account</th>';
+    tplDays.forEach(function(d){
+        var dlabel=tplDayNames[d.date.getDay()]+' '+(d.date.getMonth()+1)+'/'+d.date.getDate();
+        var dnote='';
+        if(d.fomc)dnote='<div style="font-size:9px;color:var(--rd);font-weight:900;margin-top:1px">FOMC</div>';
+        else if(d.holiday)dnote='<div style="font-size:9px;color:var(--yl);font-weight:900;margin-top:1px">'+d.holiday.t.toUpperCase()+'</div>';
+        else if(d.fri)dnote='<div style="font-size:9px;color:var(--rd);font-weight:900;margin-top:1px">SKIP DAY</div>';
+        tplHeader+='<th style="text-align:center;padding:10px 8px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;color:var(--tx-secondary);min-width:88px">'+dlabel+dnote+'</th>';
+    });
+    tplHeader+='</tr></thead>';
+
+    var tplBody='<tbody>';
+    D.accounts.forEach(function(a){
+        var rkBadge='<span style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;padding:1px 6px;border-radius:4px;background:'+rs(a.rk)+';color:'+rc(a.rk)+';margin-left:6px">'+a.rk+'</span>';
+        tplBody+='<tr style="border-top:1px solid var(--border)">'
+            +'<td style="padding:12px;font-family:var(--font-mono);font-weight:900;font-size:13px">'+a.s+rkBadge+'<div style="font-size:10px;font-weight:600;color:var(--tx-muted);margin-top:2px;font-family:var(--font-body)">'+(a.db!=null?fm(a.db)+' buffer':'—')+'</div></td>';
+        tplDays.forEach(function(d){
+            var s=tplSize(a,d);
+            tplBody+='<td style="padding:8px;text-align:center"><span style="display:inline-block;padding:6px 10px;border-radius:7px;background:'+s.bg+';color:'+s.clr+';font-size:11px;font-weight:900;letter-spacing:0.2px;font-family:var(--font-mono)">'+s.label+'</span></td>';
+        });
+        tplBody+='</tr>';
+    });
+    tplBody+='</tbody>';
+
+    var tplLegend='<div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:14px;font-size:11px;color:var(--tx-muted);font-weight:600">'
+        +'<span><strong style="color:var(--rd)">NO TRADE</strong> = critical account, FOMC, or full closure</span>'
+        +'<span><strong style="color:var(--rd)">SKIP</strong> = Friday (historic 0% win rate)</span>'
+        +'<span><strong style="color:var(--yl)">1c MES</strong> = single contract on micro</span>'
+        +'<span><strong style="color:var(--gn)">2c MES</strong> = normal size</span>'
+    +'</div>';
+
+    var tplCard='<div style="margin-bottom:32px">'
+        +'<h3 class="h3" style="margin-bottom:14px">Tactical Plan — Next 5 Sessions</h3>'
+        +'<div class="card"><div class="card-body" style="padding:18px 20px">'
+            +'<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse">'+tplHeader+tplBody+'</table></div>'
+            +tplLegend
+        +'</div></div>'
+    +'</div>';
+
     document.getElementById('prep-content').innerHTML=
         fomcWarning
+        +tplCard
         +'<h3 class="h3" style="margin-bottom:18px">Week in Review: '+weekStart+' – '+weekEnd+'</h3>'
         +'<div class="grid grid-4" style="margin-bottom:24px">'
             +'<div class="prep-stat"><div class="tx-sm">Week P&L</div><div class="prep-stat-val" style="color:'+(wk>=0?'var(--gn)':'var(--rd)')+'">'+fp(wk)+'</div></div>'
@@ -2635,20 +2744,27 @@ function buildRiskAlerts(){
         if(alert)alerts.push(alert);
     });
 
-    /* ── FOMC proximity (deduped — only nearest one) ── */
+    /* ── FOMC proximity — use TRADING days (consistent with hero countdown) ── */
     var fomcMM={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
     var today=new Date();today.setHours(0,0,0,0);
-    var nearestFomc=null,nearestDays=999;
+    var nearestFomc=null,nearestFomcDate=null,nearestTradingDays=999;
     D.fomc.forEach(function(ds){
         var pts=ds.split(' ');
         var fd=new Date(today.getFullYear(),fomcMM[pts[0]],parseInt(pts[1]));
-        var dd=Math.ceil((fd-today)/(1000*60*60*24));
-        if(dd>=0&&dd<nearestDays){nearestDays=dd;nearestFomc=ds;}
+        if(fd<today)return;
+        /* Count trading days strictly BEFORE the FOMC day */
+        var td=0;var cur=new Date(today);cur.setDate(cur.getDate()+1);
+        while(cur<fd){
+            var dw=cur.getDay();
+            if(dw>=1&&dw<=5)td++;
+            cur.setDate(cur.getDate()+1);
+        }
+        if(!nearestFomcDate||fd<nearestFomcDate){nearestFomc=ds;nearestFomcDate=fd;nearestTradingDays=td;}
     });
-    if(nearestFomc&&nearestDays<=3){
-        alerts.unshift({level:'critical',icon:'zap',acct:'FOMC',text:nearestFomc+' · '+nearestDays+'d away',val:'NO TRADE'});
-    }else if(nearestFomc&&nearestDays<=7){
-        alerts.push({level:'info',icon:'calendar',acct:'FOMC',text:nearestFomc+' · '+nearestDays+'d out',val:'Plan'});
+    if(nearestFomc&&nearestTradingDays<=2){
+        alerts.unshift({level:'critical',icon:'zap',acct:'FOMC',text:nearestFomc+' · '+nearestTradingDays+' trading day'+(nearestTradingDays!==1?'s':'')+' away',val:'NO TRADE'});
+    }else if(nearestFomc&&nearestTradingDays<=5){
+        alerts.push({level:'warning',icon:'calendar',acct:'FOMC',text:nearestFomc+' · '+nearestTradingDays+' trading days away',val:'Prep'});
     }
 
     /* ── Holidays (only show today/tomorrow) ── */

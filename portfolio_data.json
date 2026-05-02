@@ -1034,80 +1034,57 @@
   "extraction_triggers": {
     "topstep_1_204": {
       "trigger_balance": 0,
-      "current_balance": -28.99,
+      "current_balance": -902.23,
       "pct_to_trigger": 0,
-      "est_days": "1-2 days",
-      "note": "NOT eligible \u2014 balance -$29. Need positive balance. 8/5 win days banked."
+      "est_days": "Survival first",
+      "note": "CRITICAL \u2014 $130 buffer. Recovery required before payout consideration. 10/5 win days banked but balance must reach 0."
     },
     "topstep_2_676": {
       "trigger_balance": 0,
-      "current_balance": -156.18,
+      "current_balance": -702.32,
       "pct_to_trigger": 0,
-      "est_days": "2-3 days",
-      "note": "NOT eligible \u2014 balance -$156. 7/5 win days banked. Needs recovery."
+      "est_days": "Recovery mode",
+      "note": "$702 to breakeven. 10/5 win days banked. ~6+ green days needed to reach 0."
     },
     "topstep_3_235": {
       "trigger_balance": 0,
-      "current_balance": -781.83,
+      "current_balance": -1329.27,
       "pct_to_trigger": 0,
-      "est_days": "6+ days",
-      "note": "NOT eligible \u2014 balance -$782. 5/5 win days banked. A++ only."
-    },
-    "tradeify_286": {
-      "trigger_profit": 3000,
-      "current_profit": 506.45,
-      "pct_to_trigger": 16.9,
-      "est_days": 25,
-      "note": "$2,494 to $3k extraction trigger. COLD mode \u2014 projections at 1.5x."
+      "est_days": "Recovery mode",
+      "note": "$1,329 to breakeven. 8/5 win days banked. MLL locked at -$2,000 floor."
     },
     "apex_50k_812": {
       "trigger_balance": 52600,
-      "current_balance": 51213.47,
-      "pct_to_trigger": 46.5,
-      "est_days": 14,
-      "note": "$1,387 to safety net. 30% rule barely CLEAR (29.8%). COLD mode."
+      "current_balance": 50317.44,
+      "pct_to_trigger": 12.2,
+      "est_days": 17,
+      "note": "$2,283 to safety net. 30% rule GAP $886 must clear first (best day 114% of profit)."
     },
     "apex_100k_811": {
       "trigger_balance": 103100,
-      "current_balance": 101150.64,
-      "pct_to_trigger": 37.1,
-      "est_days": 19,
-      "note": "$1,949 to safety net. 30% rule WARNING (32.2%). COLD mode."
+      "current_balance": 100252.05,
+      "pct_to_trigger": 8.1,
+      "est_days": 22,
+      "note": "$2,848 to safety net. 30% rule GAP $985 must clear first (best day 147% of profit)."
     }
   },
   "payouts_taken": [],
   "projected_payouts": [
     {
-      "account": "topstep_1_204",
-      "target_date": "2026-04-14",
-      "amount": 500,
-      "net": 500,
-      "confidence": "low",
-      "notes": "Needs to recover to positive first, then build to $2k. COLD mode \u2014 earliest realistic window mid-April."
-    },
-    {
       "account": "apex_50k_812",
-      "target_date": "2026-04-28",
+      "target_date": "2026-06-05",
       "amount": 1500,
       "net": 1500,
-      "confidence": "medium",
-      "notes": "$1,387 to safety net. ~14 trading days at COLD pace. 30% rule at 29.8% \u2014 one big day re-trips it."
+      "confidence": "low",
+      "notes": "$2,283 to safety net. ~17 trading days at recovery pace. 30% rule gap $886 must clear first. FOMC May 6 will halt one day."
     },
     {
       "account": "apex_100k_811",
-      "target_date": "2026-05-05",
+      "target_date": "2026-06-17",
       "amount": 2000,
       "net": 2000,
       "confidence": "low",
-      "notes": "$1,949 to safety net. ~19 trading days at COLD pace. 30% rule at 32.2% \u2014 must clear first."
-    },
-    {
-      "account": "tradeify_286",
-      "target_date": "2026-05-12",
-      "amount": 1350,
-      "net": 1215,
-      "confidence": "low",
-      "notes": "$2,494 to $3k extraction trigger. ~25 trading days at COLD pace. Longest runway."
+      "notes": "$2,848 to safety net. ~22 trading days. 30% rule gap $985. Both gaps require steady greens \u2014 single big day re-trips the rule."
     }
   ],
   "danger_dates": [
