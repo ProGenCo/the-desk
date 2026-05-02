@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# pre-commit hook for The Desk
+# Runs if portfolio_data.json is staged. Validates JSON parses and
+# matches the shape contract via desk_io.validate_data_shape().
+# Exits non-zero on failure → commit is blocked.
+
+set -e
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+
+# Are any staged files relevant?
+if ! git diff --cached --name-only | grep -qx "portfolio_data.json"; then
+    exit 0
+fi
+
+cd "$REPO_ROOT"
+
+python3 - <<'PY'
+import sys, json
+from pathlib import Path
+try:
+    sys.path.insert(0, str(Path.cwd()))
+    from desk_io import load_json, validate_data_shape
+    data = load_json()
+    validate_data_shape(data)
+    # Extra sanity: every account has a status; daily_log entries have date
+    for k, a in data["accounts"].items():
+        if a.get("status") not in ("funded", "shelved", "breached", "evaluation"):
+            raise ValueError(f"{k}: invalid status {a.get('status')!r}")
+    for i, e in enumerate(data["daily_log"]):
+        if "date" not in e:
+            raise ValueError(f"daily_log[{i}]: missing 'date'")
+    print("pre-commit: portfolio_data.json valid ✓")
+except json.JSONDecodeError as e:
+    print(f"pre-commit BLOCKED: portfolio_data.json is not valid JSON — {e}", file=sys.stderr)
+    sys.exit(1)
+except Exception as e:
+    print(f"pre-commit BLOCKED: {e}", file=sys.stderr)
+    sys.exit(1)
+PY
