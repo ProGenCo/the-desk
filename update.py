@@ -28,9 +28,8 @@ What it does:
 
 import argparse, json, os, sys, subprocess, re
 from datetime import datetime, timedelta
+from desk_io import ROOT, JSON_PATH, load_json, save_json, validate_data_shape
 
-ROOT       = os.path.dirname(os.path.abspath(__file__))
-JSON_PATH  = os.path.join(ROOT, "portfolio_data.json")
 SYNC_PATH  = os.path.join(ROOT, "sync.py")
 
 # Map CLI flag names to JSON account keys
@@ -66,30 +65,19 @@ def bold(s):   return color(s, BOLD)
 def dim(s):    return color(s, DIM)
 
 def fp(n):
-    """Format P&L with sign."""
+    """Format P&L with sign and ANSI color (terminal printing)."""
     if n is None: return "—"
     return (green(f"+${abs(n):,.2f}") if n >= 0 else red(f"-${abs(n):,.2f}"))
+
+def fp_plain(n):
+    """Format P&L with sign, no color codes (safe for JSON / files)."""
+    if n is None: return "—"
+    return f"+${abs(n):,.2f}" if n >= 0 else f"-${abs(n):,.2f}"
 
 def fm(n):
     """Format dollar amount."""
     if n is None: return "—"
     return f"${abs(n):,.2f}"
-
-
-def load_json():
-    with open(JSON_PATH) as f:
-        return json.load(f)
-
-
-def validate_data_shape(data):
-    """Sanity-check the loaded JSON has the keys we depend on. Fail loud, fail early."""
-    required_top = ["accounts", "daily_log", "momentum"]
-    missing = [k for k in required_top if k not in data]
-    if missing:
-        raise ValueError(f"portfolio_data.json missing required keys: {missing}")
-    if not isinstance(data["accounts"], dict) or not data["accounts"]:
-        raise ValueError("portfolio_data.json: 'accounts' must be a non-empty dict")
-    return True
 
 
 def backup_json():
@@ -100,11 +88,6 @@ def backup_json():
     bak = JSON_PATH + "." + _dt.now().strftime("%Y%m%d-%H%M%S") + ".bak"
     shutil.copy2(JSON_PATH, bak)
     return bak
-
-
-def save_json(data):
-    with open(JSON_PATH, "w") as f:
-        json.dump(data, f, indent=2)
 
 
 def validate_pnl_magnitudes(pnl_map, threshold=1000):
@@ -161,7 +144,7 @@ def parse_pnl_arg(val):
         raise argparse.ArgumentTypeError(f"Invalid P&L value: '{val}'. Use a number like 150.43, -286.41, or 'skip'.")
 
 
-def prompt_pnl(label, current_bal, current_floor, current_buffer):
+def prompt_pnl(label, current_bal, current_buffer):
     """Interactive prompt for one account's daily P&L."""
     buf_str = (red(f"  ⚠ buffer {fm(current_buffer)}") if current_buffer < 200
                else yellow(f"  buffer {fm(current_buffer)}") if current_buffer < 700
@@ -323,10 +306,9 @@ def apply_pnl(data, date_str, pnl_map):
         "accounts": acct_log,
     }
 
-    # Add day note
+    # Add day note (use plain formatter — JSON shouldn't contain ANSI)
     dow = get_dow_str(date_str)
-    sentiment = "green" if fleet_total > 0 else "red"
-    log_entry["notes"] = f"Fleet {fp(fleet_total).replace(chr(27)+'[92m','').replace(chr(27)+'[91m','').replace(chr(27)+'[0m','')}. {dow}."
+    log_entry["notes"] = f"Fleet {fp_plain(fleet_total)}. {dow}."
 
     data["daily_log"].append(log_entry)
 
@@ -576,7 +558,7 @@ Examples:
                 bal = acct.get("balance", 0)
                 floor = acct.get("floor") or acct.get("mll_current")
                 buf = bal - floor if floor is not None else None
-                val = prompt_pnl(ACCT_LABELS[json_key], bal, floor, buf)
+                val = prompt_pnl(ACCT_LABELS[json_key], bal, buf)
             pnl_map[json_key] = val
     else:
         # Interactive mode — prompt for all accounts
@@ -589,7 +571,7 @@ Examples:
             bal = acct.get("balance", 0)
             floor = acct.get("floor") or acct.get("mll_current")
             buf = bal - floor if floor is not None else None
-            pnl_map[json_key] = prompt_pnl(ACCT_LABELS[json_key], bal, floor, buf)
+            pnl_map[json_key] = prompt_pnl(ACCT_LABELS[json_key], bal, buf)
 
     # ── Magnitude sanity ───────────────────────────────────
     suspicious = validate_pnl_magnitudes(pnl_map, threshold=1000)

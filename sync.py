@@ -6,11 +6,7 @@ and copy to index.html. No external dependencies.
 
 import json, re, shutil, os, sys
 from datetime import datetime
-
-ROOT = os.path.dirname(os.path.abspath(__file__))
-JSON_PATH  = os.path.join(ROOT, "portfolio_data.json")
-DASH_PATH  = os.path.join(ROOT, "dashboard-v4.html")
-INDEX_PATH = os.path.join(ROOT, "index.html")
+from desk_io import ROOT, JSON_PATH, DASH_PATH, INDEX_PATH, load_json, validate_data_shape
 
 # ── Account key / short-name / firm mapping ──────────────────────────
 ACCOUNT_MAP = {
@@ -52,17 +48,6 @@ def fmt_fomc(iso):
     return d.strftime("%b %-d")
 
 
-def validate_data_shape(data):
-    """Sanity-check the loaded JSON has the keys we depend on."""
-    required = ["accounts", "daily_log", "momentum"]
-    missing = [k for k in required if k not in data]
-    if missing:
-        raise ValueError(f"portfolio_data.json missing required keys: {missing}")
-    if not isinstance(data["accounts"], dict) or not data["accounts"]:
-        raise ValueError("portfolio_data.json: 'accounts' must be a non-empty dict")
-    return True
-
-
 def sanity_check_derived(data):
     """After derive_computed_fields, run sanity checks. Returns list of warnings."""
     warnings = []
@@ -82,11 +67,6 @@ def sanity_check_derived(data):
             if bd > acct["profit"]:
                 warnings.append(f"  ℹ {key}: best_day ${bd} > profit ${acct['profit']} → 30%-rule blocked until profit catches up")
     return warnings
-
-
-def load_json():
-    with open(JSON_PATH) as f:
-        return json.load(f)
 
 
 def derive_computed_fields(data):

@@ -1207,6 +1207,42 @@ const fp=n=>n==null?'—':(n>=0?'+$':'-$')+Math.abs(Math.round(n)).toLocaleStrin
 const rc=r=>({safe:'var(--gn)',medium:'var(--yl)',high:'var(--rd)',critical:'var(--rd)',na:'var(--pp)'}[r]||'var(--tx-muted)');
 const rs=r=>({safe:'var(--gn-bg)',medium:'var(--yl-bg)',high:'var(--rd-bg)',critical:'var(--rd-bg)',na:'var(--pp-bg)'}[r]||'var(--bg-tertiary)');
 
+/* ══ SHARED HELPERS ══ */
+const MONTH_MAP={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+const HOLIDAY_MAP=(D.holidays||[]).reduce(function(m,h){m[h.d]=h;return m;},{});
+function isoDateOf(dt){return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');}
+function parseFomc(ds,year){var p=ds.split(' ');return new Date(year||(new Date()).getFullYear(),MONTH_MAP[p[0]],parseInt(p[1],10));}
+/* Trading days strictly BEFORE targetDate. respectHolidays=true skips full-close days. */
+function tradingDaysUntil(targetDate,startDate,respectHolidays){
+    var s=startDate||new Date();
+    var c=new Date(s.getFullYear(),s.getMonth(),s.getDate());
+    c.setDate(c.getDate()+1);
+    var n=0;
+    while(c<targetDate){
+        var dw=c.getDay();
+        var hol=respectHolidays?HOLIDAY_MAP[isoDateOf(c)]:null;
+        if(dw>=1&&dw<=5&&!(hol&&hol.t==='close'))n++;
+        c.setDate(c.getDate()+1);
+    }
+    return n;
+}
+/* Find nearest upcoming FOMC date. Returns {label,date,tradingDays} or null. */
+function getNearestFomc(now,respectHolidays){
+    now=now||new Date();
+    var nearest=null;
+    D.fomc.forEach(function(ds){
+        var fd=parseFomc(ds,now.getFullYear());
+        if(fd<now)return;
+        if(!nearest||fd<nearest.date){
+            nearest={label:ds,date:fd,tradingDays:0};
+        }
+    });
+    if(nearest){
+        nearest.tradingDays=tradingDaysUntil(nearest.date,now,respectHolidays);
+    }
+    return nearest;
+}
+
 function spark(arr,h){
     h=h||24;
     const v=arr.filter(x=>x!=null);if(!v.length)return'';
@@ -1596,37 +1632,17 @@ function showFleetView(){
     var rmDayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
     var rmMonthNames=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-    /* Build holiday lookup: 'YYYY-MM-DD' -> holiday object */
-    var holidayMap={};
-    (D.holidays||[]).forEach(function(h){holidayMap[h.d]=h;});
-
-    function isoDate(dt){
-        return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');
-    }
-
-    /* FOMC countdown — find nearest upcoming FOMC, count trading days away */
-    var fomcMM={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
-    var fomcNextLabel='',fomcTradeCount=0,fomcUrgency='safe';
-    var fomcNextDate=null;
-    D.fomc.forEach(function(ds){
-        var pts=ds.split(' ');
-        var fd=new Date(rmNow.getFullYear(),fomcMM[pts[0]],parseInt(pts[1]));
-        if(fd>=rmNow&&(!fomcNextDate||fd<fomcNextDate)){fomcNextDate=fd;fomcNextLabel=ds;}
-    });
-    if(fomcNextDate){
-        /* Count trading days strictly BEFORE the FOMC date itself.
-           FOMC day is a no-trade day per hard rule, so it shouldn't count. */
-        var fc=new Date(rmNow.getFullYear(),rmNow.getMonth(),rmNow.getDate());
-        fc.setDate(fc.getDate()+1);
-        while(fc<fomcNextDate){
-            var fcdow=fc.getDay();var fciso=isoDate(fc);var fchol=holidayMap[fciso];
-            if(fcdow>=1&&fcdow<=5&&!(fchol&&fchol.t==='close'))fomcTradeCount++;
-            fc.setDate(fc.getDate()+1);
-        }
-        fomcUrgency=fomcTradeCount<=2?'critical':fomcTradeCount<=4?'high':'safe';
-    }
+    /* FOMC countdown — uses shared getNearestFomc + HOLIDAY_MAP at top of script */
+    var nearestFomc=getNearestFomc(rmNow,true);
+    var fomcNextLabel=nearestFomc?nearestFomc.label:'';
+    var fomcNextDate=nearestFomc?nearestFomc.date:null;
+    var fomcTradeCount=nearestFomc?nearestFomc.tradingDays:0;
+    var fomcUrgency=!nearestFomc?'safe':(fomcTradeCount<=2?'critical':fomcTradeCount<=4?'high':'safe');
     var fomcClr=fomcUrgency==='critical'?'var(--rd)':fomcUrgency==='high'?'var(--yl)':'var(--tx-muted)';
     var fomcBgClr=fomcUrgency==='critical'?'var(--rd-bg)':fomcUrgency==='high'?'var(--yl-bg)':'var(--bg-secondary)';
+    /* Local references for the 5-day roadmap below */
+    var holidayMap=HOLIDAY_MAP;
+    var isoDate=isoDateOf;
 
     /* Get next 5 trading days (Mon-Fri, skip weekends AND full-close holidays) */
     var tradingDays5=[];
@@ -1643,11 +1659,9 @@ function showFleetView(){
     }
 
     /* Check FOMC dates within the 5-day window */
-    var fomcMonthMap={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
     var fomcDatesInWindow={};
     D.fomc.forEach(function(dateStr){
-        var pts=dateStr.split(' ');
-        var fDate=new Date(rmNow.getFullYear(),fomcMonthMap[pts[0]],parseInt(pts[1]));
+        var fDate=parseFomc(dateStr,rmNow.getFullYear());
         tradingDays5.forEach(function(td,idx){
             if(fDate.getFullYear()===td.getFullYear()&&fDate.getMonth()===td.getMonth()&&fDate.getDate()===td.getDate()){
                 fomcDatesInWindow[idx]=dateStr;
@@ -2260,29 +2274,11 @@ function buildPrep(){
         return '<li style="display:flex;gap:10px"><span style="color:'+r.color+';font-weight:800">'+r.icon+'</span><span class="tx-sec" style="font-size:13px">'+r.text+'</span></li>';
     }).join('');
 
-    /* FOMC proximity check */
+    /* FOMC proximity check — shared getNearestFomc helper */
     var now=new Date();
     var fomcWarning='';
-    var nextFomc=null;
-    var fomcCountdown=null;
-    D.fomc.forEach(function(dateStr){
-        var parts=dateStr.split(' ');
-        var monthMap={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
-        var fomcDate=new Date(now.getFullYear(),monthMap[parts[0]],parseInt(parts[1]));
-        if(fomcDate<now)return;
-        /* Count trading days strictly BEFORE FOMC (FOMC day excluded — hard no-trade rule) */
-        var tradingDays=0;
-        var check=new Date(now.getFullYear(),now.getMonth(),now.getDate());
-        check.setDate(check.getDate()+1);
-        while(check<fomcDate){
-            var dw=check.getDay();
-            if(dw!==0&&dw!==6)tradingDays++;
-            check.setDate(check.getDate()+1);
-        }
-        if(!nextFomc||(fomcDate<nextFomc.date)){
-            nextFomc={date:fomcDate,str:dateStr,days:tradingDays};
-        }
-    });
+    var _nf=getNearestFomc(now,false);
+    var nextFomc=_nf?{date:_nf.date,str:_nf.label,days:_nf.tradingDays}:null;
     if(nextFomc&&nextFomc.days<=10){
         fomcWarning='<div class="alert alert-danger" style="margin-bottom:16px"><i data-lucide="alert-triangle"></i><strong>FOMC WARNING:</strong> '+nextFomc.str+' is '+nextFomc.days+' trading days away. No entries within 2 hours of announcement.</div>';
     }
@@ -2306,14 +2302,11 @@ function buildPrep(){
        Per-account size guidance + per-day notes
     ───────────────────────────────────────── */
     var tplDayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-    var tplMonthNames=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    var tplHolidayMap={};(D.holidays||[]).forEach(function(h){tplHolidayMap[h.d]=h;});
-    function tplIso(dt){return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');}
+    var tplHolidayMap=HOLIDAY_MAP;
+    var tplIso=isoDateOf;
     function tplFomcCheck(dt){
-        var fmm={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
         for(var i=0;i<D.fomc.length;i++){
-            var p=D.fomc[i].split(' ');
-            var fd=new Date(dt.getFullYear(),fmm[p[0]],parseInt(p[1]));
+            var fd=parseFomc(D.fomc[i],dt.getFullYear());
             if(fd.getFullYear()===dt.getFullYear()&&fd.getMonth()===dt.getMonth()&&fd.getDate()===dt.getDate())return D.fomc[i];
         }
         return null;
@@ -2744,27 +2737,13 @@ function buildRiskAlerts(){
         if(alert)alerts.push(alert);
     });
 
-    /* ── FOMC proximity — use TRADING days (consistent with hero countdown) ── */
-    var fomcMM={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+    /* ── FOMC proximity — uses shared getNearestFomc helper ── */
     var today=new Date();today.setHours(0,0,0,0);
-    var nearestFomc=null,nearestFomcDate=null,nearestTradingDays=999;
-    D.fomc.forEach(function(ds){
-        var pts=ds.split(' ');
-        var fd=new Date(today.getFullYear(),fomcMM[pts[0]],parseInt(pts[1]));
-        if(fd<today)return;
-        /* Count trading days strictly BEFORE the FOMC day */
-        var td=0;var cur=new Date(today);cur.setDate(cur.getDate()+1);
-        while(cur<fd){
-            var dw=cur.getDay();
-            if(dw>=1&&dw<=5)td++;
-            cur.setDate(cur.getDate()+1);
-        }
-        if(!nearestFomcDate||fd<nearestFomcDate){nearestFomc=ds;nearestFomcDate=fd;nearestTradingDays=td;}
-    });
-    if(nearestFomc&&nearestTradingDays<=2){
-        alerts.unshift({level:'critical',icon:'zap',acct:'FOMC',text:nearestFomc+' · '+nearestTradingDays+' trading day'+(nearestTradingDays!==1?'s':'')+' away',val:'NO TRADE'});
-    }else if(nearestFomc&&nearestTradingDays<=5){
-        alerts.push({level:'warning',icon:'calendar',acct:'FOMC',text:nearestFomc+' · '+nearestTradingDays+' trading days away',val:'Prep'});
+    var nf=getNearestFomc(today,false);
+    if(nf&&nf.tradingDays<=2){
+        alerts.unshift({level:'critical',icon:'zap',acct:'FOMC',text:nf.label+' · '+nf.tradingDays+' trading day'+(nf.tradingDays!==1?'s':'')+' away',val:'NO TRADE'});
+    }else if(nf&&nf.tradingDays<=5){
+        alerts.push({level:'warning',icon:'calendar',acct:'FOMC',text:nf.label+' · '+nf.tradingDays+' trading days away',val:'Prep'});
     }
 
     /* ── Holidays (only show today/tomorrow) ── */
