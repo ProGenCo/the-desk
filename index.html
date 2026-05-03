@@ -887,6 +887,31 @@ a{color:inherit;text-decoration:none}
 .breach-banner-acct{font-family:var(--font-mono);font-size:15px;font-weight:900;margin-left:auto;white-space:nowrap;padding:4px 12px;border-radius:8px;background:rgba(248,113,113,0.15);border:1px solid rgba(248,113,113,0.25)}
 
 /* ════════════════════════════════════
+   CHART TOOLTIP
+════════════════════════════════════ */
+.chart-pt{transition:opacity 0.15s}
+.chart-pt:hover circle:nth-child(2){r:6}
+.chart-tooltip{
+    position:absolute;pointer-events:none;
+    display:flex;flex-direction:column;align-items:center;gap:2px;
+    padding:8px 12px;border-radius:10px;
+    background:rgba(8,8,10,0.92);
+    backdrop-filter:blur(20px) saturate(180%);
+    -webkit-backdrop-filter:blur(20px) saturate(180%);
+    border:1px solid var(--border-strong);
+    box-shadow:0 8px 24px rgba(0,0,0,0.6);
+    opacity:0;transform:translateY(4px);
+    transition:opacity 0.12s, transform 0.12s;
+    z-index:20;white-space:nowrap;
+    font-family:var(--font-mono);
+}
+.chart-tooltip.show{opacity:1;transform:translateY(0)}
+.chart-tooltip-date{font-size:10px;color:var(--tx-muted);font-weight:500;letter-spacing:0.3px}
+.chart-tooltip-val{font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
+.chart-tooltip-val.pos{color:var(--gn)}
+.chart-tooltip-val.neg{color:var(--rd)}
+
+/* ════════════════════════════════════
    ANIMATIONS
 ════════════════════════════════════ */
 .fade-up{opacity:0;transform:translateY(28px);transition:opacity 0.7s var(--spring),transform 0.7s var(--spring)}
@@ -1236,8 +1261,7 @@ function svgChart(data,h){
     const line=pts.map((p,i)=>(i?'L':'M')+p[0]+','+p[1]).join(' ');
     const area=line+' L'+pts[pts.length-1][0]+','+h+' L0,'+h+' Z';
 
-    /* Identify "important" points: highest, lowest, last — always labeled.
-       Other points get labels only if step is wide enough OR they're clear extrema. */
+    /* Identify extrema for labeling */
     var maxIdx=0,minIdx=0;
     vals.forEach(function(d,i){
         if(d.p>vals[maxIdx].p)maxIdx=i;
@@ -1245,39 +1269,58 @@ function svgChart(data,h){
     });
     var lastIdx=vals.length-1;
     var labelSet={};
-    labelSet[maxIdx]=1;labelSet[minIdx]=1;labelSet[lastIdx]=1;
-    /* If step is wide enough (>60px), label more points — alternate to avoid clash */
-    if(step>=60){
-        for(var i=0;i<vals.length;i++)labelSet[i]=1;
-    }else if(step>=35){
-        /* Medium spacing — label every other */
-        for(var i=0;i<vals.length;i+=2)labelSet[i]=1;
-    }
-    /* Always show first too, for context */
-    labelSet[0]=1;
+    labelSet[0]=1;labelSet[maxIdx]=1;labelSet[minIdx]=1;labelSet[lastIdx]=1;
+    if(step>=60){for(var i=0;i<vals.length;i++)labelSet[i]=1;}
+    else if(step>=35){for(var i=0;i<vals.length;i+=2)labelSet[i]=1;}
 
+    /* Each "dot" is actually a group: invisible large hit-area circle (12px radius)
+       wrapping the visible 4.5px dot. Hit area triggers tooltip via inline events. */
     const dots=pts.map(function(p,i){
-        return '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="4.5" fill="'+(vals[i].p>=0?'var(--gn)':'var(--rd)')+'" stroke="var(--bg-main)" stroke-width="2">'
-            +'<title>'+vals[i].d+': '+fp(vals[i].p)+'</title>'
-            +'</circle>';
+        var v=vals[i];
+        var color=v.p>=0?'var(--gn)':'var(--rd)';
+        var safeDate=String(v.d).replace(/'/g,"\\'");
+        var safeVal=fp(v.p).replace(/'/g,"\\'");
+        return '<g class="chart-pt" onmouseover="chartTip(event,\''+safeDate+'\',\''+safeVal+'\','+(v.p>=0?1:0)+')" onmouseout="chartTipHide()">'
+            +'<circle cx="'+p[0]+'" cy="'+p[1]+'" r="14" fill="transparent" style="cursor:pointer"/>'
+            +'<circle cx="'+p[0]+'" cy="'+p[1]+'" r="4.5" fill="'+color+'" stroke="var(--bg-main)" stroke-width="2" pointer-events="none"/>'
+            +'</g>';
     }).join('');
     const dateLabels=vals.map(function(d,i){
         return '<text x="'+(i*step)+'" y="'+(h+18)+'" fill="var(--tx-muted)" font-size="10" font-weight="500" text-anchor="middle" font-family="JetBrains Mono,monospace">'+d.d+'</text>';
     }).join('');
-    /* Stagger value labels above/below dots, alternating, to spread them out vertically */
     const valueLabels=vals.map(function(d,i){
         if(!labelSet[i])return'';
-        /* Position: above the dot for positive, below for negative — and shift further if alt */
-        var py=pts[i][1];
-        var yOff=d.p>=0?-12:18;
-        return '<text x="'+(i*step)+'" y="'+(py+yOff)+'" fill="'+(d.p>=0?'var(--gn)':'var(--rd)')+'" font-size="10" font-weight="500" text-anchor="middle" font-family="JetBrains Mono,monospace" font-variant-numeric="tabular-nums">'+fp(d.p)+'</text>';
+        var py=pts[i][1];var yOff=d.p>=0?-12:18;
+        return '<text x="'+(i*step)+'" y="'+(py+yOff)+'" fill="'+(d.p>=0?'var(--gn)':'var(--rd)')+'" font-size="10" font-weight="500" text-anchor="middle" font-family="JetBrains Mono,monospace" font-variant-numeric="tabular-nums" pointer-events="none">'+fp(d.p)+'</text>';
     }).join('');
-    return'<svg viewBox="-20 -32 '+(w+40)+' '+(h+56)+'" style="width:100%;height:auto;overflow:visible">'
-        +'<defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--gn)" stop-opacity=".18"/><stop offset="100%" stop-color="var(--gn)" stop-opacity="0"/></linearGradient></defs>'
-        +'<line x1="0" y1="'+(h/2)+'" x2="'+w+'" y2="'+(h/2)+'" stroke="var(--border)" stroke-dasharray="4,5"/>'
-        +'<path d="'+area+'" fill="url(#ag)"/>'
-        +'<path d="'+line+'" fill="none" stroke="var(--gn)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>'
-        +dots+valueLabels+dateLabels+'</svg>';
+    return '<div class="chart-wrap" style="position:relative">'
+        +'<svg viewBox="-20 -32 '+(w+40)+' '+(h+56)+'" style="width:100%;height:auto;overflow:visible">'
+            +'<defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--gn)" stop-opacity=".18"/><stop offset="100%" stop-color="var(--gn)" stop-opacity="0"/></linearGradient></defs>'
+            +'<line x1="0" y1="'+(h/2)+'" x2="'+w+'" y2="'+(h/2)+'" stroke="var(--border)" stroke-dasharray="4,5"/>'
+            +'<path d="'+area+'" fill="url(#ag)" pointer-events="none"/>'
+            +'<path d="'+line+'" fill="none" stroke="var(--gn)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity=".9" pointer-events="none"/>'
+            +dots+valueLabels+dateLabels
+        +'</svg>'
+        +'<div id="chart-tooltip" class="chart-tooltip"></div>'
+    +'</div>';
+}
+
+/* Chart tooltip — single shared element, follows cursor */
+function chartTip(e,date,val,isPos){
+    var tip=document.getElementById('chart-tooltip');
+    if(!tip)return;
+    var wrap=tip.parentElement;
+    var rect=wrap.getBoundingClientRect();
+    var x=e.clientX-rect.left;
+    var y=e.clientY-rect.top;
+    tip.innerHTML='<span class="chart-tooltip-date">'+date+'</span><span class="chart-tooltip-val '+(isPos?'pos':'neg')+'">'+val+'</span>';
+    tip.style.left=Math.max(8,Math.min(rect.width-110,x-50))+'px';
+    tip.style.top=Math.max(0,y-44)+'px';
+    tip.classList.add('show');
+}
+function chartTipHide(){
+    var tip=document.getElementById('chart-tooltip');
+    if(tip)tip.classList.remove('show');
 }
 
 /* ══════════════════════════════════
