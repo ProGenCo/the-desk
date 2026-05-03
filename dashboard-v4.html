@@ -1235,15 +1235,49 @@ function svgChart(data,h){
     const pts=vals.map((d,i)=>[i*step,h/2-(d.p/mx)*(h/2-28)]);
     const line=pts.map((p,i)=>(i?'L':'M')+p[0]+','+p[1]).join(' ');
     const area=line+' L'+pts[pts.length-1][0]+','+h+' L0,'+h+' Z';
-    const dots=pts.map((p,i)=>'<circle cx="'+p[0]+'" cy="'+p[1]+'" r="5" fill="'+(vals[i].p>=0?'var(--gn)':'var(--rd)')+'" stroke="var(--bg-card)" stroke-width="2.5"/>').join('');
-    const labels=vals.map((d,i)=>'<text x="'+(i*step)+'" y="'+(h+18)+'" fill="var(--tx-muted)" font-size="10" font-weight="600" text-anchor="middle" font-family="Manrope,sans-serif">'+d.d+'</text>').join('');
-    const vl=vals.map((d,i)=>'<text x="'+(i*step)+'" y="'+(pts[i][1]-14)+'" fill="'+(d.p>=0?'var(--gn)':'var(--rd)')+'" font-size="10" font-weight="700" text-anchor="middle" font-family="Inter,sans-serif">'+fp(d.p)+'</text>').join('');
-    return'<svg viewBox="-14 -28 '+(w+28)+' '+(h+52)+'" style="width:100%;height:auto;overflow:visible">'
-        +'<defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--gn)" stop-opacity=".15"/><stop offset="100%" stop-color="var(--gn)" stop-opacity="0"/></linearGradient></defs>'
-        +'<line x1="0" y1="'+(h/2)+'" x2="'+w+'" y2="'+(h/2)+'" stroke="var(--border)" stroke-dasharray="5,4"/>'
+
+    /* Identify "important" points: highest, lowest, last — always labeled.
+       Other points get labels only if step is wide enough OR they're clear extrema. */
+    var maxIdx=0,minIdx=0;
+    vals.forEach(function(d,i){
+        if(d.p>vals[maxIdx].p)maxIdx=i;
+        if(d.p<vals[minIdx].p)minIdx=i;
+    });
+    var lastIdx=vals.length-1;
+    var labelSet={};
+    labelSet[maxIdx]=1;labelSet[minIdx]=1;labelSet[lastIdx]=1;
+    /* If step is wide enough (>60px), label more points — alternate to avoid clash */
+    if(step>=60){
+        for(var i=0;i<vals.length;i++)labelSet[i]=1;
+    }else if(step>=35){
+        /* Medium spacing — label every other */
+        for(var i=0;i<vals.length;i+=2)labelSet[i]=1;
+    }
+    /* Always show first too, for context */
+    labelSet[0]=1;
+
+    const dots=pts.map(function(p,i){
+        return '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="4.5" fill="'+(vals[i].p>=0?'var(--gn)':'var(--rd)')+'" stroke="var(--bg-main)" stroke-width="2">'
+            +'<title>'+vals[i].d+': '+fp(vals[i].p)+'</title>'
+            +'</circle>';
+    }).join('');
+    const dateLabels=vals.map(function(d,i){
+        return '<text x="'+(i*step)+'" y="'+(h+18)+'" fill="var(--tx-muted)" font-size="10" font-weight="500" text-anchor="middle" font-family="JetBrains Mono,monospace">'+d.d+'</text>';
+    }).join('');
+    /* Stagger value labels above/below dots, alternating, to spread them out vertically */
+    const valueLabels=vals.map(function(d,i){
+        if(!labelSet[i])return'';
+        /* Position: above the dot for positive, below for negative — and shift further if alt */
+        var py=pts[i][1];
+        var yOff=d.p>=0?-12:18;
+        return '<text x="'+(i*step)+'" y="'+(py+yOff)+'" fill="'+(d.p>=0?'var(--gn)':'var(--rd)')+'" font-size="10" font-weight="500" text-anchor="middle" font-family="JetBrains Mono,monospace" font-variant-numeric="tabular-nums">'+fp(d.p)+'</text>';
+    }).join('');
+    return'<svg viewBox="-20 -32 '+(w+40)+' '+(h+56)+'" style="width:100%;height:auto;overflow:visible">'
+        +'<defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--gn)" stop-opacity=".18"/><stop offset="100%" stop-color="var(--gn)" stop-opacity="0"/></linearGradient></defs>'
+        +'<line x1="0" y1="'+(h/2)+'" x2="'+w+'" y2="'+(h/2)+'" stroke="var(--border)" stroke-dasharray="4,5"/>'
         +'<path d="'+area+'" fill="url(#ag)"/>'
-        +'<path d="'+line+'" fill="none" stroke="var(--gn)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>'
-        +dots+vl+labels+'</svg>';
+        +'<path d="'+line+'" fill="none" stroke="var(--gn)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>'
+        +dots+valueLabels+dateLabels+'</svg>';
 }
 
 /* ══════════════════════════════════
